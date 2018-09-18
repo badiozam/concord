@@ -1,0 +1,122 @@
+#**
+ * MIT License
+ * 
+ * Copyright (c) 2018 i4one Interactive, LLC
+ * 
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ * 
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ * 
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ *#
+#**
+ * @author Hamid Badiozamani
+ */
+#parseVm( "base/user/template/start.vm" )
+
+<style>
+#pageCSS()
+</style>
+
+<section class="container" id="support">
+	<div class="form-group row">
+		<div class="col-xs-12">#i4oneStatus('userClient')</div>
+
+		<div id="label" class="col-xs-12 col-md-6">
+			<h1>#msg('title')</h1>
+			<p>#msg('subtitle')</p>
+		</div>
+	
+		<div id="form" class="col-xs-12 col-md-6">
+			<form action="${request.requestURI}" method="post">
+				<div class="form-group row">
+					<div class="col-xs-12"><label for="email">#msg('email')</label></div>
+					<div class="col-xs-12">#i4oneFormInput('userClient.email' '' 'maxlength="50" required')</div>
+				</div>
+	
+	
+			<div class="form-group row">
+				<div class="col-xs-12"><label for="message">#msg('category')</label></div>
+				<div class="col-xs-12">#i4oneFormSingleSelect('userClient.category' $model.validCategories '')</div>
+			</div>
+	
+			<div class="form-group row">
+				<div class="col-xs-12"><label for="message">#msg('description')</label></div>
+				<div class="col-xs-12">#i4oneFormTextarea('userClient.description' '' 'required')</div>
+			</div>
+	
+			<div class="form-group row">
+				<div class="col-xs-12">#i4oneFormSubmit('msg.base.user.support.submit' $userClient)</div>
+			</div>
+	
+			</form>
+		</div>
+	</div>
+</section>
+
+#*
+<div class="breadcrumbs" align="left"><a href="index.html">Home</a> / Technical Support</div>
+
+<div align="left" class="sectiontexthead">Need a little help?</div>
+
+<div align="center" class="fullformbox">
+
+<div align="left" style="padding-top:20px; padding-left:40px; padding-right:25px;"><p>What seems to be the problem?</p>
+
+<div id="support">
+	<form action="$request.requestURI" method="post" result="contentContainer" errors="support_errors" target="_top">
+		<div id="support_errors">
+			#springBind("userClient")
+			#springShowErrors(" " "formError")
+		</div>
+		<br/>
+		#if ( $model.User.exists )
+			<input type="hidden" name="email" value="$model.User.email"/>
+		#else
+		<p>
+                        #springBind('userClient.email')
+                        #springShowErrors(" " "formError")
+			#springFormInput("userClient.email" "size='25' class='rounded' placeholder='E-mail'")
+                </p>
+		#end
+		<p>
+		#set ( $categories = ${model.buildMessage('msg.base.UserClient.categories').split('\n')} )
+		#springBind('userClient.category')
+		<select id="${status.expression}" name="${status.expression}" class="rounded $errorClass">
+		#foreach ( $category in $categories )
+			<option value="${category}"
+				#if("$!status.value" == "$category")
+					selected="selected"
+				#end>
+			$category</option>
+		#end
+		</select>
+		</p>
+		<p>
+                        #springBind('userClient.description')
+                        #springShowErrors(" " "formError")
+			Description:<br/>
+			#springFormTextarea("userClient.description" "class='rounded' cols='40' rows='5'")
+                </p>
+
+               <input type="submit" align="center" class="orangebutton" value="Submit"/>
+	</form>
+        <br/>
+</div>
+</div>
+
+</div>
+*#
+#parseVm( "base/user/template/end.vm" )

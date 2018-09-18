@@ -1,0 +1,71 @@
+#**
+ * MIT License
+ * 
+ * Copyright (c) 2018 i4one Interactive, LLC
+ * 
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ * 
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ * 
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ *#
+#**
+ * @author Hamid Badiozamani
+ */
+#parseVm( "base/admin/template/startHead.vm" )
+#parseVm( "base/admin/template/endHead.vm" )
+
+#parseVm( "base/admin/template/startBody.vm" )
+
+<style>
+#forgot
+{
+	text-align: right;
+}
+</style>
+
+<section class="container" id="login">
+	<div class="row">
+		<div class="col-xs-12">
+			<h2>#msg('pageTitle')</h2>
+		</div>
+
+		<div class="col-xs-12">
+			<form method="post" role="form" action="$request.requestURI">
+				## We only remember the username for security reasons
+				## #springFormHiddenInput("adminLogin.MD5Password" "")
+				<input type="hidden" name="redirURL" value="$request.baseURL/base/admin/client/index.html"/>
+				<span id="jq_errors">#i4oneStatus("adminLogin")</span>
+		
+				<div class="form-group row">
+					#set($usernameLabel = $model.buildMessage('msg.base.admin.auth.index.username'))
+					<div class="col-xs-12">#i4oneFormInput( "adminLogin.username" $usernameLabel "autofocus required")</div>
+		
+					#set($passwordLabel = $model.buildMessage('msg.base.admin.auth.index.password'))
+					<div class="col-xs-12">#i4oneFormPasswordInput( "adminLogin.clearPassword" $passwordLabel '')</div>
+		
+					#set($rememberMeLabel = $model.buildMessage('msg.base.admin.auth.index.rememberme'))
+					<div class="col-xs-12 col-sm-6">#i4oneFormCheckbox("adminLogin.rememberMe" $rememberMeLabel '')</div>
+					<div class="col-xs-12 col-sm-6" id="forgot"><a href="forgot.html">#msg('forgot')</a></div>
+		
+					#set( $submitLabel = $model.buildMessage('msg.base.admin.auth.index.submit') )
+					<div class="col-xs-12">#i4oneFormSubmit($submitLabel)</div>
+				</div>
+			</form>
+		</div>
+	</div>
+</section>
+
+#parseVm( "base/admin/template/endHead.vm" )

@@ -1,0 +1,189 @@
+#**
+ * MIT License
+ * 
+ * Copyright (c) 2018 i4one Interactive, LLC
+ * 
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ * 
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ * 
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ *#
+#**
+ * @author Hamid Badiozamani
+ */
+#parseVm( "base/user/template/start.vm" )
+<style>
+#raffles div#label h1
+{
+	font-size: 4.5rem;
+}
+
+#raffles .category
+{
+	text-align: center;
+}
+
+#raffles .info
+{
+	font-size: 1.0rem;
+}
+
+#raffles .info.title
+{
+	font-size: 1.2rem;
+}
+
+#raffles .odd,
+#raffles .even
+{
+	padding-bottom: 1rem;
+}
+
+#raffles .raffle
+{
+	margin-bottom: 5px;
+
+	padding-left: 0px;
+	padding-right: 7px;
+}
+
+#raffles .raffle .wrapper
+{
+	border-top: 1px solid #333;
+	border-left: 1px solid #666;
+	border-right: 1px solid #666;
+	border-bottom: 2px solid #888;
+
+	border-radius: 5px;
+}
+
+#raffles .btn-back
+{
+	margin-top: 15px;
+}
+
+#raffles .rafflethumbnail
+{
+	position: relative;
+}
+
+#raffles .rafflethumbnail .caption
+{
+	position: absolute;
+	visibility: hidden;
+
+	top: 2rem;
+	left: 1.2rem;
+
+	font-size: 1rem;
+	font-weight: bold;
+	text-transform: uppercase;
+
+	color: #c00;
+	background-color: #fff;
+
+	border: 2px solid #c00;
+	padding: 5px;
+
+	-ms-transform: rotate(-30deg); /* IE 9 */
+	-webkit-transform: rotate(-30deg); /* Chrome, Safari, Opera */
+	transform: rotate(-30deg);
+
+	-ms-transform-origin: 1rem 5rem; /* IE 9 */
+	-webkit-transform-origin: 1rem 5rem; /* Chrome, Safari, Opera */
+	transform-origin: 1rem 5rem;
+}
+
+#raffles .rafflethumbnail .caption.soldout
+{
+	visibility: visible;
+}
+
+@media (max-width:767px) /* @screen-xs-max */
+{
+	#raffles .raffle
+	{
+		margin-top: 15px;
+		margin-bottom: 15px;
+	}
+}
+
+@media (min-width:768px) /* @screen-sm-max */
+{
+	#raffles .raffle:nth-child(2n+1)
+	{
+		clear: both;
+	}
+}
+
+@media (min-width:992px) /* @screen-md-max */
+{
+	#* This is the same as lg since we want 3 in a row *#
+	#raffles .raffle:nth-child(2n+1)
+	{
+		clear: none;
+	}
+
+	#raffles .raffle:nth-child(3n+1)
+	{
+		clear: both;
+	}
+}
+
+
+#pageCSS()
+</style>
+
+<section class="container" id="raffles">
+	#if ( $category.exists )
+		<div class="row">
+			<div id="label" class="$editClass col-xs-12" data-ser="$category.ser" data-item="categoryid">
+				<h1>#IString($category.title)</h1>
+				<p>#IString($!category.descr)</p>
+			</div>
+		</div>
+
+		<div class="listing row">
+			#foreach ($entry in $raffles.entrySet())
+				#striping()
+				#set( $raffle = $entry.key )
+
+				#if ( !$raffle.soldOut || $raffle.soldOutDisplay)
+					<div class="col-xs-12 col-sm-6 col-md-4 col-lg-4 raffle">
+						<div class="col-xs-12 wrapper $editClass $rowClass" data-ser="$raffle.ser">
+							<div class="col-xs-12 info title"><a href="raffle.html?raffleid=$raffle.ser">#IString($raffle.title)</a></div>
+							<div class="col-xs-12 info thumbnailimg">
+								<a href="raffle.html?raffleid=$raffle.ser"><div class="rafflethumbnail"><img class="img-responsive" src="$raffle.prize.thumbnailURL"/></div></a>
+							</div>
+							<div class="col-xs-5 heading expenses">$model.buildMessage('msg.rewards.user.raffles.index.expenses', 'raffle', $raffle)</div>
+							<div class="col-xs-7 info expenses">
+								$model.buildMessage('msg.rewards.user.raffles.index.expenselisting','expenses',$raffle.balanceExpenses)
+							</div>
+							<div class="col-xs-5 heading endtime">#msg('endtime')</div>
+							<div class="col-xs-7 info endtime">#dateFormat($raffle.endTime)<br/>#timeFormat($raffle.endTime)</div>
+						</div>
+					</div>
+				#end
+			#end
+		</div>
+	#else
+		#displayCategories( $categories )
+	#end
+	<div class="form-group row">
+		<div class="col-xs-12">#i4oneCategoryBack</div>
+	</div>
+</section>
+#parseVm( "base/user/template/end.vm" )

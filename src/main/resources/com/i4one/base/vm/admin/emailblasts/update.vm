@@ -1,0 +1,146 @@
+#**
+ * MIT License
+ * 
+ * Copyright (c) 2018 i4one Interactive, LLC
+ * 
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ * 
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ * 
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ *#
+#**
+ * @author Hamid Badiozamani
+ */
+#set($title = ${model.buildMessage('msg.base.admin.emailblasts.update.pageTitle', 'item', $emailblast)})
+#parseVm( "base/admin/template/startHead.vm" )
+#rootCSS("/js/bootstrap-tokenfield/css/bootstrap-tokenfield.min.css")
+#parseVm( "base/admin/template/endHead.vm" )
+#parseVm( "base/admin/template/startBody.vm" )
+#parseVm( "base/admin/template/targetableCrud.vm" )
+
+#macro( emailBlastBackButton $path )
+	#if ( ${path.isPast($model.timeInSeconds)} )
+		#set( $terminableDisplay = "past")
+	#elseif ( ${path.isFuture($model.timeInSeconds)} )
+		#set( $terminableDisplay = "future")
+	#else
+		#set( $terminableDisplay = "live")
+	#end
+	#i4oneFormBack("index.html?display=$terminableDisplay")
+#end
+
+<script language="javascript" type="text/javascript">
+function scheduleTypeChanged(event)
+{
+	$("select#validSchedule option:selected").each(function()
+	{
+		var optionValue = $(this).attr("value");
+
+		if ( optionValue == '--')
+		{
+			$(".other").each(function() { $(this).removeClass("hidden"); });
+		}
+		else
+		{
+			$(".other").each(function() { $(this).addClass("hidden"); });
+		}
+	});
+}
+
+// Hide/unhide depending on what we have as soon as we start
+//
+$(function()
+{
+	scheduleTypeChanged();
+	$("select#validSchedule").keyup(scheduleTypeChanged).change(scheduleTypeChanged);
+});
+
+</script>
+
+<div id="crud">
+	<form method="post" action="$request.requestURI">
+		#springFormHiddenInput("emailblast.ser" "")
+		#springFormHiddenInput("emailblast.client" "")
+		#springFormHiddenInput("emailblast.emailTemplate.ser" "")
+		<span id="jq_errors">#i4oneStatus("emailblast")</span>
+
+		<div class="form-group row">
+			<div class="col-sm-4 col-md-2"><label for="title">#msgWithHelp('title')</label></div>
+			<div class="col-sm-8 col-md-10">#i4oneFormIStringInput('emailblast.title' '' 'maxlength="128"')</div>
+		</div>
+
+		<div class="form-group row">
+			#i4oneBind('emailblast.matureTimeString')
+			<div class="col-sm-4 col-md-2"><label for="matureTimeString">#msgWithHelp('maturetime')</label></div>
+			<div class="col-sm-8 col-md-4 $springErrorClass">
+				#i4oneShowErrors('emailblast.matureTimeString')
+				#dateTimeInput('emailblast.matureTimeString' "placeholder='10/21/1978 3:35 PM'")
+			</div>
+
+			<div class="col-sm-4 col-md-2"><label for="schedule">#msg('schedule')</label></div>
+			<div class="col-sm-8 col-md-4 $springErrorClass">
+				#i4oneShowErrors('emailblast.schedule')
+				<div class="col-sm-6">
+					#i4oneFormSingleSelect("emailblast.validSchedule" ${validScheduleTypes} '')
+				</div>
+				<div class="col-sm-6 other">
+					#i4oneFormInput('emailblast.schedule' '' 'maxlength="64"')
+				</div>
+			</div>
+		</div>
+
+		#targetableCrud("emailblast")
+
+		<div class="form-group row">
+			<div class="col-sm-12 col-md-2"><label for="fromAddress">#msgWithHelp('from')</label></div>
+			<div class="col-sm-12 col-md-4">#i4oneFormIStringInput("emailblast.fromAddress" '' 'maxlength="256"')</div>
+
+			<div class="col-sm-12 col-md-2"><label for="fromAddress">#msgWithHelp('replyto')</label></div>
+			<div class="col-sm-12 col-md-4">#i4oneFormIStringInput("emailblast.replyTo" '' 'maxlength="256"')</div>
+		</div>
+
+		<div class="form-group row">
+			<div class="col-sm-12 col-md-2"><label for="subject">#msgWithHelp('subject')</label></div>
+			<div class="col-sm-12 col-md-10">#i4oneFormIStringInput("emailblast.subject" '' 'maxlength="512"')</div>
+		</div>
+
+		<div class="form-group row">
+			<div class="col-sm-12 col-md-2"><label for="htmlBody">#msgWithHelp('htmlbody')</label></div>
+			<div class="col-sm-12 col-md-10">
+				#if ( $emailblast.exists )
+				<div class="row">
+					<div class="col-sm-12 col-md-6"><a class="btn btn-default btn-block btn-back" onClick="window.open('test.html?id=' + $emailblast.ser, 'test', 'status=0, toolbar=0, menubar=1, directories=0, height=400, width=700, scrollbars=1, resizable=1');">#msg('test')</a></div>
+					<div class="col-sm-12 col-md-6"><a class="btn btn-default btn-block btn-back" onClick="window.open('preview.html?id=' + $emailblast.ser, 'preview', 'status=0, toolbar=0, menubar=1, directories=0, height=800, width=700, scrollbars=1, resizable=1');">#msg('preview')</a></div>
+				</div>
+				#end
+				#i4oneFormITextarea("emailblast.htmlBody" '' 'rows="8"')
+			</div>
+		</div>
+
+		<div class="form-group row">
+			<div class="col-sm-12 col-md-2"><label for="textBody">#msgWithHelp('textbody')</label></div>
+			<div class="col-sm-12 col-md-10">#i4oneFormITextarea("emailblast.textBody" '' 'rows="8"')</div>
+		</div>
+
+		<div class="form-group row">
+			<div class="col-sm-4">#i4oneFormUpdate($emailblast)</div>
+			<div class="col-sm-4">#i4oneFormHistory($emailblast)</div>
+			<div class="col-sm-4">#emailBlastBackButton($emailblast)</div>
+		</div>
+	</form>
+</div>
+
+#parseVm( "base/admin/template/endBody.vm" )

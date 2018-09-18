@@ -1,0 +1,234 @@
+#**
+ * MIT License
+ * 
+ * Copyright (c) 2018 i4one Interactive, LLC
+ * 
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ * 
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ * 
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ *#
+#**
+ * @author Hamid Badiozamani
+ */
+#set( $title = ${model.buildMessage('msg.base.admin.members.index.lookup.pageTitle', 'lookup', $lookup)})
+#parseVm( "base/admin/template/startHead.vm" )
+#parseVm( "base/admin/template/endHead.vm" )
+#parseVm( "base/admin/template/startBody.vm" )
+
+#if ( $lookup.user.exists )
+<section class="crud">
+	<div class="form-group row">
+		<div class="col-xs-12">#i4oneFormBack()</div>
+	</div>
+
+	<h2>$model.buildMessage('msg.base.admin.members.index.profile', 'lookup', $lookup)</h2>
+	<form method="post" action="$request.requestURI" role="form" class="form">
+		#springFormHiddenInput("lookup.user.ser" "")
+
+		<div class="col-xs-12"><span id="jq_errors">#i4oneStatus("lookup")</span></div>
+		<div class="form-group row">
+			<div class="col-md-2"><label for="username">#msg('profile.username')</label></div>
+			<div class="col-md-4">#i4oneFormInput("lookup.user.username" '' 'maxlength="256"')</div>
+
+			<div class="col-md-2"><label for="password">#msg('profile.password')</label></div>
+			<div class="col-md-4">#i4oneFormStatic("lookup.user.password")</div>
+		</div>
+
+		<div class="form-group row">
+			<div class="col-md-2"><label for="balance">#msg('profile.balance')</label></div>
+			<div class="col-md-4">#i4oneUserBalance($lookup.defaultBalance)</div>
+
+			<div class="col-md-2"><label for="createtime">#msg('profile.createtime')</label></div>
+			<div class="col-md-4">#set( $createTimeMillis = $lookup.user.createTimeSeconds * 1000) #dateFormat($createTimeMillis) #timeFormat($createTimeMillis)</div>
+		</div>
+
+		<div class="form-group row">
+			<div class="col-md-2"><label for="birthday">#msg('profile.birthday')</label></div>
+			<div class="col-md-4">#dateFormat($lookup.user.birthCalendar)</div>
+
+			<div class="col-md-2"><label for="age">#msg('profile.age')</label></div>
+			<div class="col-md-4">$lookup.user.ageInYears</div>
+		</div>
+
+		<div class="form-group row">
+			<div class="col-md-2"><label for="email">#msg('profile.email')</label></div>
+			<div class="col-md-4">#i4oneFormInput("lookup.user.email" '' 'maxlength="256"')</div>
+
+			<div class="col-md-2"><label for="gender">#msg('profile.gender')</label></div>
+			<div class="col-md-4">#i4oneFormInput("lookup.user.gender" '' 'maxlength="1"')</div>
+		</div>
+
+		<div class="form-group row">
+			<div class="col-md-2"><label for="firstName">#msg('profile.firstname')</label></div>
+			<div class="col-md-4">#i4oneFormInput("lookup.user.firstName" '' 'maxlength="100"')</div>
+
+			<div class="col-md-2"><label for="lastName">#msg('profile.lastname')</label></div>
+			<div class="col-md-4">#i4oneFormInput("lookup.user.lastName" '' 'maxlength="100"')</div>
+		</div>
+
+		<div class="form-group row">
+			<div class="col-md-2"><label for="city">#msg('profile.city')</label></div>
+			<div class="col-md-4">#i4oneFormInput("lookup.user.city" '' 'maxlength="100"')</div>
+
+			<div class="col-md-2"><label for="state">#msg('profile.state')</label></div>
+			<div class="col-md-4">#i4oneFormInput("lookup.user.state" '' 'maxlength="4"')</div>
+		</div>
+
+		<div class="form-group row">
+			<div class="col-md-2"><label for="zipcode">#msg('profile.zipcode')</label></div>
+			<div class="col-md-4">#i4oneFormInput("lookup.user.zipcode" '' 'maxlength="10"')</div>
+		</div>
+
+		<div class="form-group row">
+			<div class="col-md-2"><label for="cellphone">#msg('profile.cellphone')</label></div>
+			<div class="col-md-4">#i4oneFormInput("lookup.user.cellPhone" '' 'maxlength="32"')</div>
+
+			<div class="col-md-2"><label for="homephone">#msg('profile.homephone')</label></div>
+			<div class="col-md-4">#i4oneFormInput("lookup.user.homePhone" '' 'maxlength="32"')</div>
+		</div>
+
+		<div class="form-group row">
+			#set( $updateLabel = ${model.buildMessage('msg.base.admin.members.index.profile.submit')} )
+			<div class="col-xs-12">#i4oneFormUpdate($updateLabel)</div>
+		</div>
+
+	</form>
+</section>
+
+<a name="listing"></a>
+<section class="listing">
+	<span id="transactions">
+		<table class="table">
+		<tr>
+			<th>#message('msg.base.user.account.activity.balance')</th>
+			<th>#message('msg.base.user.account.activity.prevbal')</th>
+			<th>#message('msg.base.user.account.activity.balxacted')</th>
+			<th>#message('msg.base.user.account.activity.newbal')</th>
+			<th>#message('msg.base.user.account.activity.status')</th>
+			<th>#message('msg.base.user.account.activity.timestamp')</th>
+			<th>#message('msg.base.user.account.activity.sourceIP')</th>
+		</tr>
+
+		#*
+		 * NOTE: We have to do striping ourselves since we have two rows for each transaction
+		 *#
+		#foreach($currTransaction in $transactions)
+		#striping()
+		<tr class="$rowClass">
+			<td colspan="7">#IString($currTransaction.descr)</td>
+		</tr>
+		<tr class="$rowClass">
+			<td>#if ( $currTransaction.balance.exists )#IString($currTransaction.balance.pluralName)#end</td>
+			<td>$!currTransaction.prevBalance</td>
+			<td>$!currTransaction.amountTransacted</td>
+			<td>$!currTransaction.newBalance</td>
+			<td>$!currTransaction.status</td>
+			<td>#dateFormat($currTransaction.timeStamp) #timeFormat($currTransaction.timeStamp)</td>
+			<td>$currTransaction.sourceIP</td>
+		</tr>
+		#end
+		</table>
+
+		<form action="$request.requestURI#listing" method="get" result="transactions" role="form" class="form-inline">
+			#springFormHiddenInput("lookup.user.ser" "")
+
+			<label for="perPage">#message("msg.base.admin.pagination.perpage")</label>
+			#i4oneFormInput("lookup.transactionPagination.perPage" '' '')
+		</form>
+
+		<ul class="pager">
+			#if ( $lookup.transactionPagination.currentPage > 0 )
+				<li class="previous">
+					<span>
+						<form action="$request.requestURI#listing" method="get" result="transactions" role="form">
+							#springFormHiddenInput("lookup.user.ser" "")
+							#springFormHiddenInput("lookup.transactionPagination.currentPage" " ")
+							#springFormHiddenInput("lookup.transactionPagination.perPage" " ")
+							#springBind("lookup.transactionPagination.prevPage")
+							<input type="hidden" id="${status.expression}" name="${status.expression}" value="true"/>
+							<button class="btn" data-style="expand-left" type="submit">
+								&larr; <span class="ladda-label">#message('msg.base.admin.pagination.prevpage')</span>
+							</button>
+						</form>
+					</span>
+				<li>
+			#else
+				<li class="previous disabled"><span><button class="btn disabled">&larr; #message('msg.base.admin.pagination.prevpage')</button></span></li>
+			#end
+			#if ( ${transactions.size()} >= $lookup.transactionPagination.perPage ) ## Infinite pagination
+				<li class="next">
+					<span>
+						<form action="$request.requestURI#listing" method="get" result="transactions" role="form">
+							#springFormHiddenInput("lookup.user.ser" "")
+							#springFormHiddenInput("lookup.transactionPagination.currentPage" " ")
+							#springFormHiddenInput("lookup.transactionPagination.perPage" " ")
+							#springBind("lookup.transactionPagination.nextPage")
+							<input type="hidden" id="${status.expression}" name="${status.expression}" value="true"/>
+							<button class="btn" data-style="expand-left" type="submit">
+								<span class="ladda-label">#message('msg.base.admin.pagination.nextpage')</span> &rarr;
+							</button>
+						</form>
+					</span>
+				</li>
+			#else
+				<li class="next disabled"><span><button class="btn disabled">#message('msg.base.admin.pagination.nextpage') &rarr;</button></span></li>
+			#end
+		</ul>
+	</span>	
+</section>
+#else
+<section class="lookup">
+	<div class="form-group row">
+		<div class="hidden-xs col-sm-2 col-md-3"></div>
+		<div class="col-xs-12 col-sm-8 col-md-6">
+			<h2>#msg('lookup')</h2>
+			<span id="jq_errors">#i4oneStatus("lookup")</span>
+	
+			<form method="get" action="$request.requestURI" role="form" class="form">
+				<div class="form-group row">
+					#set( $lookupUsernameLabel = ${model.buildMessage('msg.base.admin.members.index.lookup.username')} )
+					<div class="col-xs-12">#i4oneFormInput("lookup.lookupUsername" "$lookupUsernameLabel" '')</div>
+				</div>
+	
+				<div class="form-group row">
+					#set( $submitLabel = ${model.buildMessage('msg.base.admin.members.index.lookup.submit')})
+					<div class="col-xs-12">#i4oneFormSubmit($submitLabel $lookup)</div>
+				</div>
+			</form>
+		</div>
+		<div class="hidden-xs col-sm-2 col-md-3"></div>
+	</div>
+
+	<div class="form-group row">
+		<div class="hidden-xs col-sm-2 col-md-3"></div>
+		<div class="col-xs-12 col-sm-8 col-md-6">
+			<h2>#msg('random')</h2>
+	
+			<form method="get" action="$request.requestURI" role="form" class="form">
+				<input type="hidden" name="selectRandom" value="true"/>
+				<div class="form-group row">
+					#set( $submitLabel = ${model.buildMessage('msg.base.admin.members.index.lookup.submitRandom')})
+					<div class="col-xs-12">#i4oneFormSubmit($submitLabel $lookup)</div>
+				</div>
+			</form>
+		</div>
+		<div class="hidden-xs col-sm-2 col-md-3"></div>
+	</div>
+</section>
+#end
+
+#parseVm( "base/admin/template/endBody.vm" )

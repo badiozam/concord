@@ -1,0 +1,104 @@
+#**
+ * MIT License
+ * 
+ * Copyright (c) 2018 i4one Interactive, LLC
+ * 
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ * 
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ * 
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ *#
+#**
+ * @author Hamid Badiozamani
+ */
+#macro( winnersButton $item )
+	<form action="winners.html">
+		<input type="hidden" name="id" value="$item.ser"/>
+
+		#set( $submitLabel = ${model.buildMessage('msg.rewards.admin.raffles.listing.winners')})
+		#i4oneFormSubmit($submitLabel)
+	</form>
+#end
+
+<div class="row hidden-sm hidden-xs headings">
+	<div class="heading col-md-2">#message('msg.base.admin.terminable.listing.starttime')</div>
+	<div class="heading col-md-4">#message('msg.rewards.admin.raffles.listing.raffle.title')</div>
+	<div class="heading col-md-2">#message('msg.rewards.admin.raffles.listing.raffle.userlimit')</div>
+	<div class="heading col-md-2">#message('msg.base.admin.terminable.listing.endtime')</div>
+	<div class="heading col-md-2"></div>
+</div>
+	
+#foreach ( $item in $listing.items )
+	#striping()
+	<div class="row item $rowClass" data-globalid="$item.globalID">
+		<div class="heading col-sm-3 hidden-md hidden-lg">#message('msg.base.admin.terminable.listing.starttime')</div>
+		<div class="col-sm-9 col-md-2">
+			<div class="row">
+				<div class="col-xs-12">
+					<div class="row">
+						<div class="heading col-xs-6 displaytime">#message('msg.rewards.admin.terminable.listing.displaytime')</div>
+						<div class="col-xs-6 displaytime">#dateFormat($item.startTime) #timeFormat($item.startTime)</div>
+					</div>
+				</div>
+				<div class="col-xs-12">
+					<div class="row">
+						<div class="heading col-xs-6 purchasetime">#message('msg.rewards.admin.terminable.listing.purchasetime')</div>
+						<div class="col-xs-6 purchasetime">#dateFormat($item.purchaseStartTime) #timeFormat($item.purchaseStartTime)</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div class="heading col-sm-3 hidden-md hidden-lg">#message('msg.rewards.admin.raffles.listing.raffle.title')</div>
+		<div class="col-sm-9 col-md-4">#IString($item.title)<br/><img class="img-responsive" src="$item.prize.thumbnailURL"/></div>
+
+		<div class="heading col-sm-3 hidden-md hidden-lg">#message('msg.rewards.admin.raffles.listing.raffle.userlimit')</div>
+		<div class="col-sm-9 col-md-2">
+			#intFormat($item.userLimit)
+			#if ( $listing.isPastListing() && $item.needsWinners )
+				<hr/>
+				#winnersButton($item)
+			#end
+		</div>
+
+		<div class="heading col-sm-3 hidden-md hidden-lg">#message('msg.base.admin.terminable.listing.endtime')</div>
+		<div class="col-sm-9 col-md-2 endtime">
+			<div class="row">
+				<div class="col-xs-12">
+					<div class="row">
+						<div class="heading col-xs-6 displaytime">#message('msg.rewards.admin.terminable.listing.displaytime')</div>
+						<div class="col-xs-6 displaytime">#dateFormat($item.endTime) #timeFormat($item.endTime)</div>
+					</div>
+				</div>
+				<div class="col-xs-12">
+					<div class="row">
+						<div class="heading col-xs-6 purchasetime">#message('msg.rewards.admin.terminable.listing.purchasetime')</div>
+						<div class="col-xs-6 purchasetime">#dateFormat($item.purchaseEndTime) #timeFormat($item.purchaseEndTime)</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+
+		<div class="col-sm-12 col-md-2">
+			#updateButton($item)
+			#reportButton($item)
+			#cloneButton($item)
+			#listingRevertButton($item)
+			#listingRemoveButton($item)
+		</div>
+	</div>
+#end

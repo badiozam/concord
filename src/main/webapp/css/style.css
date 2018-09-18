@@ -1,0 +1,431 @@
+html
+{
+	height: 100%;
+}
+
+body
+{
+	height: 100%;
+
+	/* Needed for the fixed nav bar*/
+	padding-top: 70px;
+}
+
+main
+{
+	padding: 10px;
+	display: table;
+
+	width: 100%;
+	height: 100%;
+}
+
+main > section
+{
+	display: table-cell;
+	vertical-align: middle;
+}
+
+hr
+{
+	border-top-color: #aaa;
+}
+
+body.edit span.msg:active,
+body.edit span.msg:hover
+{
+	cursor: crosshair;
+	border: 1px solid #0e0;
+
+	display: block;
+	z-index: 1032;
+}
+
+body.edit div.editable:active,
+body.edit div.editable:hover
+{
+	cursor: crosshair;
+	border: 1px solid #e00;
+
+	display: block;
+	z-index: 1032;
+}
+
+body.edit div#editbutton
+{
+	background-color: #fff;
+	color: #000;
+}
+
+div#editcover
+{
+	display: none;
+}
+
+body.edit div#editcover
+{
+	pointer-events: none;
+
+	display: inline;
+
+	width: 100%;
+	height: 100%;
+	z-index: 1031;
+
+	position: fixed;
+	left: 0;
+	top: 0;
+
+	background-color: rgba(0,0,0, 0.5);
+}
+
+div#editbutton
+{
+	position: fixed;
+
+	cursor: pointer;
+
+	top: 0;
+	left: 50%;
+
+	text-align: center;
+	z-index: 1032;
+
+	font-size: 1.2rem;
+
+	background-color: #000;
+	color: #fff;
+
+	border: 1px solid black;
+	border-radius: 5px;
+	padding: 0.5rem;
+
+	animation: slideup 0.25s ease-in 0s 1 normal forwards;
+	-webkit-animation: slideup 0.25s ease-in 0s 1 normal forwards; /* Chrome, Safari, Opera */
+}
+
+div#editbutton:hover,
+div#editbutton:active
+{
+	/*
+	-webkit-transform: translate(-50%, -5%);
+	-ms-transform: translate(-50%, -5%);
+	transform: translate(-50%, -5%);
+	 */
+
+	animation: slidedown 0.25s ease-out 0s 1 normal forwards;
+	-webkit-animation: slidedown 0.25s ease-out 0s 1 normal forwards; /* Chrome, Safari, Opera */
+}
+
+/* Chrome, Safari, Opera */
+@-webkit-keyframes slidedown
+{
+    from {-webkit-transform: translate(-50%, -80%); }
+    to { -webkit-transform: translate(-50%, -5%); }
+}
+
+@keyframes slidedown
+{
+    from { transform: translate(-50%, -80%); }
+    to { transform: translate(-50%, -5%); }
+}
+
+/* Chrome, Safari, Opera */
+@-webkit-keyframes slideup
+{
+    from { -webkit-transform: translate(-50%, -5%); }
+    to {-webkit-transform: translate(-50%, -80%); }
+}
+
+@keyframes slideup
+{
+    from { transform: translate(-50%, -5%); }
+    to { transform: translate(-50%, -80%); }
+}
+
+#defaultNavBar
+{
+	background-color: #860000;
+	color: #fff;
+
+	font-weight: bold;
+}
+
+#defaultNavBar a,
+#defaultNavBar .dropdown-menu
+{
+	background-color: #860000;
+	color: #fff;
+}
+
+#defaultNavBar a:hover,
+#defaultNavBar a:active,
+#defaultNavBar a:focus
+{
+	background-color: #960b02;
+	border-color: #583281;
+}
+
+
+#defaultNavBar .nav-collapse
+{
+	height: auto;
+}
+
+#defaultNavBar ul.nav
+{
+	margin-top: 5px;
+	margin-bottom: 5px;
+}
+
+#brand
+{
+	margin-top: 5px;
+	margin-bottom: 5px;
+	margin-left: auto;
+	margin-right: auto;
+
+	float: left;
+	max-width: 50px;
+	max-height: 50px;
+}
+
+.navbar-inner
+{
+	text-align:center;
+}
+
+.form-control
+{
+	font-size: 0.85rem;
+	height: 2.1rem;
+}
+
+.form-group label
+{
+	/* This aligns any labels that are adjacent to the form controls */
+	margin-top: 7px;
+}
+
+.form-group label input[type=radio],
+.form-group label input[type=checkbox]
+{
+	margin-top: 7px;
+}
+
+.btn-primary,
+.btn-alternate
+{
+	font-weight: bold;
+}
+
+.btn-alternate
+{
+	background-color: #fff;
+	color: #860000;
+	border-color: #860000;
+}
+
+.btn-alternate:hover,
+.btn-alternate:active,
+.btn-alternate:focus
+{
+	background-color: #fff;
+	color: #860000;
+	border-color: #860000;
+}
+
+.btn-facebook
+{
+	background-color: #4a6ea8;
+	color: #fff;
+
+	font-size: 1.1rem;
+	line-height: 2.0;
+}
+
+.btn-facebook:hover,
+.btn-facebook:active,
+.btn-facebook:focus
+{
+	background-color: #295679;
+	color: #fff;
+
+	font-size: 1.1rem;
+}
+
+/* 
+ * This renders lines around the content
+ *	---- h3 content ----
+ */
+h3.divider
+{
+	overflow: hidden;
+	text-align: center;
+	text-transform: uppercase;
+
+	font-size: 1.0rem;
+	padding-bottom: 0.7rem;
+	padding-top: 0.7rem;
+	letter-spacing: 1px;
+}
+
+h3.divider:before,
+h3.divider:after
+{
+	background-color: #aaa;
+	content: "";
+	display: inline-block;
+	height: 1px;
+	position: relative;
+	vertical-align: middle;
+	width: 45%;
+}
+
+h3.divider:before
+{
+	right: 0.5em;
+	margin-left: -50%;
+}
+
+h3.divider:after
+{
+	left: 0.5em;
+	margin-right: -50%;
+}
+
+/* A standard heading for displaying information */
+.heading
+{
+	font-size: 0.85rem;
+	font-weight: bold;
+}
+
+/* Striping */
+.striped:nth-child(2n)
+{
+	background-color: rgba(190,190,190,0.1);
+}
+
+.striped:nth-child(2n+1)
+{
+	background-color: rgba(215,215,215,0.65);
+}
+
+.even
+{
+	background-color: rgba(190,190,190,0.1);
+}
+
+.odd
+{
+	background-color: rgba(215,215,215,0.65);
+}
+
+div#label
+{
+	margin-bottom: 45px;
+}
+
+div#label p
+{
+	text-transform: lowercase;
+	font-weight: bold;
+}
+
+h1
+{
+	font-family: 'Gotham Thin',Arial,sans-serif;
+	font-size: 2.5rem;
+
+	word-wrap: break-word;
+	-webkit-hyphens: auto;
+	-moz-hyphens: auto;
+	-ms-hyphens: auto;
+	-o-hyphens: auto;
+	hyphens: auto;
+}
+
+/**
+ */
+a
+{
+	color: #860000;
+}
+
+a:hover,
+a:focus,
+a:active
+{
+	color: #960b02;
+}
+
+.btn-primary
+{
+	background-color: #860000;
+	border-color: #960b02;
+}
+
+.btn-primary:focus,
+.btn-primary:hover,
+.btn-primary:active
+{
+
+	background-color: #960b02;
+	border-color: #860000;
+}
+
+.btn-primary.disabled
+{
+	background-color: #888;
+	border-color: #960b02;
+}
+
+.form-control:focus
+{
+	border-color: #860000;
+	box-shadow: 0 1px 1px rgba(0, 0, 0, 0.075) inset, 0 0 8px rgba(150, 0, 0, 0.6);
+}
+
+@media (max-width:767px) /* @screen-xs-max */
+{
+	html { font-size: 14px; }
+
+	#defaultNavBar ul.nav
+	{
+		margin-top: 1px;
+		margin-bottom: 1px;
+	}
+}
+
+@media (min-width:768px) /* @screen-sm-min */
+{
+	html { font-size: 16px; }
+}
+
+@media (min-width:992px) /* @screen-md-min */
+{
+	html { font-size: 18px; }
+}
+
+@media (min-width:1200px) /* @screen-lg-min */
+{
+	html { font-size: 18px; }
+}
+
+@media print
+{
+	nav,
+	footer,
+	header
+	{
+		display: none;
+	}
+
+	#content\.main\.begin,
+	#content\.main\.end
+	{
+		display: none;
+	}
+
+}

@@ -1,0 +1,372 @@
+#**
+ * MIT License
+ * 
+ * Copyright (c) 2018 i4one Interactive, LLC
+ * 
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ * 
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ * 
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ *#
+#**
+ * @author Hamid Badiozamani
+ */
+#if ( !$reportName || $!reportName == "" ) #set( $reportName = "report" ) #end
+#if ( $reportSettings.printableView ) #set( $hideNavBar = true ) #end
+
+#*
+ * Default implementation, just so we can see something.
+ * Files that import this one should override with more
+ * specific views
+ *#
+#macro( sortClassificationLink $orderBy $messageKey )
+	<a href="?JSON=$esc.url(${reportSettings.toJSONString()})&pagination.orderBy=$orderBy">#message($messageKey)</a>
+#end
+
+#macro ( exportClassificationCSVButton )
+	<a class="btn btn-block btn-default" href="${reportName}.csv?JSON=$esc.url(${reportSettings.toJSONString()})">#message('msg.base.admin.report.csv')</a>
+#end
+
+#macro ( printClassificationButton )
+	<a class="btn btn-block btn-default" target="_blank" href="?JSON=$esc.url(${reportSettings.toJSONString()})&printableView=true">#message('msg.base.admin.report.print')</a>
+#end
+
+#macro(displayClassificationHeading)
+	<div class="hidden-xs col-sm-2 heading">#sortClassificationLink('username' 'msg.base.admin.report.username')</div>
+	<div class="hidden-xs col-sm-2 heading">#sortClassificationLink('lastname' 'msg.base.admin.report.name')</div>
+	<div class="hidden-xs col-sm-1 heading">#sortClassificationLink('birthyyyy' 'msg.base.admin.report.age')</div>
+	<div class="hidden-xs col-sm-1 heading">#sortClassificationLink('gender' 'msg.base.admin.report.gender')</div>
+	<div class="hidden-xs col-sm-2 heading">#sortClassificationLink('zipcode' 'msg.base.admin.report.zipcode')</div>
+	<div class="hidden-xs col-sm-2 heading">#sortClassificationLink('email' 'msg.base.admin.report.email')</div>
+	<div class="hidden-xs col-sm-2 heading">#message('msg.base.admin.report.timestamp')</div>
+	<div class="clearfix"></div>
+#end
+
+#macro(displayClassificationFooting)
+#end
+
+#macro(displayClassificationRow $item)
+	#set( $timeStamp = $item.timeStampSeconds * 1000 )
+	<div class="hidden-xs col-sm-2">
+		$foreach.count. #formatUser($item.user)
+	</div>
+	<div class="hidden-xs col-sm-2">${item.user.firstName} ${item.user.lastName}</div>
+	<div class="hidden-xs col-sm-1">${item.user.ageInYears}</div>
+	<div class="hidden-xs col-sm-1">${item.user.gender}</div>
+	<div class="hidden-xs col-sm-2">${item.user.zipcode}</div>
+	<div class="hidden-xs col-sm-2">${item.user.email}</div>
+	<div class="hidden-xs col-sm-2">#dateFormat($timeStamp) #timeFormat($timeStamp)</div>
+	<div class="clearfix"></div>
+#end
+
+<style>
+div#actions .btn-default:active,
+div#actions .btn-default:hover,
+div#actions .btn-default:focus,
+div#actions .dropdown-toggle.btn-default
+{
+	background-color: #e3d2b8;
+}
+
+div#actions .dropdown-toggle .caret
+{
+	margin-left: 5px;
+}
+
+div#actions ul.dropdown-menu
+{
+	margin-left: 10px;
+}
+
+div#actions ul.dropdown-menu > li > a
+{
+	margin: 3px 20px;
+	padding: 6px 20px;
+}
+
+@media (max-width: 991px)
+{
+	div#actions ul.dropdown-menu
+	{
+		margin-left: 0px;
+	}
+}
+
+.printonly
+{
+	display: none;
+}
+
+@media print
+{
+	[class*="col-"]
+	{
+		float: none;
+		clear: both;
+	}
+
+	.chart
+	{
+	}
+
+	.tabulated
+	{
+		page-break-before: always;
+		page-break-after: always;
+
+		text-align: center;
+		width: 100%;
+	}
+
+	.tabulated table
+	{
+		text-align: left;
+	}
+
+	.printonly
+	{
+		display: block;
+	}
+}
+
+</style>
+
+<div id="report">
+	#js('/js/highcharts/highcharts.js')
+	#set( $id = $model.request.params.id )
+
+	<script>
+	Highcharts.theme = {
+		colors: ['#981A1E', '#E3D2B8', '#960096', '#DDDF00', '#24CBE5', '#64E572', '#FF9655', '#FFF263', '#6AF9C4'],
+		chart: {
+			backgroundColor: 'rgba(255,255,255,0.1)'
+			/*
+			backgroundColor: {
+				linearGradient: [0, 0, 500, 500],
+				stops: [
+					[0, 'rgb(255, 255, 255)'],
+					[1, 'rgb(230, 230, 230)']
+				]
+			},*/
+		},
+		#if ( $reportSettings.showTables )
+			title: { style: { display: 'none' } },
+		#else
+			title: { style: { color: '#000' } },
+		#end
+		subtitle: { style: { color: '#666666' } },
+		legend: {
+			itemStyle: { color: 'black' },
+			itemHoverStyle:{
+				color: 'gray'
+			}
+		}
+	};
+	Highcharts.setOptions(Highcharts.theme);
+
+	function showReport(selector, options)
+	{
+		var plotOptions = options['plotOptions'];
+
+		// Create the object if none exists
+		//
+		if ( !plotOptions )
+		{
+			plotOptions = {};
+		}
+
+		plotOptions['series'] = { 
+						cursor: 'pointer',
+						point:
+						{
+							events:
+							{
+								click: function()
+								{
+									var userOptions = this.series.chart.userOptions;
+									//lineage = this['key'];
+									crumbs = "$reportSettings.breadCrumbsCSV" + "," + this['key'];
+
+									document.location.href='?JSON=' + encodeURIComponent("$esc.javascript(${reportSettings.toJSONString()})") + '&lineage=' + encodeURIComponent(crumbs);
+								}
+							}
+						},
+						dataLabels:
+						{
+							enabled: (options.chart.type == 'pie'),
+							formatter: function()
+							{
+								if ( this.series.type == 'pie' )
+								{
+									return this.point.name + ' (' + Math.round(this.percentage*10)/10 + '%)';
+								}
+								else
+								{
+									return this.point.name;
+								}
+							}
+						}
+					}
+
+		options['plotOptions'] = plotOptions;
+
+		// Disable the legend if there's only one series to show
+		//
+		if ( options.series.length == 1 )
+		{
+			options['legend'] = { enabled: 0};
+		}
+		$(selector).highcharts(options);
+	}
+	</script>
+
+	#if ( $reportSettings.printableView )<p style="page-break-after: always"><br style="height: 0; line-height: 0"/></p>#end
+	<div id="reports">
+		#if ( $!reportSettings.printableView )
+		<h3>
+			<small>
+				#set( $crumbCollection = "" )
+				#foreach ( $crumb in $reportSettings.breadCrumbs)
+					#set($index = $foreach.index)
+					#set($crumbKey = "msg.classification." + $crumb)
+					#set($crumbCollection = $crumbCollection + "," + $crumb)
+					#if ( !$foreach.hasNext )
+						#if ( $data )
+							#* Data is streamed so we won't have a count until the very end *# 
+							#message($crumbKey)
+						#else
+							#message($crumbKey)
+						#end
+					#else
+						<a href="?a=1&lineage=$esc.url($crumbCollection)&id=$!id">#message($crumbKey)</a> #if ( $foreach.hasNext )&gt; #end
+					#end
+				#end
+			</small>
+		</h3>
+		#end
+		#if ( $data )
+			<div class="row">
+				#set( $computedBackURL = "?JSON=$esc.url(${reportSettings.toJSONString()})&showRawData=false")
+				<div class="col-xs-12 col-sm-6">#exportClassificationCSVButton()</div>
+				<div class="col-xs-12 col-sm-6">#i4oneFormBack($computedBackURL)</div>
+				<div class="clearfix"></div>
+
+				#displayClassificationHeading
+				#foreach ( $item in $data )
+					#displayClassificationRow($item)
+				#end
+				#displayClassificationFooting
+				<div class="col-xs-12 col-sm-6">#exportClassificationCSVButton()</div>
+				<div class="col-xs-12 col-sm-6">#i4oneFormBack($computedBackURL)</div>
+			</div>
+		#else
+			#if ( !$reportSettings.printableView )
+				#if ( !$backURL || $!backURL == "")#set( $backURL = "index.html")#end
+				#if ( $reportSettings.breadCrumbs.empty )
+					#set( $computedBackURL = "$backURL" )
+				#else
+					#set( $backCrumbs = "" )
+					#foreach ( $crumb in $reportSettings.breadCrumbs )
+						#if ( $foreach.hasNext )
+							#set($backCrumbs = $backCrumbs + "," + $crumb)
+						#end
+					#end
+					#set( $computedBackURL = "?JSON=$esc.url(${reportSettings.toJSONString()})&lineage=$esc.url($backCrumbs)" )
+				#end
+			#end
+			<div class="form-group row">
+				#if ( !$reportSettings.printableView )
+
+					<div id="actions" class="btn-group col-xs-12 col-sm-4">
+  						<button type="button" class="btn btn-default btn-block dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+    							#message('msg.base.admin.report.actions')<span class="caret"></span>
+  						</button>
+						<ul class="col-xs-12 col-sm-11 dropdown-menu">
+							#if ( $showUniques )
+							#set( $toggledUniques = !$reportSettings.uniqueUsers )
+							<li><a class="btn btn-default" href="?JSON=$esc.url(${reportSettings.toJSONString()})&uniqueUsers=$toggledUniques">$model.buildMessage('msg.base.admin.report.toggleuniques', 'uniqueUsers', $reportSettings.uniqueUsers)</a></li>
+							#end
+
+							<li><a class="btn btn-default" href="?JSON=$esc.url(${reportSettings.toJSONString()})&showRawData=true">#message('msg.base.admin.report.rawdata')</a></li>
+
+							#set( $toggledTables = !$reportSettings.showTables )
+							<li><a class="btn btn-default" href="?JSON=$esc.url(${reportSettings.toJSONString()})&showTables=$toggledTables">$model.buildMessage('msg.base.admin.report.toggletables', 'showTables', $reportSettings.showTables)</a></li>
+						</ul>
+					</div>
+					<div class="col-xs-12 col-sm-4">
+						#printClassificationButton($computedBackURL)
+					</div>
+					<div class="col-xs-12 col-sm-4">
+						#i4oneFormBack($computedBackURL)
+					</div>
+				#end
+
+				#foreach ( $classification in $display.classificationDisplays )
+					#set( $chartid = $classification.class.simpleName + $foreach.count )
+					#set( $currClassification = ${display.getHighChartsClassificationDisplay($classification)} )
+					#if ( $currClassification.hasData() )
+						#if ( $currClassification.showChart) <script>$(function(){ showReport("#$chartid", ${currClassification.toJSONString()}); })</script> #end
+						#if ( $reportSettings.showTables )
+						<div class="col-xs-12">
+							<div class="col-xs-12 title"><h2>$currClassification.title.text</h2></div>
+							#set( $dataPoints = $classification.getDataPoints($display.lineage) )
+							#if ( $currClassification.showChart )
+							<div id="$chartid" class="col-xs-12 col-sm-6 chart"></div>
+							<div class="col-xs-12 col-sm-6 tabulated">
+							#else
+							<div class="col-xs-12 col-sm-12 tabulated">
+							#end
+								#if ( $reportSettings.printableView )
+									<h2 class="title printonly">$currClassification.title.text</h2>
+								#end
+								<table class="table table-striped">
+								<tr>
+									<th></th>
+									<th>#message('msg.classification.count')</th>
+									<th>#message('msg.classification.percentage')</th>
+								</tr>
+								#foreach ( $dataPoint in $dataPoints )
+									<tr>
+										#if ( $dataPoint.title.blank )
+											<td>#IString($dataPoint.title)</td>
+										#else
+											<td>#message("msg.classification.$dataPoint.titleKey")</td>
+										#end
+										<td align="right">#intFormat($dataPoint.value)</td>
+										<td align="right">
+											#set($percentValue = $math.div($dataPoint.value,$dataPoints.total))
+											#percentFormat($percentValue)
+										</td>
+									</tr>
+								#end
+								<tr>
+									<th>#message('msg.classification.total')</th>
+									<th>#intFormat($dataPoints.total)</th>
+									<th></th>
+								</tr>
+								</table>
+							</div>
+						</div>
+						#else
+							<div id="$chartid" class="col-xs-12 col-sm-6 chart"></div>
+						#end
+					#end
+				#end
+				#if ( !$reportSettings.printableView)<div class="col-xs-12">#i4oneFormBack($computedBackURL)</div>#end
+			</div>
+		#end
+	</div>
+</div>

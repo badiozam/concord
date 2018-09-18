@@ -1,0 +1,106 @@
+#**
+ * MIT License
+ * 
+ * Copyright (c) 2018 i4one Interactive, LLC
+ * 
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ * 
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ * 
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ *#
+#**
+ * @author Hamid Badiozamani
+ */
+#parseVm( "base/user/template/start.vm" )
+<style>
+#surveys div#label h1
+{
+	font-size: 3.5rem;
+}
+
+#surveys .info
+{
+	font-size: 1.1rem;
+}
+
+#surveys .info.survey
+{
+	font-size: 1.3rem;
+}
+
+#surveys .odd,
+#surveys .even
+{
+	padding-top: 10px;
+	padding-bottom: 10px;
+}
+
+#surveys .listing
+{
+	margin-left: 15px;
+	margin-right: 15px;
+}
+
+#surveys .btn-back
+{
+	margin-top: 15px;
+}
+
+#pageCSS()
+</style>
+
+<section class="container" id="surveys">
+	#if ( $category.exists )
+		<div class="row">
+			<div id="label" class="$editClass col-xs-12" data-ser="$category.ser" data-item="categoryid">
+				<h1>#IString($category.title)</h1>
+				<p>#IString($!category.descr)</p>
+			</div>
+		</div>
+		<div class="listing row">
+			<div class="row hidden-xs">
+				<div class="col-sm-4 heading survey">#msg('survey')</div>
+				<div class="col-sm-4 heading completed">#msg('completed')</div>
+				<div class="col-sm-4 heading credits">#msg('credits')</div>
+			</div>
+			#foreach ($entry in $surveys.entrySet())
+				#striping()
+				#set( $survey = $entry.key )
+				#set( $respondent = $entry.value )
+				<div class="$editClass $rowClass row" data-ser="$survey.ser">
+					<div class="col-xs-12 hidden-sm hidden-md hidden-lg heading survey">#msg('survey')</div>
+					<div class="col-xs-12 col-sm-4 col-md-4 col-lg-4 info survey">
+					#if ( !$respondent.hasFinished )
+						<a href="survey.html?surveyid=$survey.ser">#IString($survey.title)</a>
+					#else
+						#IString($survey.title)
+					#end
+					</div>
+					<div class="col-xs-12 hidden-sm hidden-md hidden-lg heading completed">#msg('completed')</div>
+					<div class="col-xs-12 col-sm-4 col-md-4 col-lg-4 info completed">$model.buildMessage('msg.research.user.surveys.index.progress','respondent',$respondent,'survey',$survey)</div>
+					<div class="col-xs-12 hidden-sm hidden-md hidden-lg heading credits">#msg('credits')</div>
+					<div class="col-xs-12 col-sm-4 col-md-4 col-lg-4 info credits">$model.buildMessage('msg.research.user.surveys.index.creditlisting','triggers',$survey.balanceTriggers)</div>
+				</div>
+			#end
+		</div>
+	#else
+		#displayCategories( $categories )
+	#end
+	<div class="row">
+		<div class="col-xs-12">#i4oneCategoryBack()</div>
+	</div>
+</section>
+#parseVm( "base/user/template/end.vm" )

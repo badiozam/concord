@@ -1,0 +1,141 @@
+#**
+ * MIT License
+ * 
+ * Copyright (c) 2018 i4one Interactive, LLC
+ * 
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ * 
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ * 
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ *#
+#**
+ * @author Hamid Badiozamani
+ */
+#**
+ * Output all model attributes
+ *#
+#macro (listModelAttributes )
+<ol>
+	#foreach ( $paramName in ${model.keySet()} )
+		#if ( $paramName != 'model' )
+			#set( $valueVTL = '#set( $currValue = $' + $paramName + ')' )
+			#evaluate( $valueVTL )
+			<li>$paramName = $currValue </li>
+		#end
+	#end
+</ol>
+#end
+
+#**
+ * Output all request parameters
+ *#
+#macro ( listRequestParams )
+<ol>
+	#foreach ( $paramName in $request.paramNames )
+		<li>$paramName = ${request.getParameter($paramName)}</li>
+	#end
+</ol>
+#end
+
+#**
+ * Output all request attributes
+ *#
+#macro ( listRequestAttributes )
+<ol>
+	#foreach ( $paramName in $request.attrNames )
+		<li>$paramName = ${request.getAttribute($paramName)}</li>
+	#end
+</ol>
+#end
+
+#**
+ * Output all session attributes
+ *#
+#macro ( listSessionAttributes )
+<ol>
+	#foreach ($sessionName in $request.sessionNames )
+		<li>$sessionName = ${request.getSessionValue($sessionName)}</li>
+	#end
+</ol>
+#end
+
+#**
+ * Output all cookies
+ *#
+#macro (listCookies )
+<ol>
+	#foreach ($cookie in $request.cookies )
+		<li>$cookie.name = (Value: $cookie.value, Max Age: $cookie.maxAge, Secure: $cookie.secure)</li>
+	#end
+</ol>
+#end
+
+<div class="row">
+	<div class="col-sm-2">Model attributes:</div>
+	<div class="col-sm-10">#listModelAttributes</div>
+</div>
+
+<div class="row">
+	<div class="col-sm-2">Request attributes:</div>
+	<div class="col-sm-10">#listRequestAttributes</div>
+</div>
+
+<div class="row">
+	<div class="col-sm-2">Request parameters:</div>
+	<div class="col-sm-10">#listRequestParams</div>
+</div>
+
+<div class="row">
+	<div class="col-sm-2">Session attributes:</div>
+	<div class="col-sm-10">#listSessionAttributes</div>
+</div>
+
+<div class="row">
+	<div class="col-sm-2">Cookies:</div>
+	<div class="col-sm-10">#listCookies</div>
+</div>
+
+<div class="row">
+	<div class="col-sm-2">User Agent:</div>
+	<div class="col-sm-10">${request.getHeader("user-agent")}</div>
+</div>
+
+<div class="row">
+	<div class="col-sm-2">Requested With:</div>
+	<div class="col-sm-10">${request.getHeader("X-Requested-With")}</div>
+</div>
+
+<div class="row">
+	<div class="col-sm-2">Ajax Request:</div>
+	<div class="col-sm-10">${model.isAjaxRequest}</div>
+</div>
+
+<div class="row">
+	<div class="col-sm-2">Context Path</div>
+	<div class="col-sm-10">$request.contextPath</div>
+</div>
+
+<div class="row">
+	<div class="col-sm-2">Servlet Path</div>
+	<div class="col-sm-10">$request.servletPath</div>
+</div>
+
+<div class="row">
+	<div class="col-sm-2">Request URI</div>
+	<div class="col-sm-10">$request.requestURI</div>
+</div>
+
+</div>

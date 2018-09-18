@@ -1,0 +1,122 @@
+#**
+ * MIT License
+ * 
+ * Copyright (c) 2018 i4one Interactive, LLC
+ * 
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ * 
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ * 
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ *#
+#**
+ * @author Hamid Badiozamani
+ */
+#set( $title = ${model.buildMessage("msg.base.admin.members.search.pageTitle")})
+#parseVm( "base/admin/template/startHead.vm" )
+#parseVm( "base/admin/template/endHead.vm" )
+#parseVm( "base/admin/template/startBody.vm" )
+
+<section class="search">
+<h2>#msg('search')</h2>
+
+	<span id="jq_errors">#i4oneStatus("search")</span>
+
+	<form method="post" action="$request.requestURI" role="form" class="form">
+		<div class="form-group row">
+			#set( $searchEmailLabel = ${model.buildMessage('msg.base.admin.members.search.email')} )
+			<div class="col-xs-12">#i4oneFormInput("search.criteria.email" "$searchEmailLabel" 'maxlength="256"')</div>
+		</div>
+
+		<div class="form-group row">
+			#set( $searchFirstnameLabel = ${model.buildMessage('msg.base.admin.members.search.firstname')} )
+			<div class="col-sm-6">#i4oneFormInput("search.criteria.firstName" "$searchFirstnameLabel" 'maxlength="128"')</div>
+
+			#set( $searchLastnameLabel = ${model.buildMessage('msg.base.admin.members.search.lastname')} )
+			<div class="col-sm-6">#i4oneFormInput("search.criteria.lastName" "$searchLastnameLabel" 'maxlength="128"')</div>
+
+			<div class="clearfix"></div>
+
+			#set( $searchStreetLabel = ${model.buildMessage('msg.base.admin.members.search.street')} )
+			<div class="col-sm-12">#i4oneFormInput("search.criteria.street" "$searchStreetLabel" 'maxlength="512"')</div>
+
+			#set( $searchCityLabel = ${model.buildMessage('msg.base.admin.members.search.city')} )
+			<div class="col-xs-6">#i4oneFormInput("search.criteria.city" "$searchCityLabel" 'maxlength="128"')</div>
+
+			#set( $searchStateLabel = ${model.buildMessage('msg.base.admin.members.search.state')} )
+			<div class="col-xs-2">#i4oneFormInput("search.criteria.state" "$searchStateLabel" 'maxlength="5"')</div>
+
+			#set( $searchZipcodeLabel = ${model.buildMessage('msg.base.admin.members.search.zipcode')} )
+			<div class="col-xs-4">#i4oneFormInput("search.criteria.zipcode" "$searchZipcodeLabel" 'maxlength="10"')</div>
+
+			<div class="clearfix"></div>
+
+			#set( $searchGenderLabel = ${model.buildMessage('msg.base.admin.members.search.gender')} )
+			<div class="col-xs-12">#i4oneFormSingleSelect('search.criteria.gender' $model.validGenders '' )</div>
+		</div>
+
+		<div class="form-group row">
+			<div class="col-xs-6 col-sm-2">#msg('limit')</div>
+			<div class="col-xs-6 col-sm-4">#i4oneFormInput("search.criteria.limit" "$searchLimitLabel")</div>
+
+			#set( $submitLabel = ${model.buildMessage('msg.base.admin.members.search.submit')})
+			<div class="col-xs-12 col-sm-6">#i4oneFormSubmit($submitLabel $search)</div>
+		</div>
+	</form>
+</section>
+
+#if ( !$search.results.empty )
+<section class="results">
+<h2>#msg('results')</h2>
+
+	<div class="row hidden-xs hidden-sm">
+		<div class="col-md-3 heading username">#msg('username')</div>
+		<div class="col-md-3 heading name">#msg('name')</div>
+		<div class="col-md-1 heading age">#msg('age')</div>
+		<div class="col-md-1 heading gender">#msg('gender')</div>
+		<div class="col-md-2 heading zipcode">#msg('zipcode')</div>
+		<div class="col-md-2 heading createtime">#msg('createtime')</div>
+	</div>
+
+	#foreach ( $currUser in $search.results )
+		#striping
+		<div class="row $rowClass">
+			<div class="col-xs-6 hidden-md hidden-lg heading username">#msg('username')</div>
+			<div class="col-xs-6 col-md-3">
+				<div class="row">
+					<div class="hidden-xs hidden-sm col-md-2">$foreach.count.</div><div class="col-xs-12 col-md-10">#formatUser($currUser)</div>
+				</div>
+			</div>
+
+			<div class="col-xs-6 hidden-md hidden-lg heading name">#msg('name')</div>
+			<div class="col-xs-6 col-md-3">$currUser.firstName $currUser.lastName</div>
+
+			<div class="col-xs-6 hidden-md hidden-lg heading age">#msg('age')</div>
+			<div class="col-xs-6 col-md-1">$currUser.ageInYears</div>
+
+			<div class="col-xs-6 hidden-md hidden-lg heading age">#msg('gender')</div>
+			<div class="col-xs-6 col-md-1">$currUser.gender</div>
+
+			<div class="col-xs-6 hidden-md hidden-lg heading zipcode">#msg('zipcode')</div>
+			<div class="col-xs-6 col-md-2">$currUser.zipcode</div>
+
+			<div class="col-xs-6 hidden-md hidden-lg heading createtime">#msg('createtime')</div>
+			<div class="col-xs-6 col-md-2">#dateFormat($currUser.createTime) #timeFormat($currUser.createTime)</div>
+		</div>
+	#end
+</section>
+#end
+
+#parseVm( "base/admin/template/endBody.vm" )

@@ -1,0 +1,86 @@
+#parseVm( "base/user/template/startHead.vm" )
+#parseVm( "base/user/template/endHead.vm" )
+#parseVm( "base/user/template/startBody.vm" )
+#js("/js/slides.min.jquery.js")
+
+<div class="container">
+
+<div id="loginboxContainer" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true" aria-labelledby="loginboxLabel">
+	<div class="modal-dialog">
+	<div class="modal-content">
+
+	<form method="post" action="${request.baseurl}/base/user/auth/index.html" target="_top" result="page">
+
+	<div class="modal-header">
+		<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+		<h4 class="modal-title" id="loginboxLabel">Login</h4>
+	</div>
+
+	<div class="modal-body">
+	#if ( !$model.User.exists )
+	<section class="loginbox">
+		<div class="row">
+			#i4oneStatus("login")
+
+			<input type="hidden" name="redirURL" value="${request.fullrequesturi}"/>
+			#springFormHiddenInput("login.MD5Password" " ")
+			<div class="col-xs-12">
+				#i4oneFormInput('login.username' 'E-mail / Username' 'maxlength="128"')
+			</div>
+
+			<div class="col-xs-12">
+				#i4oneFormPasswordInput('login.password' 'Password' 'maxlength="128"')
+			</div>
+			<div class="col-xs-12">
+				#i4oneFormCheckbox('login.rememberMe' 'Remember Me' '')
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-xs-12">
+				<ul>
+					<li><a href="${request.baseurl}/base/user/account/forgot.html" result="contentContainer">Forgot Password?</a></li>
+					<li><a href="${request.baseurl}/base/user/account/register.html" result="contentContainer">Create Free Account</a></li>
+				</ul>
+			</div>
+		</div>
+	</section>
+
+	#else
+	<div class="profilebox">
+
+		<div class="avatar">
+			<img src="http://dev.i4oneinteractive.com/images/i4one/icon-rank-player.png" />
+			## <span class="score"><h1>GAME SCORE</h1>$number.format($model.predictionUserBalance.total)</span>
+		</div>
+
+		<div class="profilelinks">
+
+			<h3><nobr>$model.User.firstname $model.User.lastname</nobr></h3>
+			<h5>$model.User.city</h5>
+
+			<ul>
+				<li><a href="${request.baseurl}/base/user/account/profile.html" result="contentContainer">My Profile</a> | <a href="${request.baseurl}/base/user/account/resetpassword.html" result="contentContainer">Password</a></li>
+				<li><a href="${request.baseurl}/base/user/account/activity.html" result="contentContainer">Activity</a></li>
+				<li>
+					<a href="${request.baseurl}/base/user/auth/logout.html">Log Out</a>
+				</li>
+			</ul>
+
+
+		</div>
+
+	</div>
+	#end
+	</div> <!-- modal-body -->
+	<div class="modal-footer">
+		<div class="row">
+			<div class="col-sm-6">#i4oneFormSubmit('Log in' $login)</div>
+			<div class="col-sm-6">#i4oneFormButton('Close' 'Close' 'data-dismiss="modal"')</div>
+		</div>
+	</div> <!-- modal-footer -->
+	</div> <!-- modal-content -->
+	</form>
+	</div> <!-- modal-dialog -->
+</div>
+
+<div id="contentContainer">

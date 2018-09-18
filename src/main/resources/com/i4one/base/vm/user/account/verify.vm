@@ -1,0 +1,65 @@
+#**
+ * MIT License
+ * 
+ * Copyright (c) 2018 i4one Interactive, LLC
+ * 
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ * 
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ * 
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ *#
+#**
+ * @author Hamid Badiozamani
+ */
+#parseVm( "base/user/template/start.vm" )
+
+<div class="breadcrumbs" align="left"><a href="index.html">Home</a> / Account Verification </div>
+
+<div id="verifyform">
+
+<div align="left" class="sectiontexthead">Please take a moment to verify your account</div>
+
+<div align="center" class="fullformbox">
+
+<div style="text-align: left; padding-left: 40px; padding-top:25px; padding-bottom: 25px;">Please check your mobile phone and enter the code you received below to verify your account:<br/>
+</div>
+<hr width="75%"/>
+
+<div align="center">
+	<div id="verifyformfields">
+	$!modelStatus
+	<br/>
+	<div id="verifyform_errors">
+		#springBind("verificationToken")
+		#springShowErrors("" "formError")
+	</div>
+	<br/>
+	<form id="profile" name="verifyform" method="post" action="$request.requestURI" result="contentContainer" errors="verifyform_errors" target="_top">
+	<p>
+		#springBind('verificationToken.code')
+		#springShowErrors(" " "formError")
+		<input type="text" id="${status.expression}" name="${status.expression}" value="${status.value}" size='25' class='rounded $errorClass' placeholder='XXXX' #springCloseTag()
+
+	</p>
+	<input type="submit" align="center" class="orangebutton" style="margin-left:-3px;" value="Verify Account"/>
+	<br/>
+	</form>
+	</div> ## updateformfields
+</div>
+
+</div>
+</div>
+#parseVm( "base/user/template/end.vm" )

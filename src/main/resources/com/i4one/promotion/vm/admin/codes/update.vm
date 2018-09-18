@@ -1,0 +1,74 @@
+#**
+ * MIT License
+ * 
+ * Copyright (c) 2018 i4one Interactive, LLC
+ * 
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ * 
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ * 
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ *#
+#**
+ * @author Hamid Badiozamani
+ */
+#parseVm( "base/admin/template/instantWinningCrud.vm" )
+#parseVm( "base/admin/template/triggerableCrud.vm" )
+#parseVm( "base/admin/template/terminableCrud.vm" )
+#set($title = ${model.buildMessage('msg.promotion.admin.codes.update.pageTitle', 'item', $code)})
+#parseVm( "base/admin/template/startHead.vm" )
+#parseVm( "base/admin/template/endHead.vm" )
+#parseVm( "base/admin/template/startBody.vm" )
+
+<div id="crud">
+	<form method="post" action="$request.requestURI">
+		#springFormHiddenInput("code.ser" "")
+		#springFormHiddenInput("code.client" "")
+		<span id="jq_errors">#i4oneStatus("code")</span>
+
+		<div class="form-group row">
+			<div class="col-sm-4 col-md-2"><label for="siteGroup">#msg('sitegroup')</label></div>
+			<div class="col-sm-8 col-md-10">#i4oneFormSingleSelect('code.siteGroup' ${siteGroups} '')</div>
+
+			<div class="col-sm-4 col-md-2"><label for="title">#msgWithHelp('title')</label></div>
+			<div class="col-sm-8 col-md-10">#i4oneFormIStringInput('code.title' '' 'maxlength="128"')</div>
+		</div>
+
+		#terminableCrud("code")
+
+		<div class="form-group row">
+			<div class="col-sm-12 col-md-2"><label for="code">#msgWithHelp('code')</label></div>
+			#if ( $code.exists )
+				<div class="col-sm-12 col-md-10">#i4oneFormInput('code.code' '' '')</div>
+			#else
+				<div class="col-sm-12 col-md-10">#i4oneFormTextarea('code.code' '' '')</div>
+			#end
+
+			<div class="col-sm-12 col-md-2"><label for="outro">#msg('outro')</label></div>
+			<div class="col-sm-12 col-md-10">#i4oneFormIHtmlarea("code.outro" '' 'rows="4"')</div>
+		</div>
+
+		#triggerableCrud("code")
+		#instantWinningCrud("code")
+
+		<div class="form-group row">
+			<div class="col-sm-4">#i4oneFormUpdate($code)</div>
+			<div class="col-sm-4">#i4oneFormHistory($code)</div>
+			<div class="col-sm-4">#i4oneTerminableBack($code)</div>
+		</div>
+	</form>
+</div>
+
+#parseVm( "base/admin/template/endBody.vm" )

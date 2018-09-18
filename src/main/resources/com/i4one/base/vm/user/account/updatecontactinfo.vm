@@ -1,0 +1,106 @@
+#**
+ * MIT License
+ * 
+ * Copyright (c) 2018 i4one Interactive, LLC
+ * 
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ * 
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ * 
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ *#
+#**
+ * @author Hamid Badiozamani
+ */
+#parseVm( "base/user/template/start.vm" )
+
+<style>
+#updatecontactinfo div#label h1
+{
+	font-size: 3.0rem;
+}
+#pageCSS()
+</style>
+
+<section class="container" id="updatecontactinfo">
+	<div class="row">
+		<div class="hidden-xs col-sm-2 hidden-md hidden-lg"></div>
+		<div class="col-xs-12 col-sm-8 col-md-12 col-lg-12">
+
+			<div class="form-group row">
+				<div class="col-xs-12">#i4oneStatus('user')</div>
+			</div>
+	
+			<div id="label" class="col-xs-12 col-md-6">
+				<h1>#msg('title')</h1>
+				<p>#msg('subtitle')</p>
+			</div>
+			<div id="form" class="col-xs-12 col-md-6">
+				<form action="${request.requestURI}" method="post">
+
+				<div class="form-group row">
+					<div class="col-xs-12"><label for="email">#message('msg.base.user.account.email')</label></div>
+					<div class="col-xs-12">#i4oneFormEmailInput('user.email' '' 'autofocus required')</div>
+				</div>
+
+				<div class="form-group row">
+					#set($cellPhonePlaceholder = ${model.buildMessage('msg.base.user.account.cellphone.placeholder')} )
+					<div class="col-xs-12"><label for="cellPhone">#message('msg.base.user.account.cellphone')</label></div>
+					<div class="col-xs-12">#i4oneFormPhoneInput('user.cellPhone' '' 'required')</div>
+				</div>
+
+				<div class="form-group row">
+					#set($cityPlaceholder = ${model.buildMessage('msg.base.user.account.city.placeholder')} )
+					#set($zipcodePlaceholder = ${model.buildMessage('msg.base.user.account.zipcode.placeholder')} )
+					<div class="col-xs-12">
+						<div class="row">
+							<div class="col-xs-12 col-sm-5">
+								<div class="row">
+									<div class="col-xs-12"><label for="city">#message('msg.base.user.account.city')</label></div>
+									<div class="col-xs-12">#i4oneFormInput('user.city' "$cityPlaceholder" 'maxlength="100" required')</div>
+								</div>
+							</div>
+							<div class="col-xs-12 col-sm-2">
+								<div class="row">
+									<div class="col-xs-12"><label for="state">#message('msg.base.user.account.state')</label></div>
+									<div class="col-xs-12">#i4oneFormSingleSelect('user.state' $model.validStates '')</div>
+								</div>
+							</div>
+							<div class="col-xs-12 col-sm-5">
+								<div class="row">
+									<div class="col-xs-12"><label for="zipcode">#message('msg.base.user.account.zipcode')</label></div>
+									<div class="col-xs-12">#i4oneFormInput('user.zipcode' "$zipcodePlaceholder" 'maxlength="15" required')</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<div class="form-group row">
+					#set( $updateLabel = $model.buildMessage('msg.base.user.account.updatecontactinfo.submit') )
+					<div class="col-xs-12">#i4oneFormSubmit($updateLabel $user)</div>
+				</div>
+
+				<div class="form-group row">
+					<div class="col-xs-12"><a class="btn btn-alternate btn-block" href="${request.baseurl}/base/user/account/profile.html">#msg('back')</a></div>
+				</div>
+
+				</form>
+			</div>
+		</div>
+		<div class="hidden-xs col-sm-2 hidden-md hidden-lg"></div>
+	</div>
+</section>
+#parseVm( "base/user/template/end.vm" )

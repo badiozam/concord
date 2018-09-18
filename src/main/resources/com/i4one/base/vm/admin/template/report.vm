@@ -1,0 +1,213 @@
+#**
+ * MIT License
+ * 
+ * Copyright (c) 2018 i4one Interactive, LLC
+ * 
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ * 
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ * 
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ *#
+#**
+ * @author Hamid Badiozamani
+ */
+#if ( !$reportName || $!reportName == "" ) #set( $reportName = "report" ) #end
+#parseVm( "base/admin/template/startHead.vm" )
+#parseVm( "base/admin/template/endHead.vm" )
+#parseVm( "base/admin/template/startBody.vm" )
+
+#*
+ * Default implementation, just so we can see something.
+ * Files that import this one should override with more
+ * specific views
+ *#
+#macro( sortReportLink $orderBy $messageKey )
+	<a href="?titleChain=$esc.url($report.titleChain)&showRawData=true&id=$!model.request.params.id&pagination.orderBy=$orderBy">#message($messageKey)</a>
+#end
+
+#macro ( exportReportCSVButton )
+	<a class="btn btn-block btn-default" href="${reportName}.csv?titleChain=$esc.url($report.titleChain)&id=$!id">#message('msg.base.admin.report.csv')</a>
+#end
+
+#macro(displayReportHeading)
+	<div class="hidden-xs col-sm-2 heading">#sortReportLink('username' 'msg.base.admin.report.username')</div>
+	<div class="hidden-xs col-sm-2 heading">#sortReportLink('lastname' 'msg.base.admin.report.name')</div>
+	<div class="hidden-xs col-sm-1 heading">#sortReportLink('birthyyyy' 'msg.base.admin.report.age')</div>
+	<div class="hidden-xs col-sm-1 heading">#sortReportLink('gender' 'msg.base.admin.report.gender')</div>
+	<div class="hidden-xs col-sm-2 heading">#sortReportLink('zipcode' 'msg.base.admin.report.zipcode')</div>
+	<div class="hidden-xs col-sm-2 heading">#sortReportLink('email' 'msg.base.admin.report.email')</div>
+	<div class="hidden-xs col-sm-2 heading">#message('msg.base.admin.report.timestamp')</div>
+	<div class="clearfix"></div>
+#end
+
+#macro(displayReportRow $item)
+	#set( $timeStamp = $item.timeStampSeconds * 1000 )
+	<div class="hidden-xs col-sm-2">
+		$foreach.count. #formatUser($item.user)
+	</div>
+	<div class="hidden-xs col-sm-2">${item.user.firstName} ${item.user.lastName}</div>
+	<div class="hidden-xs col-sm-1">${item.user.ageInYears}</div>
+	<div class="hidden-xs col-sm-1">${item.user.gender}</div>
+	<div class="hidden-xs col-sm-2">${item.user.zipcode}</div>
+	<div class="hidden-xs col-sm-2">${item.user.email}</div>
+	<div class="hidden-xs col-sm-2">#dateFormat($timeStamp) #timeFormat($timeStamp)</div>
+	<div class="clearfix"></div>
+#end
+
+#macro (showReport)
+<div id="report">
+	#js('/js/highcharts/highcharts.js')
+	#set( $id = $model.request.params.id )
+
+	<script>
+	Highcharts.theme = {
+		colors: ['#981A1E', '#E3D2B8', '#960096', '#DDDF00', '#24CBE5', '#64E572', '#FF9655', '#FFF263', '#6AF9C4'],
+		chart: {
+			backgroundColor: 'rgba(255,255,255,0.1)'
+			/*
+			backgroundColor: {
+				linearGradient: [0, 0, 500, 500],
+				stops: [
+					[0, 'rgb(255, 255, 255)'],
+					[1, 'rgb(230, 230, 230)']
+				]
+			},*/
+		},
+		title: { style: { color: '#000' } },
+		subtitle: { style: { color: '#666666' } },
+		legend: {
+			itemStyle: { color: 'black' },
+			itemHoverStyle:{
+				color: 'gray'
+			}
+		}
+	};
+	Highcharts.setOptions(Highcharts.theme);
+
+	function showReport(selector, options)
+	{
+		var plotOptions = options['plotOptions'];
+
+		// Create the object if none exists
+		//
+		if ( !plotOptions )
+		{
+			plotOptions = {};
+		}
+
+		plotOptions['series'] = { 
+						cursor: 'pointer',
+						point:
+						{
+							events:
+							{
+								click: function()
+								{
+									document.location.href='?titleChain=' + this['titleChain'] + "&id=$!id";
+								}
+							}
+						},
+						dataLabels:
+						{
+							enabled: (options.chart.type == 'pie'),
+							formatter: function()
+							{
+								if ( this.series.type == 'pie' )
+								{
+									return this.point.name + ' (' + Math.round(this.percentage*10)/10 + '%)';
+								}
+								else
+								{
+									return this.point.name;
+								}
+							}
+						}
+					}
+
+		options['plotOptions'] = plotOptions;
+
+		// Disable the legend if there's only one series to show
+		//
+		if ( options.series.length == 1 )
+		{
+			options['legend'] = { enabled: 0};
+		}
+		$(selector).highcharts(options);
+	}
+	</script>
+
+	<div id="reports">
+	#if ( $report.type == "manager" )
+		#foreach( $topLevelReport in $report.subReports )
+			<a href="?titleChain=$esc.url($topLevelReport.titleChain)">$topLevelReport.title</a>
+		#end
+	#else
+		<h3>
+			<small>
+				#foreach ( $crumb in $report.breadCrumbs)
+					#set($index = $foreach.index)
+					#if ( $crumb.key == $report.titleChain )
+						#if ( $data )
+							#* Data is streamed so we won't have a count until the very end *# 
+							$crumb.value
+						#else
+							$crumb.value [$crumb.count]
+						#end
+					#elseif ( $crumb.key == "" && $index > 0 )
+						$crumb.value:
+					#else
+						#if ( $data )
+							#* Data is streamed so we won't have a count until the very end *# 
+							<a href="?titleChain=$crumb.key&id=$!id">$crumb.value</a> &gt;
+						#else
+							<a href="?titleChain=$crumb.key&id=$!id">$crumb.value [$crumb.count]</a> &gt;
+						#end
+					#end
+				#end
+			</small>
+		</h3>
+		<br/><br/>
+		<div class="row">
+			#if ( $data )
+				#set( $backURL = "?titleChain=$esc.url($report.titleChain)&id=$!id" )
+				<div class="col-xs-12 col-sm-6">#exportReportCSVButton()</div>
+				<div class="col-xs-12 col-sm-6">#i4oneFormBack($backURL)</div>
+				<div class="clearfix"></div>
+
+				#displayReportHeading
+				#foreach ( $item in $data )
+					#displayReportRow($item)
+				#end
+				<div class="col-xs-12 col-sm-6">#exportReportCSVButton()</div>
+				<div class="col-xs-12 col-sm-6">#i4oneFormBack($backURL)</div>
+			#else
+				#if ( !$backURL || $!backURL == "")#set( $backURL = "index.html")#end
+				<div id="rawdata" class="col-xs-12 col-md-6"><a class="btn btn-block btn-default" href="?titleChain=$esc.url($report.titleChain)&id=$!id&showRawData=true">#message('msg.base.admin.report.rawdata')</a></div>
+				<div class="col-xs-12 col-md-6">#i4oneFormBack($backURL)</div>
+				#foreach( $aggregateReport in $report.subReports )
+					#set( $chartid = $report.report.class.simpleName + $foreach.count )
+					<script>$(function(){ showReport("#$chartid", ${aggregateReport.toJSONString()}); })</script>
+					<div id="$chartid" class="col-xs-12 col-sm-6 chart"></div>
+				#end 
+				<div class="col-xs-12">#i4oneFormBack($backURL)</div>
+			#end
+		</div>
+	#end
+	</div>
+</div>
+#end
+
+#parseVm( "base/admin/template/endBody.vm" )

@@ -1,0 +1,72 @@
+#**
+ * MIT License
+ * 
+ * Copyright (c) 2018 i4one Interactive, LLC
+ * 
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ * 
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ * 
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ *#
+#**
+ * @author Hamid Badiozamani
+ */
+<script language='javascript'>
+$(function()
+{
+   	$('#menu ul li').off('mouseenter');
+   	$('#menu ul li').on('mouseenter', function(event)
+   	{
+		$(this).children('ul').css('display', 'block');
+   	});
+
+   	$('#menu ul li').off('mouseleave');
+   	$('#menu ul li').on('mouseleave',function(event)
+   	{
+		$(this).children('ul').css('display', 'none');
+   	});
+
+   	// Make the menu visible
+	//
+	$('#menu').css('visibility', 'visible');
+
+	//initMenus('contentContainer', false);
+});
+</script>
+
+<div id="menuContainer">
+<div id="menu">
+
+   <div align="center" id="nav">
+      <div class="navlinks">
+<ul>
+<li><a href="http://${request.serverName}:${request.serverPort}${request.baseurl}/base/user/index.html"><img src="http://f.canadapredicts.ca/images/icon-home2.png" /></a></li>
+#if ( !$model.User.exists )
+	<li><a href="http://${request.serverName}:${request.serverPort}${request.baseurl}/base/user/account/register.html" result="contentContainer">GET STARTED</a></li>
+#end
+<li><a href="http://${request.serverName}:${request.serverPort}${request.baseurl}/predict/user/index.html" result="contentContainer">GAMES</a></li>
+<li><a href="http://${request.serverName}:${request.serverPort}${request.baseurl}/base/user/prizes/index.html" result="contentContainer">PRIZES</a></li>
+<li><a href="http://${request.serverName}:${request.serverPort}${request.baseurl}/predict/user/top10.html" result="contentContainer">TOP 100</a></li>
+<li><a href="http://${request.serverName}:${request.serverPort}${request.baseurl}/survey/user/index.html" result="contentContainer">EXTRA CREDIT</a></li>
+
+<li><a href="http://${request.serverName}:${request.serverPort}${request.baseurl}/base/user/support.html" result="contentContainer">HELP</a></li>
+</ul>
+</div>
+
+</div>
+
+</div>
+</div>

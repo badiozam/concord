@@ -1,0 +1,55 @@
+/*
+ * MIT License
+ * 
+ * Copyright (c) 2018 i4one Interactive, LLC
+ * 
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ * 
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ * 
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ */
+package com.i4one.rewards.model;
+
+import com.i4one.base.model.ReturnType;
+import com.i4one.base.model.category.Category;
+import com.i4one.base.model.manager.categorizable.CategorizableTerminableManager;
+
+/**
+ * @author Hamid Badiozamani
+ */
+public interface WinnablePrizeTypeManager<U extends TerminableRewardsClientRecordType, T extends TerminableRewardsClientType<U, V>, V extends Category<?>> extends CategorizableTerminableManager<U, T>
+{
+	/**
+	 * Increases (or decreases) the total reserve of a shopping item. This has
+	 * the effect of incrementing the initialReserve as well as the currentReserve
+	 * since the total prize inventory is being reduced.
+	 * 
+	 * @param item The item for which to increment the total reserve
+	 * @param amount The amount (positive or negative) to increment the reserve by
+	 * 
+	 * @return The item with the updated reserve values reflected
+	 */
+	public ReturnType<T> incrementTotalReserve(T item, int amount);
+
+	/**
+	 * Increases (or decreases) the current reserve of a shopping item.
+	 * 
+	 * @param item The item for which to increment the current reserve
+	 * @param amount The amount (positive or negative) to increment the reserve by
+	 */
+	public void incrementCurrentReserve(T item, int amount);
+
+}

@@ -1,0 +1,126 @@
+#**
+ * MIT License
+ * 
+ * Copyright (c) 2018 i4one Interactive, LLC
+ * 
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ * 
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ * 
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ *#
+#**
+ * @author Hamid Badiozamani
+ */
+#parseVm( "base/user/template/start.vm" )
+<style>
+#events div#label h1
+{
+	font-size: 4.5rem;
+}
+
+#events .category
+{
+	text-align: center;
+}
+
+#events .info
+{
+	font-size: 1.1rem;
+}
+
+#events .info.event
+{
+	font-size: 1.3rem;
+}
+
+#events .odd,
+#events .even
+{
+	padding-top: 10px;
+	padding-bottom: 10px;
+}
+
+#events .listing
+{
+	margin-left: 15px;
+	margin-right: 15px;
+}
+
+#events .btn-back
+{
+	margin-top: 15px;
+}
+
+#pageCSS()
+</style>
+
+<section class="container" id="events">
+	#if ( $category.exists )
+		<div class="row">
+			<div id="label" class="$editClass col-xs-12" data-ser="$category.ser" data-item="categoryid">
+				<h1>#IString($category.title)</h1>
+				<p>#IString($!category.descr)</p>
+			</div>
+		</div>
+		<div class="listing row">
+			#*
+			<div class="row hidden-xs">
+				<div class="col-sm-4 heading event">#msg('event')</div>
+				<div class="col-sm-4 heading credits">#msg('credits')</div>
+				<div class="col-sm-4 heading endtime">#msg('endtime')</div>
+			</div>
+			*#
+			#foreach ($entry in $events.entrySet())
+				#striping()
+				#set( $event = $entry.key )
+				#set( $eventResponse = $entry.value )
+				#set ( $hasPlayed = $eventResponse.exists )
+				<div class="$editClass $rowClass row" data-ser="$event.ser">
+					#if ( $event.detailPicURL != "" )
+					<div class="col-xs-12 col-sm-6 info detailpicurl">
+						#if ( $hasPlayed )
+							<a href="${event.sponsorURL}"><img src="$event.detailPicURL" alt="#IString($event.title)"></a>
+						#else
+							<a href="${event.ser}.html"><img src="$event.detailPicURL" alt="#IString($event.title)"></a>
+						#end
+					</div>
+					#end
+					<div class="col-xs-12 #if ( $event.detailPicURL != "")col-sm-6#end info intro">
+						#if ( $hasPlayed )
+							<h3><a href="${event.sponsorURL}">#IString($event.title)</a></h3>
+						#else
+							<h3><a href="${event.ser}.html">#IString($event.title)</a></h3>
+						#end
+						#IString($event.intro)
+					</div>
+					<div class="col-xs-12 info credits">
+						#if ( $hasPlayed )
+							$model.buildMessage('msg.promotion.user.event.index.progress','eventResponse',$eventResponse,'event',$event)
+						#else
+							$model.buildMessage('msg.promotion.user.event.index.creditlisting','triggers',$event.balanceTriggers)
+						#end
+					</div>
+				</div>
+			#end
+		</div>
+	#else
+		#displayCategories( $categories )
+	#end
+	<div class="form-group row">
+		<div class="col-xs-12">#i4oneCategoryBack()</div>
+	</div>
+</section>
+#parseVm( "base/user/template/end.vm" )

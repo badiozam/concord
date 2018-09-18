@@ -1,0 +1,210 @@
+#**
+ * MIT License
+ * 
+ * Copyright (c) 2018 i4one Interactive, LLC
+ * 
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ * 
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ * 
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ *#
+#**
+ * @author Hamid Badiozamani
+ */
+#parseVm( "base/admin/template/startHead.vm" )
+#parseVm( "base/admin/template/endHead.vm" )
+#parseVm( "base/admin/template/startBody.vm" )
+
+#macro( updateButton $item )
+	<form action="update.html">
+		<input type="hidden" name="id" value="$item.ser"/>
+
+		#set( $submitLabel = ${model.buildMessage('msg.base.admin.general.update')})
+		#i4oneFormSubmit($submitLabel)
+	</form>
+#end
+
+#macro( reportButton $item )
+	<form action="report.html">
+		<input type="hidden" name="id" value="$item.ser"/>
+
+		#set( $submitLabel = ${model.buildMessage('msg.base.admin.general.report')})
+		#i4oneFormSubformSubmit($submitLabel)
+	</form>
+#end
+
+#macro( removeButton $item )
+	<form action="remove.html" onSubmit='return formConfirm("#message('msg.base.admin.general.areyousure')")'>
+		<input type="hidden" name="id" value="$item.ser"/>
+
+		#set( $submitLabel = ${model.buildMessage('msg.base.admin.general.remove')})
+		#i4oneFormSubformSubmit($submitLabel)
+	</form>
+#end
+
+#macro( listingButton $item $action $labelKey )
+	<form action="$action">
+		<input type="hidden" name="id" value="$item.ser"/>
+
+		#set( $submitLabel = ${model.buildMessage($labelKey)})
+		#i4oneFormSubformSubmit($submitLabel)
+	</form>
+#end
+
+#macro( cloneButton $item )
+	#listingButton( $item 'clone.html' 'msg.base.admin.general.clone')
+#end
+
+#macro( listingRemoveButton $item )
+	<form action="index.html" onSubmit='return formConfirm("#message('msg.base.admin.general.areyousure')")'>
+		<input type="hidden" name="action" value="remove"/>
+		<input type="hidden" name="actionItemId" value="$item.ser"/>
+		#springFormHiddenInput("listing.display" " ")
+		#springFormHiddenInput("listing.pagination.currentPage" " ")
+		#springFormHiddenInput("listing.pagination.orderBy" " ")
+		#springFormHiddenInput("listing.pagination.perPage" " ")
+
+		#set( $submitLabel = ${model.buildMessage('msg.base.admin.general.remove')})
+		#i4oneFormSubformSubmit($submitLabel)
+	</form>
+#end
+
+#macro( listingRevertButton $item )
+	<form action="index.html" onSubmit='return formConfirm("#message('msg.base.admin.general.areyousure')")'>
+		<input type="hidden" name="action" value="revert"/>
+		<input type="hidden" name="actionItemId" value="$item.ser"/>
+		#springFormHiddenInput("listing.display" " ")
+		#springFormHiddenInput("listing.pagination.currentPage" " ")
+		#springFormHiddenInput("listing.pagination.orderBy" " ")
+		#springFormHiddenInput("listing.pagination.perPage" " ")
+
+		#set( $submitLabel = ${model.buildMessage('msg.base.admin.general.revert')})
+		#i4oneFormSubformSubmit($submitLabel)
+	</form>
+#end
+
+#macro( targetList $item)
+	#set( $targetListLabel = $model.buildMessage('msg.base.admin.general.targetlist', 'targets', $item.targets) )
+	<span class="heading">$targetListLabel</span>
+	#if ( $item.targets.size() > 1 )
+		<ul class="targets">
+		#foreach ( $target in $item.targets )
+			<li>$target.title</li>
+		#end
+		</ul>
+	#else
+		#foreach ( $target in $item.targets ) $target.title #end
+	#end
+#end
+
+<div id="terminable">
+	<div class="form-group row">
+		#if ( $!importable )
+			<div class="col-xs-12 col-sm-4">
+				<a class="btn btn-primary btn-block ladda-button" data-style="expand-left" href="update.html"><span class="ladda-label">#message('msg.base.admin.terminable.create')</span></a>
+				#if ( $!sortable )
+				<a class="btn btn-default btn-block ladda-button" data-style="expand-left" href="sort.html?display=$listing.display"><span class="ladda-label">#message('msg.base.admin.terminable.sort')</span></a>
+				#end
+			</div>
+			<div class="col-xs-12 col-sm-4"><a class="btn btn-default btn-block btn-back" href="$request.baseurl/base/admin/admins/history.html?item.featureName=$emptyInstance.featureName&backURL=$request.requestURI">#message('msg.base.admin.general.history')</a></div>
+			<div class="col-xs-12 col-sm-4">
+				<a class="btn btn-default btn-block ladda-button" data-style="expand-left" href="import.html"><span class="ladda-label">#message('msg.base.admin.terminable.import')</span></a>
+				#if ( $!exportable )
+				<a class="btn btn-default btn-block ladda-button" data-style="expand-left" href="export.csv?JSONString=$esc.url($listing.JSONString)&action=display"><span class="ladda-label">#message('msg.base.admin.terminable.export')</span></a>
+				#end
+			</div>
+		#else
+			<div class="col-xs-12 col-sm-6">
+				<a class="btn btn-primary btn-block ladda-button" data-style="expand-left" href="update.html"><span class="ladda-label">#message('msg.base.admin.terminable.create')</span></a>
+				#if ( $!sortable )
+				<a class="btn btn-default btn-block ladda-button" data-style="expand-left" href="sort.html?display=$listing.display"><span class="ladda-label">#message('msg.base.admin.terminable.sort')</span></a>
+				#end
+			</div>
+			<div class="col-xs-12 col-sm-6"><a class="btn btn-default btn-block btn-back" href="$request.baseurl/base/admin/admins/history.html?item.featureName=$emptyInstance.featureName&backURL=$request.requestURI">#message('msg.base.admin.general.history')</a></div>
+		#end
+		<div class="col-xs-12"><span id="jq_errors">#i4oneStatus("listing")</span></div>
+	</div>
+	<div class="row">
+		<div class="col-xs-12">
+			<ul class="nav nav-tabs">
+				<li #if ( ${listing.isPastListing()} ) class="active"#end><a href="${request.requestURI}?JSONString=$esc.url($listing.JSONString)&display=past&action=display">#message('msg.base.admin.terminable.viewpast')</a></li>
+				<li #if ( ${listing.isLiveListing()} ) class="active"#end><a href="${request.requestURI}?JSONString=$esc.url($listing.JSONString)&display=live&action=display">#message('msg.base.admin.terminable.viewlive')</a></li>
+				<li #if ( ${listing.isFutureListing()} ) class="active"#end><a href="${request.requestURI}?JSONString=$esc.url($listing.JSONString)&display=future&action=display">#message('msg.base.admin.terminable.viewfuture')</a></li>
+			</ul>
+		</div>
+	</div>
+	<div class="row">
+		<div id="terminableContent" class="col-xs-12">
+			<section class="listing">
+				<form action="$request.requestURI" result="listing" class="form-inline">
+					#springBind("listing.JSONString")
+					<input type="hidden" id="${status.expression}" name="${status.expression}" value="$esc.html($listing.JSONString)"/>
+					#springBind("listing.pagination.currentPage")
+					<input type="hidden" id="${status.expression}" name="${status.expression}" value="0"/>
+			
+					<label for="perPage">#message("msg.base.admin.pagination.perpage")</label>
+					#i4oneFormInput("listing.pagination.perPage" " ")
+				</form>
+			
+				<ul class="pager">
+					#if ( $listing.pagination.currentPage > 0 )
+						<li class="previous">
+							<span>
+								<form action="$request.requestURI" result="listing" role="form">
+									#springBind("listing.JSONString")
+									<input type="hidden" id="${status.expression}" name="${status.expression}" value="$esc.html($listing.JSONString)"/>
+									#springBind("listing.pagination.prevPage")
+									<input type="hidden" id="${status.expression}" name="${status.expression}" value="true"/>
+									<button class="btn" data-style="expand-left" type="submit">
+										&larr; <span class="ladda-label">#message('msg.base.admin.pagination.prevpage')</span>
+									</button>
+								</form>
+							</span>
+						<li>
+					#else
+						<li class="previous disabled"><span><button class="btn disabled">&larr; #message('msg.base.admin.pagination.prevpage')</button></span></li>
+					#end
+					#if ( ${listing.items.size()} >= $listing.pagination.perPage ) ## Infinite pagination
+						<li class="next">
+							<span>
+								<form action="$request.requestURI" result="transactions" role="form">
+									#springBind("listing.JSONString")
+									<input type="hidden" id="${status.expression}" name="${status.expression}" value="$esc.html($listing.JSONString)"/>
+									#springBind("listing.pagination.nextPage")
+									<input type="hidden" id="${status.expression}" name="${status.expression}" value="true"/>
+									<button class="btn" data-style="expand-left" type="submit">
+										<span class="ladda-label">#message('msg.base.admin.pagination.nextpage')</span> &rarr;
+									</button>
+								</form>
+							</span>
+						</li>
+					#else
+						<li class="next disabled"><span><button class="btn disabled">#message('msg.base.admin.pagination.nextpage') &rarr;</button></span></li>
+					#end
+				</ul>
+		
+				#if ( $listing.items.empty )
+					<h3>#message($noContentMessage)</h3>
+				#else
+					#parseVm($terminableContent)
+				#end
+
+			</section>
+		</div>
+	</div>
+</div>
+
+#parseVm( "base/admin/template/endBody.vm" )

@@ -1,0 +1,131 @@
+#**
+ * MIT License
+ * 
+ * Copyright (c) 2018 i4one Interactive, LLC
+ * 
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ * 
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ * 
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ *#
+#**
+ * @author Hamid Badiozamani
+ */
+#set($title = ${model.buildMessage('msg.rewards.admin.prizes.winnings.pageTitle', 'item', $prize)})
+#parseVm( "base/admin/template/startHead.vm" )
+#parseVm( "base/admin/template/endHead.vm" )
+#parseVm( "base/admin/template/startBody.vm" )
+
+#macro( winningsBackButton $item )
+	#if ( $item.feature.exists )
+		#i4oneUpdateURL($item.feature)
+		#i4oneFormBack($updateURL)
+	#else
+		#i4oneTerminableBack($item)
+	#end
+#end
+
+#if ( $prize.exists() )
+	#if ( $prize.winnings.empty )
+	<section class="listing">
+		<h3>#msg('nowinnings')</h3>
+		<div class="form-group row">
+			<div class="col-xs-12">#winningsBackButton($prize)</div>
+		</div>
+	</section>
+	#else
+	<section class="listing">
+		<div class="row hidden-sm hidden-xs">
+			<div class="heading col-md-2">#msg('user')</div>
+			<div class="heading col-md-2">#msg('owner')</div>
+			<div class="heading col-md-1">#msg('quantity')</div>
+			<div class="heading col-md-2">#msg('timestamp')</div>
+			<div class="heading col-md-5">#msg('fulfillment')</div>
+		</div>
+		
+		#foreach ( $item in $prize.winnings )
+			#striping()
+			<div class="row $rowClass">
+				<div class="heading col-sm-3 hidden-md hidden-lg">#msg('user')</div>
+				<div class="col-sm-9 col-md-2">#formatUser($item.user)</div>
+	
+				<div class="heading col-sm-3 hidden-md hidden-lg">#msg('owner')</div>
+				<div class="col-sm-9 col-md-2">#mapMessage('msg.base.GenericFeature.fullTableName' $item.owner.fullTableName)</div>
+		
+				<div class="heading col-sm-3 hidden-md hidden-lg">#msg('quantity')</div>
+				<div class="col-sm-9 col-md-1">#intFormat($item.quantity)</div>
+		
+				<div class="heading col-sm-3 hidden-md hidden-lg">#msg('timestamp')</div>
+				<div class="col-sm-9 col-md-2">#formatDateTime($item.timeStamp)</div>
+		
+				<div class="heading col-sm-3 hidden-md hidden-lg">#msg('fulfillment')</div>
+				<div class="col-sm-9 col-md-5">
+					#foreach ( $fulfillment in $item.prizeFulfillments )
+						<div class="row">
+							<div class="col-md-6">${model.buildMessage('msg.rewards.admin.prizes.winnings.fulfilled', 'item', $fulfillment)}</div>
+							<div class="col-md-6">
+								<a class="btn btn-primary btn-block" href="fulfillment.html?id=$fulfillment.ser">#msg('updatefulfillment')</a>
+							</div>
+						</div>
+					#end
+					#if ( !$item.fulfilled )
+					<div class="row">
+						<div class="col-xs-12"><a class="btn btn-primary btn-block" href="fulfillment.html?winningid=$item.ser">#msg('createfulfillment')</a></div>
+					</div>
+					#end
+				</div>
+			</div>
+		#end
+	</section>
+	
+	<section class="crud">
+		<h2>#msgWithHelp('fulfillment')</h2>
+		<span id="jq_errors">#i4oneStatus("prize")</span>
+	
+		<form method="post" action="$request.requestURI">
+		#springFormHiddenInput("prize.ser" "")
+		#springFormHiddenInput("prize.feature.ser" "")
+		#springFormHiddenInput("prize.feature.featureName" "")
+		<div class="form-group row">
+			<div class="col-sm-4 col-md-2"><label for="status">#msg('status')</label></div>
+			<div class="col-sm-8 col-md-10">#i4oneFormSingleSelect('prize.fulfillmentTemplate.status' ${validFulfillmentStatuses} '' '')</div>
+		</div>
+	
+		<div class="form-group row">
+			<div class="col-sm-4 col-md-2"><label for="status">#msg('notes')</label></div>
+			<div class="col-sm-8 col-md-10">#i4oneFormTextarea('prize.fulfillmentTemplate.notes' '' '')</div>
+		</div>
+	
+		<div class="form-group row">
+			<div class="col-xs-12 col-md-6">
+				#i4oneFormSubmit('msg.rewards.admin.prizes.winnings.submit', $item)
+			</div>
+
+			<div class="col-xs-12 col-md-6">#winningsBackButton($prize)</div>
+		</div>
+		</form>
+	</section>
+	#end
+#else
+	#if ( $prize.feature.exists )
+		#i4oneUpdateURL($prize.feature)
+		#i4oneItemNotFound($updateURL)
+	#else
+		#i4oneItemNotFound("index.html")
+	#end
+#end
+
+#parseVm( "base/admin/template/endBody.vm" )

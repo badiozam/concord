@@ -1,0 +1,96 @@
+#**
+ * MIT License
+ * 
+ * Copyright (c) 2018 i4one Interactive, LLC
+ * 
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ * 
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ * 
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ *#
+#**
+ * @author Hamid Badiozamani
+ */
+#set($title = ${model.buildMessage('msg.base.admin.targeting.target.pageTitle', 'targetable', $targetable)})
+#parseVm( "base/admin/template/startHead.vm" )
+#parseVm( "base/admin/template/endHead.vm" )
+#parseVm( "base/admin/template/startBody.vm" )
+
+<section id="crud">
+	<form method="post" action="$request.requestURI" class="form">
+		#springFormHiddenInput("targetable.feature.ser" "")
+		#springFormHiddenInput("targetable.feature.tableName" "")
+		#springFormHiddenInput("targetable.feature.schemaName" "")
+		#springFormHiddenInput("targetable.redir" "")
+		#springFormHiddenInput("targetable.displayName" "")
+		<span id="jq_errors">#i4oneStatus("targetable")</span>
+
+		<div class="form-group row">
+			<div class="col-sm-12"><h3>#msgWithHelp('current')</h3></div>
+			<div class="col-sm-12">
+				<ul>
+				#foreach ( $target in $targetable.targets )
+					<li>$target.title</li>
+				#end
+				</ul>
+			</div>
+		</div>
+
+		<div class="form-group row">
+			<div class="col-sm-12"><h3>#msgWithHelp('external')</h3></div>
+			<div class="col-sm-12">
+				<div class="row">
+					<div class="col-sm-6">#i4oneFormAlternateSubmit('msg.base.admin.targeting.target.external' 'external' $targetable)</div>
+
+				</div>
+			</div>
+		</div>
+
+		<div class="form-group row">
+			<div class="col-sm-12"><h3>#msgWithHelp('agegender')</h3></div>
+			<div class="col-sm-12">
+				<div class="row">
+					<div class="col-xs-12 col-sm-2">#msg('gender')</div>
+					<div class="col-xs-12 col-sm-2">#i4oneFormSingleSelect('targetable.ageGender.gender' $model.validGenders '' )</div>
+
+					<div class="col-xs-12 col-sm-2">#msg('minage')</div>
+					<div class="col-xs-12 col-sm-2">#i4oneFormInput('targetable.ageGender.minAge' "" 'maxLength=3' )</div>
+
+					<div class="col-xs-12 col-sm-2">#msg('maxage')</div>
+					<div class="col-xs-12 col-sm-2">#i4oneFormInput('targetable.ageGender.maxAge' "" 'maxLength=3' )</div>
+				</div>
+			</div>
+		</div>
+
+		<div class="form-group row">
+			<div class="col-sm-12"><h3>#msgWithHelp('byzipcode')</h3></div>
+			<div class="col-sm-12">
+				<div class="row">
+					<div class="col-xs-12 col-sm-2">#msg('zipcode')</div>
+					<div class="col-xs-12 col-sm-2">#i4oneFormInput('targetable.zipCode.zipCode' '' 'maxlength=10' )</div>
+				</div>
+			</div>
+		</div>
+
+		<div class="form-group row">
+			<div class="col-sm-6">#i4oneFormSubmit('msg.base.admin.targeting.target.submit' $targetable)</div>
+			#i4oneUpdateURL($targetable.feature)
+			<div class="col-sm-6">#if($targetable.feature.ser > 0)#i4oneFormBack($updateURL)#else#i4oneFormBack($targetable.redir)#end</div>
+		</div>
+	</form>
+</section>
+
+#parseVm( "base/admin/template/endBody.vm" )

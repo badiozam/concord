@@ -1,0 +1,333 @@
+#**
+ * MIT License
+ * 
+ * Copyright (c) 2018 i4one Interactive, LLC
+ * 
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ * 
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ * 
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ *#
+#**
+ * @author Hamid Badiozamani
+ */
+#parseVm( "base/user/template/start.vm" )
+
+<style>
+#predictionhistory div#label h1
+{
+	font-size: 3.5rem;
+}
+
+#predictionhistory .mobileheadstrip
+{
+	background-color: rgb(136,0,0);
+	min-height: 2rem;
+}
+
+#predictionhistory .headings
+{
+    background-color: rgb(136, 0, 0);
+    color: #fff;
+}
+
+#predictionhistory .reference
+{
+	padding-top: 0.75rem;
+	padding-bottom: 0.5rem;
+}
+
+#predictionhistory .info
+{
+	font-size: 0.85;
+}
+
+#predictionhistory .info.outcome .actualOutcome
+{
+	color: #428bca;
+}
+
+#predicitonhistory .info .predictionDescr
+{
+}
+
+#predictionhistory .info .glyphicon
+{
+	font-size: 0.80rem;
+}
+
+#predictionhistory .info .glyphicon-ok
+{
+	color: #0e0;
+}
+
+#predictionhistory .info .glyphicon-remove
+{
+	color: #e00;
+}
+
+#predictionhistory .backbutton
+{
+	padding-top: 1.25rem;
+}
+
+#predictionhistory .sort .sortbutton
+{
+	padding-right: 0;
+}
+
+@media (max-width: 991px) /* xs and sm */
+{
+	#predictionhistory .reference
+	{
+		padding-top: inherit;
+		padding-bottom: inherit;
+	}
+}
+
+#pageCSS()
+</style>
+
+<section class="container" id="predictionhistory">
+	<div class="row">
+		<div id="label" class="col-xs-12">
+			<h1>#msg('title')</h1>
+			<p>#msg('subtitle' 'predictionHistory' $predictionHistory)</p>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-xs-12">
+			#if ( $predictionHistory.predictions.empty )
+				<div class="row">
+					#set( $totalBidAmount = 0 )
+					#set( $totalAvailable = $prediction.event.maxBid )
+					<div class="col-xs-12 heading">#msg('nobids')</div>
+				</div>
+			#else
+				<div class="form-group row sort">
+					<div class="col-xs-4 col-sm-4 col-md-6 col-lg-8">&nbsp;</div>
+					<div class="col-xs-8 col-sm-8 col-md-6 col-lg-4 sortbutton">
+						<form>
+							#if ( $predictionHistory.onlyInitialPredictions )
+								<input type="hidden" name="onlyInitialPredictions" value="false">
+							#else
+								<input type="hidden" name="onlyInitialPredictions" value="true">
+							#end
+							#i4oneFormSubmit("msg.predict.user.account.index.sort", $predictionHistory)
+						</form>
+					</div>
+				</div>
+				<div class="row hidden-xs hidden-sm headings">
+					<div class="col-md-3 heading">#msg('event')</div>
+					<div class="col-md-3 heading">#msg('prediction')</div>
+					<div class="col-md-1 heading">#msg('amount')</div>
+					<div class="col-md-1 heading">#msg('payout')</div>
+					<div class="col-md-2 heading">#msg('outcome')</div>
+					<div class="col-md-2 heading">#msg('timestamp')</div>
+				</div>
+				<div class="row">
+					<div class="col-xs-12 col-sm-12 hidden-md hidden-lg mobileheadstrip"></div>
+				</div>
+
+				#set( $seconds = ${model.currentTime.time} / 1000 )
+				#set( $seconds = $math.round($seconds) )
+				#set( $predictionHistorySize = $predictionHistory.predictions.size())
+				#foreach ( $pastBid in $predictionHistory.predictions )
+					#striping()
+					#set( $payoutAmountFloat = $pastBid.quantity * $pastBid.payout )
+					#set( $payoutAmount = $math.round($payoutAmountFloat) )
+					#set( $initialClass = "initial")
+					#if ( ${pastBid.isInitial()} )
+						#set ($initialClass = "subsequent")
+					#end
+					#set( $bidStatus = "pending")
+					#if ( $pastBid.event.actualized )
+						#if ( $pastBid.eventOutcome == $pastBid.event.actualOutcome )
+							#set( $bidStatus = "correct")
+						#else
+							#set( $bidStatus = "incorrect")
+						#end
+					#end
+					<div class="row $rowClass $initialClass $bidStatus">
+						<div class="col-xs-6 hidden-md hidden-lg heading event">#msg('event')</div>
+						<div class="col-xs-6 col-md-3 info event">
+							#if ( ${pastBid.event.isPlayable($seconds)} )
+								<a href="../events/bid.html?eventid=$pastBid.event.ser">#IString($pastBid.eventOutcome.event.promo)</a>
+							#else
+								#IString($pastBid.eventOutcome.event.promo)
+							#end
+							#if ( $pastBid.isReferenceURL($language) )
+							<div class="hidden-xs hidden-sm info reference">#msg('reference')<a href="http://#IString($pastBid.event.reference)" target="_blank">$pastBid.getReferenceURLHost($language)</a></div>
+							#else
+							<div class="hidden-xs hidden-sm info reference">#msg('reference')#IString($pastBid.event.reference)</div>
+							#end
+						</div>
+
+						<div class="col-xs-6 hidden-md hidden-lg heading prediction">#msg('prediction')</div>
+						<div class="col-xs-6 col-md-3 info prediction">
+							<span class="hidden-md hidden-lg"><span class="predictionDescr">#IString($pastBid.eventOutcome.descr)</span></span>
+							#if ( $bidStatus == "correct" )
+								<span class="glyphicon glyphicon-ok"></span>
+							#elseif ( $bidStatus == "incorrect" )
+								<span class="glyphicon glyphicon-remove"></span>
+							#else
+								<span class="glyphicon glyphicon-time"></span>
+							#end
+							<span class="hidden-xs hidden-sm"><span class="predictionDescr">#IString($pastBid.eventOutcome.descr)</span></span>
+						</div>
+	
+						<div class="col-xs-6 hidden-md hidden-lg heading amount">#msg('amount')</div>
+						<div class="col-xs-6 col-md-1 info quantity">#intFormat($pastBid.quantity)</div>
+	
+						<div class="col-xs-6 hidden-md hidden-lg heading payout">#msg('payout')</div>
+						<div class="col-xs-6 col-md-1 info payout">#intFormat($payoutAmount)</div>
+	
+						<div class="col-xs-6 hidden-md hidden-lg heading outcome">#msg('outcome')</div>
+						<div class="col-xs-6 col-md-2 info outcome">
+							#if ($pastBid.event.actualized)
+								<span class="actualOutcome">#IString($pastBid.event.actualOutcome.descr)</span>
+							#else
+								#msg('pending')
+							#end
+						</div>
+	
+						## This only shows up in mobile
+						<div class="col-xs-6 hidden-md hidden-lg heading reference">#msg('reference')</div>
+						<div class="col-xs-6 hidden-md hidden-lg info reference">
+							#if ( $pastBid.isReferenceURL($language) )
+							<a href="http://#IString($prediction.event.reference)" target="_blank">$pastBid.getReferenceURLHost($language)</a>
+							#else
+							#IString($pastBid.event.reference)
+							#end
+						</div>
+	
+						<div class="col-xs-6 hidden-md hidden-lg heading timestamp">#msg('timestamp')</div>
+	    					<div class="col-xs-6 col-md-2 info timestamp">#dateTimeFormat('d MMM yy hh:mm a z', ${pastBid.timeStamp})</div>
+					</div>
+				#end
+			#end
+		</div>
+		<div class="row">
+			<div class="backbutton col-xs-12">#i4oneFormBack('../events/index.html')</div>
+		</div>
+	</div>
+</section>
+
+#parseVm( "base/user/template/end.vm" )
+
+#*
+#parseVm( "base/user/template/start.vm" )
+<div class="breadcrumbs" align="left"><a href="${request.baseurl}/base/user/index.html">Home</a> / Prediction History</div>
+
+<div align="left" class="sectiontexthead">Prediction History</div>
+
+<div align="center" class="fullformbox">
+
+<br/><br/>
+<table id="activity">
+<tr class="heading">
+    <th align="left">Event</th>
+    <th align="left">Posted/Posts By</th>
+    <th align="left">Investment</th>
+    <th align="left">Return</th>
+    <th align="center">Outcome</th>
+    <th align="right">Time Stamp</th>
+</tr>
+	#foreach ( $currPred in ${model.predictions} )
+		#set( $timestampMillis = ${currPred.timestamp} * 1000 )
+		#set( $postsByMillis = ${currPred.event.postsBySeconds} * 1000 )
+		#set( $payoutAmountFloat = ${currPred.bidAmount} * ${currPred.payout} )
+		#set( $payoutAmount = $math.round($payoutAmountFloat))
+		#set( $bidAmountCurrency = ${currPred.balance.formatName($currPred.bidAmount)})
+
+		#set( $payoutCurrency = ${currPred.balance.formatName($payoutAmount)})
+		#set( $rowClass = 'odd' )
+		#if ( $velocityCount % 2 == 0 )
+			#set( $rowClass = 'even' )
+		#end
+		<tr class="line1 $rowClass">
+			<td colspan="6">${currPred.event.brief}</td>
+		</tr>
+		<tr class="line2 $rowClass">
+			<td valign="top">
+				${currPred.eventOutcome.descr}
+				#if ( $currPred.postedTimeSeconds > 0 )
+					(Actual: ${currPred.event.actualOutcome.descr})
+				#end
+			</td>
+			<td valign="top">
+				#if ( $currPred.postedTimeSeconds > 0 )
+					#set( $postedTimeMillis = $currPred.postedTimeSeconds * 1000 )
+					#dateFormat('d MMM yyyy hh:mm:ss a', $postedTimeMillis)
+				#else
+					#dateFormat('d MMM yyyy', ${postsByMillis})
+				#end
+			</td>
+			<td valign="top">$number.format(${currPred.bidAmount}) $bidAmountCurrency</td>
+			<td valign="top">$number.format(${payoutAmount}) $payoutCurrency</td>
+			<td valign="top" align="center">
+				#if ( $currPred.postedTimeSeconds > 0 )
+					#if ( $currPred.correct )
+						<img height="24" width="24" src="http://f.canadapredicts.ca/images/icon-check.png">
+					#else
+						<img height="24" width="24" src="http://f.canadapredicts.ca/images/icon-wrong.png">
+					#end
+				#else
+					--
+				#end
+			</td>
+			<td valign="top" align="right">$date.format('d MMM yyyy hh:mm:ss a', $timestampMillis)</td>
+		</tr>
+	#end
+</table>
+<br/>
+<div class="pagination">
+	#if ( $pagination.currentPage > 0 )
+	<div style="display: inline-block; float: left;">
+		<form action="$request.requestURI" method="post" result="contentContainer">
+			#springFormHiddenInput("pagination.term" " ")
+			#springFormHiddenInput("pagination.currentPage" " ")
+			#springFormHiddenInput("pagination.perPage" " ")
+			#springFormHiddenInput("pagination.orderBy" " ")
+			#springBind("pagination.prevPage")
+			<input type="hidden" id="${status.expression}" name="${status.expression}" value="true"/>
+			<input type="submit" style="width: 152px; height: 40px; margin-bottom: 15px; font-size: 16px; font-weight: normal;" align="center" class="silverbutton" value="Back"/>
+		</form>
+	</div>
+	#end
+	#if ( ${model.predictions.size()} >= $pagination.perPage ) ## Infinite pagination
+	<div style="display: inline-block; float: right;">
+		#set($moreValue = "More")
+		#if ( $pagination.currentPage == 0 )
+			#set($moreValue = "See More")
+		#end
+		<form action="$request.requestURI" method="post" result="contentContainer">
+			#springFormHiddenInput("pagination.term" " ")
+			#springFormHiddenInput("pagination.currentPage" " ")
+			#springFormHiddenInput("pagination.perPage" " ")
+			#springFormHiddenInput("pagination.orderBy" " ")
+			#springBind("pagination.nextPage")
+			<input type="hidden" id="${status.expression}" name="${status.expression}" value="true"/>
+			<input type="submit" style="width: 152px; height: 40px; margin-bottom: 15px; font-size: 16px; font-weight: normal;" align="center" class="silverbutton" value="$moreValue"/>
+		</form>
+	</div>
+	#end
+	<div style="clear: both;"></div>
+</div>
+
+</div>
+#parseVm( "base/user/template/end.vm" )
+*#

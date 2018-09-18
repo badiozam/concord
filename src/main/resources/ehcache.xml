@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<ehcache xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:noNamespaceSchemaLocation="ehcache.xsd"
+         updateCheck="false" monitoring="autodetect"
+         dynamicConfig="false">
+
+    <!--
+    Default Cache configuration. These settings will be applied to caches
+    created programmatically using CacheManager.add(String cacheName).
+    This element is optional, and using CacheManager.add(String cacheName) when
+    its not present will throw CacheException
+
+    The defaultCache has an implicit name "default" which is a reserved cache name.
+    -->
+    <defaultCache
+            maxEntriesLocalHeap="100"
+            eternal="false"
+            timeToIdleSeconds="600"
+            timeToLiveSeconds="600"
+            transactionalMode="off"
+            memoryStoreEvictionPolicy="LRU"
+            statistics="true">
+    </defaultCache>
+
+    <!-- For DAO loaded objects -->
+    <cache name="daoCache" maxEntriesLocalHeap="100000" statistics="true"/>
+
+    <!-- Slow caches -->
+    <cache name="balanceManager" maxEntriesLocalHeap="50" statistics="true" timeToIdleSeconds="100" timeToLiveSeconds="100" />
+    <cache name="singleClientManager" maxEntriesLocalHeap="50" statistics="true" timeToIdleSeconds="100" timeToLiveSeconds="100" />
+
+    <cache name="privilegeManager" maxEntriesLocalHeap="30" statistics="true" timeToIdleSeconds="10" timeToLiveSeconds="10" />
+    <cache name="adminManager" maxEntriesLocalHeap="10" statistics="true" timeToIdleSeconds="10" timeToLiveSeconds="10" />
+    <cache name="adminPrivilegeManager" maxEntriesLocalHeap="50" statistics="true" timeToIdleSeconds="10" timeToLiveSeconds="10" />
+    <cache name="balanceExpenseManager" maxEntriesLocalHeap="50" statistics="true" timeToIdleSeconds="10" timeToLiveSeconds="10" />
+    <cache name="balanceTriggerManager" maxEntriesLocalHeap="50" statistics="true" timeToIdleSeconds="10" timeToLiveSeconds="10" />
+    <cache name="categoryManager" maxEntriesLocalHeap="50" statistics="true" timeToIdleSeconds="10" timeToLiveSeconds="10" />
+    <cache name="siteGroupManager" maxEntriesLocalHeap="50" statistics="true" timeToIdleSeconds="10" timeToLiveSeconds="10" />
+    <cache name="clientOptionManager" maxEntriesLocalHeap="50" statistics="true" timeToIdleSeconds="10" timeToLiveSeconds="10" />
+    <cache name="friendRefManager" maxEntriesLocalHeap="150" statistics="true" timeToIdleSeconds="10" timeToLiveSeconds="10" />
+    <cache name="instantWinManager" maxEntriesLocalHeap="150" statistics="true" timeToIdleSeconds="10" timeToLiveSeconds="10" />
+    <cache name="userMessageManager" maxEntriesLocalHeap="150" statistics="true" timeToIdleSeconds="10" timeToLiveSeconds="10" />
+    <cache name="userBalanceManager" maxEntriesLocalHeap="150" statistics="true" timeToIdleSeconds="10" timeToLiveSeconds="10" />
+    <cache name="userManager" maxEntriesLocalHeap="150" statistics="true" timeToIdleSeconds="10" timeToLiveSeconds="10" />
+    <cache name="preferenceManager" maxEntriesLocalHeap="100" statistics="true" timeToIdleSeconds="10" timeToLiveSeconds="10"/>
+    <cache name="preferenceAnswerManager" maxEntriesLocalHeap="1000" statistics="true" timeToIdleSeconds="30" timeToLiveSeconds="30"/>
+    <cache name="userPreferenceManager" maxEntriesLocalHeap="5000" statistics="true" timeToIdleSeconds="10" timeToLiveSeconds="10"/>
+
+    <cache name="accessCodeManager" maxEntriesLocalHeap="150" statistics="true" timeToIdleSeconds="10" timeToLiveSeconds="10" />
+    <cache name="accessCodeResponseManager" maxEntriesLocalHeap="500" statistics="true"/>
+    <cache name="accessCodePageManager" maxEntriesLocalHeap="100" statistics="true" />
+
+    <cache name="messageManager"
+            maxEntriesLocalHeap="10000"
+            eternal="false"
+            timeToIdleSeconds="300"
+            timeToLiveSeconds="300"
+            transactionalMode="off"
+            memoryStoreEvictionPolicy="LFU"
+            statistics="true"
+            />
+
+    <!-- Promotion -->
+    <cache name="clickThruManager" maxEntriesLocalHeap="150" statistics="true" timeToIdleSeconds="30" timeToLiveSeconds="30" />
+    <cache name="clickThruResponseManager" maxEntriesLocalHeap="500" statistics="true"/>
+
+    <cache name="codeManager" maxEntriesLocalHeap="150" statistics="true" timeToIdleSeconds="30" timeToLiveSeconds="30" />
+    <cache name="codeResponseManager" maxEntriesLocalHeap="500" statistics="true"/>
+
+    <cache name="socialPhraseManager" maxEntriesLocalHeap="150" statistics="true" timeToIdleSeconds="30" timeToLiveSeconds="30" />
+    <cache name="socialPhraseResponseManager" maxEntriesLocalHeap="500" statistics="true"/>
+
+    <cache name="triviaManager" maxEntriesLocalHeap="150" statistics="true" timeToIdleSeconds="30" timeToLiveSeconds="30" />
+    <cache name="triviaAnswerManager" maxEntriesLocalHeap="300" statistics="true" timeToIdleSeconds="30" timeToLiveSeconds="30" />
+    <cache name="triviaResponseManager" maxEntriesLocalHeap="500" statistics="true"/>
+
+    <cache name="promotionEventManager" maxEntriesLocalHeap="150" statistics="true" timeToIdleSeconds="30" timeToLiveSeconds="30" />
+    <cache name="promotionEventResponseManager" maxEntriesLocalHeap="500" statistics="true"/>
+
+    <!-- Prediction -->
+    <cache name="termManager" maxEntriesLocalHeap="10" statistics="true" timeToIdleSeconds="10" timeToLiveSeconds="10" />
+    <cache name="eventManager" maxEntriesLocalHeap="150" statistics="true" timeToIdleSeconds="30" timeToLiveSeconds="30" />
+    <cache name="eventOutcomeManager" maxEntriesLocalHeap="1000" statistics="true" timeToIdleSeconds="5" timeToLiveSeconds="5"/>
+
+    <!-- Rewards -->
+    <cache name="prizeManager" maxEntriesLocalHeap="50" statistics="true" timeToIdleSeconds="10" timeToLiveSeconds="10" />
+    <cache name="shoppingManager" maxEntriesLocalHeap="50" statistics="true" timeToIdleSeconds="10" timeToLiveSeconds="10" />
+    <cache name="raffleManager" maxEntriesLocalHeap="50" statistics="true" timeToIdleSeconds="10" timeToLiveSeconds="10" />
+
+    <!--
+	Very short term cache mainly to act as a buffer against bursts, it's set to half
+	the time of the scheduler which computes each player's status
+    -->
+    <cache name="playerManager" maxEntriesLocalHeap="1000"
+            eternal="false"
+            timeToIdleSeconds="10"
+            timeToLiveSeconds="10"
+            transactionalMode="off"
+            memoryStoreEvictionPolicy="LFU"
+            statistics="true"
+	/>
+
+    <cache name="surveyManager" maxEntriesLocalHeap="100" statistics="true" />
+    <cache name="surveyQuestionManager" maxEntriesLocalHeap="1000" statistics="true" />
+    <cache name="surveyAnswerManager" maxEntriesLocalHeap="1000" statistics="true" />
+    <cache name="surveyRespondentManager" maxEntriesLocalHeap="500" statistics="true" />
+    <cache name="surveyResponseManager" maxEntriesLocalHeap="5000" statistics="true" />
+
+    <cache name="pollManager" maxEntriesLocalHeap="100" statistics="true" timeToIdleSeconds="10" timeToLiveSeconds="10"/>
+    <cache name="pollAnswerManager" maxEntriesLocalHeap="1000" statistics="true" timeToIdleSeconds="30" timeToLiveSeconds="30"/>
+    <cache name="pollResponseManager" maxEntriesLocalHeap="5000" statistics="true" timeToIdleSeconds="10" timeToLiveSeconds="10"/>
+
+</ehcache>

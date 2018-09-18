@@ -1,0 +1,294 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+		 xmlns:p="http://www.springframework.org/schema/p"
+		 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		 xmlns:aop="http://www.springframework.org/schema/aop"
+		 xmlns:tx="http://www.springframework.org/schema/tx"
+		 xmlns:mvc="http://www.springframework.org/schema/mvc"
+		 xmlns:cache="http://www.springframework.org/schema/cache" 
+		 xmlns:context="http://www.springframework.org/schema/context"
+		 xmlns:security="http://www.springframework.org/schema/security"
+		 xsi:schemaLocation="http://www.springframework.org/schema/beans 
+		   http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
+		   http://www.springframework.org/schema/aop 
+		   http://www.springframework.org/schema/aop/spring-aop-4.0.xsd
+		   http://www.springframework.org/schema/tx 
+		   http://www.springframework.org/schema/tx/spring-tx-4.0.xsd
+		   http://www.springframework.org/schema/cache
+		   http://www.springframework.org/schema/cache/spring-cache-4.0.xsd
+		   http://www.springframework.org/schema/context
+		   http://www.springframework.org/schema/context/spring-context-4.0.xsd
+		   http://www.springframework.org/schema/mvc
+		   http://www.springframework.org/schema/mvc/spring-mvc-4.0.xsd
+		   http://www.springframework.org/schema/security
+		   http://www.springframework.org/schema/security/spring-security-4.0.xsd">
+
+	<context:annotation-config/>
+	<cache:annotation-driven />
+
+	<!-- Needed for emulating request scope -->
+	<bean class="org.springframework.beans.factory.config.CustomScopeConfigurer">
+    	<property name="scopes">
+        	<map>
+            	<entry key="session">
+                	<bean class="org.springframework.context.support.SimpleThreadScope"/>
+            	</entry>
+        	</map>
+    	</property>
+	</bean>
+
+	<bean id="i4oneDataSource" class="org.apache.commons.dbcp2.BasicDataSource" destroy-method="close">
+	        <property name="driverClassName" value="${jdbc.driverClassName}"/>
+	        <property name="url" value="${jdbc.url}"/>
+	        <property name="username" value="${jdbc.username}"/>
+		<property name="password" value="${jdbc.password}"/>
+		<property name="defaultAutoCommit" value="true"/>
+	</bean>
+
+
+	<!-- Spring security definitions (too complicated to integrate, maybe later) -->
+	<!--
+	<security:http pattern="/**/css/*" security="none" />
+	<security:http pattern="/**/js/*" security="none" />
+
+	<security:http use-expressions="true">
+		<security:intercept-url pattern="/**/admin/auth/index.html" access="permitAll" requires-channel="any"/>
+		<security:intercept-url pattern="/**/admin/**" access="hasRole('admin')" requires-channel="any"/>
+		<security:intercept-url pattern="/**" access="isAnonymous() or isAuthenticated()" requires-channel="any"/>
+	</security:http>
+
+	<bean id="adminAuthenticationProvider" class="com.i4one.base.security.AdminAuthenticationProvider"/>
+
+	<bean id="userAuthenticationProvider" class="com.i4one.base.security.UserAuthenticationProvider"/>
+
+	<security:authentication-manager erase-credentials="true">
+		<security:authentication-provider ref="adminAuthenticationProvider"/>
+		<security:authentication-provider ref="userAuthenticationProvider"/>
+	</security:authentication-manager>
+	-->
+
+	<bean id="cacheManager" class="org.springframework.cache.ehcache.EhCacheCacheManager">
+		<property name="cacheManager" ref="ehcache"/>
+	</bean>
+	<bean id="ehcache" class="org.springframework.cache.ehcache.EhCacheManagerFactoryBean">
+		<property name="configLocation" value="classpath:ehcache.xml"/>
+	</bean>
+
+	<!-- Transaction Management via Annotation -->
+	<tx:annotation-driven transaction-manager="dataSourceTransactionManager"/>
+	<bean id="dataSourceTransactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+		<property name="dataSource" ref="i4oneDataSource"/>
+	</bean>
+
+
+	<bean id="propertyConfigurer" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+		<property name="locations">
+			<list>
+				<value>classpath:jdbc.properties</value>
+			</list>
+		</property>
+	</bean>
+
+	<bean id="jacksonObjectMapper" class="org.springframework.http.converter.json.Jackson2ObjectMapperFactoryBean"
+		p:failOnUnknownProperties="false"
+		p:failOnEmptyBeans="false"
+		p:indentOutput="true">
+	</bean>
+
+	<!-- This needs to be here first since all other beans depend on it -->
+	<!--
+	<bean id="base" class="com.i4one.base.core.Base" init-method="init">
+		<property name="clientOptionManager" ref="base.ReadOnlyClientOptionManager"/>
+		<property name="velocityConfig" ref="velocityConfig"/>
+		<property name="jacksonObjectMapper" ref="jacksonObjectMapper"/>
+		<property name="instance" ref="base"/>
+	</bean>
+	-->
+
+	<!--
+	<bean id="daoManager" class="com.i4one.base.dao.DaoManager">
+		<property name="daoMap">
+			<map>
+				<entry><key><value>adminDao</value></key><ref bean="adminDao"/></entry>
+				<entry><key><value>clientAdminPrivilegeDao</value></key><ref bean="clientAdminPrivilegeDao"/></entry>
+				<entry><key><value>privilegeDao</value></key><ref bean="privilegeDao"/></entry>
+				<entry><key><value>adminHistoryDao</value></key><ref bean="adminHistoryDao"/></entry>
+				<entry><key><value>userDao</value></key><ref bean="userDao"/></entry>
+				<entry><key><value>balanceDao</value></key><ref bean="balanceDao"/></entry>
+				<entry><key><value>userBalanceDao</value></key><ref bean="userBalanceDao"/></entry>
+				<entry><key><value>transactionDao</value></key><ref bean="transactionDao"/></entry>
+				<entry><key><value>clientDao</value></key><ref bean="clientDao"/></entry>
+				<entry><key><value>clientOptionDao</value></key><ref bean="clientOptionDao"/></entry>
+				<entry><key><value>messageDao</value></key><ref bean="messageDao"/></entry>
+				<entry><key><value>prizeDao</value></key><ref bean="prizeDao"/></entry>
+				<entry><key><value>balanceTriggerDao</value></key><ref bean="balanceTriggerDao"/></entry>
+				<entry><key><value>userBalanceTriggerDao</value></key><ref bean="userBalanceTriggerDao"/></entry>
+
+				<entry><key><value>termDao</value></key><ref bean="termDao"/></entry>
+				<entry><key><value>eventDao</value></key><ref bean="eventDao"/></entry>
+				<entry><key><value>eventOutcomeDao</value></key><ref bean="eventOutcomeDao"/></entry>
+				<entry><key><value>eventPredictionDao</value></key><ref bean="eventPredictionDao"/></entry>
+				<entry><key><value>eventCategoryDao</value></key><ref bean="eventCategoryDao"/></entry>
+				<entry><key><value>playerDao</value></key><ref bean="playerDao"/></entry>
+			</map>
+		</property>
+	</bean>
+	-->
+
+	<!-- WebApp related beans -->
+	<bean id="userAdminModelInterceptor" class="com.i4one.base.web.interceptor.model.UserAdminModelInterceptor" init-method="init"/>
+	<bean id="userMenuModelInterceptor" class="com.i4one.base.web.interceptor.model.UserMenuModelInterceptor" init-method="init"/>
+	<bean id="adminMenuModelInterceptor" class="com.i4one.base.web.interceptor.model.AdminMenuModelInterceptor" init-method="init"/>
+
+	<bean id="promotionUserMenuModelInterceptor" class="com.i4one.promotion.web.interceptor.PromotionUserMenuModelInterceptor" init-method="init"/>
+	<bean id="promotionAdminMenuModelInterceptor" class="com.i4one.promotion.web.interceptor.PromotionAdminMenuModelInterceptor" init-method="init"/>
+	<bean id="promotionCategoriesModelInterceptor" class="com.i4one.promotion.web.interceptor.PromotionCategoriesModelInterceptor" init-method="init">
+		<property name="triviaCategoryManager" ref="promotion.TriviaCategoryManager"/>
+		<property name="triviaManager" ref="promotion.TriviaManager"/>
+		<property name="eventCategoryManager" ref="promotion.EventCategoryManager"/>
+		<property name="eventManager" ref="promotion.EventManager"/>
+	</bean>
+
+	<bean id="predictUserMenuModelInterceptor" class="com.i4one.predict.web.interceptor.PredictUserMenuModelInterceptor" init-method="init"/>
+	<bean id="predictAdminMenuModelInterceptor" class="com.i4one.predict.web.interceptor.PredictAdminMenuModelInterceptor" init-method="init"/>
+	<bean id="predictBalanceModelInterceptor" class="com.i4one.predict.web.interceptor.PredictBalanceModelInterceptor" init-method="init">
+		<property name="termManager" ref="predict.TermManager"/>
+		<property name="playerManager" ref="predict.PlayerManager"/>
+		<property name="balanceManager" ref="base.BalanceManager"/>
+		<property name="userBalanceManager" ref="base.UserBalanceManager"/>
+	</bean>
+	<bean id="predictDashboardModelInterceptor" class="com.i4one.predict.web.interceptor.PredictDashboardModelInterceptor" init-method="init">
+		<property name="termManager" ref="predict.TermManager"/>
+		<property name="playerManager" ref="predict.PlayerManager"/>
+		<property name="eventManager" ref="predict.EventManager"/>
+		<property name="eventOutcomeManager" ref="predict.EventOutcomeManager"/>
+		<property name="eventPredictionManager" ref="predict.EventPredictionManager"/>
+	</bean>
+	<bean id="predictCategoriesModelInterceptor" class="com.i4one.predict.web.interceptor.PredictCategoriesModelInterceptor" init-method="init">
+		<property name="eventCategoryManager" ref="predict.EventCategoryManager"/>
+		<property name="eventManager" ref="predict.EventManager"/>
+	</bean>
+
+	<bean id="researchUserMenuModelInterceptor" class="com.i4one.research.web.interceptor.ResearchUserMenuModelInterceptor" init-method="init"/>
+	<bean id="researchAdminMenuModelInterceptor" class="com.i4one.research.web.interceptor.ResearchAdminMenuModelInterceptor" init-method="init"/>
+	<bean id="surveyCategoriesModelInterceptor" class="com.i4one.research.web.interceptor.SurveyCategoriesModelInterceptor" init-method="init">
+		<property name="surveyCategoryManager" ref="research.SurveyCategoryManager"/>
+		<property name="surveyManager" ref="research.SurveyManager"/>
+	</bean>
+
+	<bean id="modelManager" class="com.i4one.base.web.SimpleModelManager" init-method="init">
+		<property name="messageManager" ref="base.ReadOnlyMessageManager"/>
+		<property name="modelInterceptors">
+			<list>
+				<ref bean="userAdminModelInterceptor"/>
+				<ref bean="userMenuModelInterceptor"/>
+				<ref bean="adminMenuModelInterceptor"/>
+
+				<ref bean="promotionAdminMenuModelInterceptor"/>
+				<ref bean="promotionUserMenuModelInterceptor"/>
+				<ref bean="promotionCategoriesModelInterceptor"/>
+
+				<ref bean="predictUserMenuModelInterceptor"/>
+				<ref bean="predictAdminMenuModelInterceptor"/>
+				<ref bean="predictBalanceModelInterceptor"/>
+				<ref bean="predictDashboardModelInterceptor"/>
+				<ref bean="predictCategoriesModelInterceptor"/>
+
+				<ref bean="researchUserMenuModelInterceptor"/>
+				<ref bean="researchAdminMenuModelInterceptor"/>
+				<ref bean="surveyCategoriesModelInterceptor"/>
+			</list>
+		</property>
+	</bean>
+
+	<bean id="messageResourceLoader" class="com.i4one.base.spring.MessageResourceLoader" init-method="init">
+		<property name="clientManager" ref="base.ReadOnlySingleClientManager"/>
+		<property name="messageManager" ref="base.ReadOnlyMessageManager"/>
+
+		<property name="fallbackResourceLoader" ref="classpathResourceLoader"/>
+	</bean>
+
+	<bean id="classpathResourceLoader" class="com.i4one.base.spring.ClasspathResourceLoader">
+		<property name="prefix" value="com/i4one/"/>
+		<property name="packageSuffix" value="/vm/"/>
+		<property name="suffix" value=""/>
+	</bean>
+
+	<bean id="velocityConfig" class="com.i4one.base.spring.VelocityConfigurer">
+		<property name="overrideLogging" value="false"/>
+		<property name="velocityPropertiesMap">
+			<map>
+				<entry key="runtime.log.logsystem.class" value="org.apache.velocity.runtime.log.CommonsLogLogChute"/>
+
+				<entry key="resource.loader" value="msg,class"/>
+				<entry key="msg.resource.loader.instance"><ref bean="messageResourceLoader"/></entry>
+
+				<!-- The custom class path resource loader that removes the client and language prefixes -->
+				<entry key="vmfiles.resource.loader.instance"><ref bean="classpathResourceLoader"/></entry>
+
+				<!-- If all else fails fall back to the default classpath loader -->
+				<entry key="class.resource.loader.class" value="org.apache.velocity.runtime.resource.loader.ClasspathResourceLoader"/>
+			</map>
+		</property>
+	</bean>
+
+	<bean id="request" class="org.springframework.mock.web.MockHttpServletRequest" scope="session"/>
+	<bean id="response" class="org.springframework.mock.web.MockHttpServletResponse" scope="session"/>
+
+	<mvc:annotation-driven/>
+
+	<context:component-scan base-package="com.i4one" name-generator="com.i4one.base.spring.I4oneBeanNameGenerator"/>
+
+        <bean id="reCaptcha" class="net.tanesha.recaptcha.ReCaptchaImpl">
+                <property name="privateKey" value="6LcisukSAAAAAJ9otiKw6ZnKl5gyK0Ak9hpd3swg" />
+                <property name="publicKey" value="6LcisukSAAAAAEYgH7_VLqLWRm2NLYlRYOFfjbff" />
+                <property name="includeNoscript" value="false" />
+        </bean>
+
+	<bean name="viewNameTranslator" class="org.springframework.web.servlet.view.DefaultRequestToViewNameTranslator"/>
+
+	<bean id="velocityViewResolver" class="org.springframework.web.servlet.view.velocity.VelocityViewResolver">
+		<property name="viewClass" value="com.i4one.base.spring.VelocityThemedView"/>
+		<property name="cache" value="true"/>
+		<property name="prefix" value=""/>
+		<property name="suffix" value=".vm"/>
+		<property name="order" value="0"/>
+		<property name="contentType" value="text/html; charset=utf-8"/>
+	</bean>
+
+	<bean id="themeResolver" class="com.i4one.base.spring.ClientThemeResolver"/>
+	<bean id="themeSource" class="com.i4one.base.spring.ClientThemeSource">
+		<property name="clientManager" ref="base.ReadOnlySingleClientManager"/>
+		<property name="messageManager" ref="base.ReadOnlyMessageManager"/>
+	</bean>
+	<bean id="localeResolver" class="com.i4one.base.spring.LocaleResolver">
+		<property name="defaultLocale" value="en"/>
+	</bean>
+
+	<mvc:interceptors>
+		<bean id="clientInterceptor" class="com.i4one.base.web.interceptor.ClientInterceptor" init-method="init">
+			<property name="defaultLanguage" value="en"/>
+			<property name="defaultPage" value="base/user/index.html"/>
+		</bean>
+
+		<bean id="adminAuthInterceptor" class="com.i4one.base.web.interceptor.AdminAuthInterceptor">
+			<property name="httpsDomain" value="i4oneinteractive.com"/>
+			<property name="unauthView" value="base/admin/auth/index.html"/>
+			<property name="modelManager" ref="modelManager"/>
+		</bean>
+
+		<bean id="userAuthInterceptor" class="com.i4one.base.web.interceptor.UserAuthInterceptor">
+			<property name="unauthView" value="base/user/auth/index.html"/>
+			<property name="modelManager" ref="modelManager"/>
+		</bean>
+
+		<bean id="browserInterceptor" class="com.i4one.base.web.interceptor.BrowserInterceptor">
+			<property name="incompatibleView" value="base/user/auth/incompatible.html"/>
+		</bean>
+
+		<bean id="accessCodeInterceptor" class="com.i4one.base.web.interceptor.AccessCodeInterceptor"/>
+	</mvc:interceptors>
+
+	<mvc:default-servlet-handler/>
+</beans>

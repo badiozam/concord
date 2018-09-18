@@ -1,0 +1,60 @@
+#**
+ * MIT License
+ * 
+ * Copyright (c) 2018 i4one Interactive, LLC
+ * 
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ * 
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ * 
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ *#
+#**
+ * @author Hamid Badiozamani
+ */
+#set($title = ${model.buildMessage('msg.rewards.admin.winnableprizetype.reserve.pageTitle', 'item', $winnable)})
+#parseVm( "base/admin/template/startHead.vm" )
+#parseVm( "base/admin/template/endHead.vm" )
+#parseVm( "base/admin/template/startBody.vm" )
+
+<section id="crud">
+	<form method="post" action="$request.requestURI">
+		#springFormHiddenInput("winnable.ser" "")
+		<span id="jq_errors">#i4oneStatus("winnable")</span>
+
+		<div class="form-group row">
+			<div class="col-xs-4 col-sm-3"><label for="currentInventory">#messageWithHelp('msg.rewards.admin.winnableprizetype.prize.currentinventory')</label></div>
+			<div class="col-xs-8 col-sm-3">#i4oneFormStatic('winnable.prize.currentInventory' '' '')</div>
+
+			<div class="col-xs-4 col-sm-3"><label for="initialReserve">#messageWithHelp('msg.rewards.admin.winnableprizetype.initialreserve')</label></div>
+			<div class="col-xs-8 col-sm-3">#i4oneFormStatic('winnable.initialReserve' '' '')</div>
+
+			<div class="col-xs-4 col-sm-3"><label for="currentReserve">#messageWithHelp('msg.rewards.admin.winnableprizetype.currentreserve')</label></div>
+			<div class="col-xs-8 col-sm-3">#i4oneFormStatic('winnable.currentReserve' '' '')</div>
+		</div>
+
+		<div class="form-group row">
+			<div class="col-xs-4 col-sm-3"><label for="amount">#messageWithHelp('msg.rewards.admin.winnableprizetype.rewards.amount')</label></div>
+			<div class="col-xs-8 col-sm-3">#i4oneFormInput('winnable.incrementReserveAmount' '1' 'maxlength="4"')</div>
+		</div>
+
+		<div class="form-group row">
+			<div class="col-sm-6">#i4oneFormUpdate($item)</div>
+			<div class="col-sm-6">#i4oneFormBack("update.html?id=$winnable.ser")</div>
+		</div>
+	</form>
+</section>
+
+#parseVm( "base/admin/template/endBody.vm" )

@@ -1,0 +1,194 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+		 xmlns:p="http://www.springframework.org/schema/p"
+		 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		 xmlns:aop="http://www.springframework.org/schema/aop"
+		 xmlns:tx="http://www.springframework.org/schema/tx"
+		 xmlns:mvc="http://www.springframework.org/schema/mvc"
+		 xmlns:cache="http://www.springframework.org/schema/cache" 
+		 xmlns:context="http://www.springframework.org/schema/context"
+		 xmlns:security="http://www.springframework.org/schema/security"
+		 xsi:schemaLocation="http://www.springframework.org/schema/beans 
+		   http://www.springframework.org/schema/beans/spring-beans-4.1.xsd
+		   http://www.springframework.org/schema/aop 
+		   http://www.springframework.org/schema/aop/spring-aop-4.1.xsd
+		   http://www.springframework.org/schema/tx 
+		   http://www.springframework.org/schema/tx/spring-tx-4.1.xsd
+		   http://www.springframework.org/schema/cache
+		   http://www.springframework.org/schema/cache/spring-cache-4.1.xsd
+		   http://www.springframework.org/schema/context
+		   http://www.springframework.org/schema/context/spring-context-4.1.xsd
+		   http://www.springframework.org/schema/mvc
+		   http://www.springframework.org/schema/mvc/spring-mvc-4.1.xsd
+		   http://www.springframework.org/schema/security
+		   http://www.springframework.org/schema/security/spring-security-4.1.xsd">
+
+	<context:annotation-config/>
+	<cache:annotation-driven />
+
+	<mvc:annotation-driven/>
+
+	<context:component-scan base-package="com.i4one" name-generator="com.i4one.base.spring.I4oneBeanNameGenerator"/>
+
+	<bean id="i4oneDataSource" class="org.apache.commons.dbcp2.BasicDataSource" destroy-method="close">
+	        <property name="driverClassName" value="${jdbc.driverClassName}"/>
+	        <property name="url" value="${jdbc.url}"/>
+	        <property name="username" value="${jdbc.username}"/>
+		<property name="password" value="${jdbc.password}"/>
+		<property name="defaultAutoCommit" value="true"/>
+	</bean>
+
+	<!-- Spring security definitions (too complicated to integrate, maybe later) -->
+	<!--
+	<security:http pattern="/**/css/*" security="none" />
+	<security:http pattern="/**/js/*" security="none" />
+
+	<security:http use-expressions="true">
+		<security:intercept-url pattern="/**/admin/auth/index.html" access="permitAll" requires-channel="any"/>
+		<security:intercept-url pattern="/**/admin/**" access="hasRole('admin')" requires-channel="any"/>
+		<security:intercept-url pattern="/**" access="isAnonymous() or isAuthenticated()" requires-channel="any"/>
+	</security:http>
+
+	<bean id="adminAuthenticationProvider" class="com.i4one.base.security.AdminAuthenticationProvider"/>
+
+	<bean id="userAuthenticationProvider" class="com.i4one.base.security.UserAuthenticationProvider"/>
+
+	<security:authentication-manager erase-credentials="true">
+		<security:authentication-provider ref="adminAuthenticationProvider"/>
+		<security:authentication-provider ref="userAuthenticationProvider"/>
+	</security:authentication-manager>
+	-->
+
+	<!-- Transaction Management via Annotation -->
+	<tx:annotation-driven transaction-manager="dataSourceTransactionManager"/>
+	<bean id="dataSourceTransactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+		<property name="dataSource" ref="i4oneDataSource"/>
+	</bean>
+
+
+	<bean id="propertyConfigurer" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+		<property name="locations">
+			<list>
+				<value>classpath:jdbc.properties</value>
+			</list>
+		</property>
+	</bean>
+
+	<!--
+	<bean id="daoManager" class="com.i4one.base.dao.DaoManager">
+		<property name="daoMap">
+			<map>
+				<entry><key><value>adminDao</value></key><ref bean="adminDao"/></entry>
+				<entry><key><value>clientAdminPrivilegeDao</value></key><ref bean="clientAdminPrivilegeDao"/></entry>
+				<entry><key><value>privilegeDao</value></key><ref bean="privilegeDao"/></entry>
+				<entry><key><value>adminHistoryDao</value></key><ref bean="adminHistoryDao"/></entry>
+				<entry><key><value>userDao</value></key><ref bean="userDao"/></entry>
+				<entry><key><value>balanceDao</value></key><ref bean="balanceDao"/></entry>
+				<entry><key><value>userBalanceDao</value></key><ref bean="userBalanceDao"/></entry>
+				<entry><key><value>transactionDao</value></key><ref bean="transactionDao"/></entry>
+				<entry><key><value>clientDao</value></key><ref bean="clientDao"/></entry>
+				<entry><key><value>clientOptionDao</value></key><ref bean="clientOptionDao"/></entry>
+				<entry><key><value>messageDao</value></key><ref bean="messageDao"/></entry>
+				<entry><key><value>prizeDao</value></key><ref bean="prizeDao"/></entry>
+				<entry><key><value>balanceTriggerDao</value></key><ref bean="balanceTriggerDao"/></entry>
+				<entry><key><value>userBalanceTriggerDao</value></key><ref bean="userBalanceTriggerDao"/></entry>
+
+				<entry><key><value>termDao</value></key><ref bean="termDao"/></entry>
+				<entry><key><value>eventDao</value></key><ref bean="eventDao"/></entry>
+				<entry><key><value>eventOutcomeDao</value></key><ref bean="eventOutcomeDao"/></entry>
+				<entry><key><value>eventPredictionDao</value></key><ref bean="eventPredictionDao"/></entry>
+				<entry><key><value>eventCategoryDao</value></key><ref bean="eventCategoryDao"/></entry>
+				<entry><key><value>playerDao</value></key><ref bean="playerDao"/></entry>
+			</map>
+		</property>
+	</bean>
+	-->
+
+	<!--
+		 The privilege manager delegate chain:
+		 Simple/Cached
+		 Privileged: Prototype, checks privileges before granting/revoking (needs setAdmin)
+		 Historical: Prototype, records admin history log (needs setSourceIP)
+	-->
+
+	<!--
+		MessageManagers
+		<bean id="simpleMessageManager" class="com.i4one.base.model.message.SimpleMessageManager" init-method="init"/>
+	-->
+
+	<!-- WebApp related beans -->
+	<bean id="base.ModelManager" class="com.i4one.base.web.SimpleModelManager" init-method="init">
+		<property name="messageManager" ref="base.ReadOnlyMessageManager"/>
+		<property name="modelInterceptors">
+			<list>
+				<ref bean="base.UserAdminModelInterceptor"/>
+				<ref bean="base.UserMenuModelInterceptor"/>
+				<ref bean="base.UserBalanceModelInterceptor"/>
+				<ref bean="base.AdminMenuModelInterceptor"/>
+				<ref bean="base.FileServerModelInterceptor"/>
+				<ref bean="base.UserMessagesModelInterceptor"/>
+
+				<ref bean="promotion.PromotionAdminMenuModelInterceptor"/>
+				<ref bean="promotion.PromotionUserMenuModelInterceptor"/>
+				<ref bean="promotion.PromotionCategoriesModelInterceptor"/>
+
+				<ref bean="rewards.RewardsAdminMenuModelInterceptor"/>
+				<ref bean="rewards.RewardsUserMenuModelInterceptor"/>
+				<ref bean="rewards.RewardsCategoriesModelInterceptor"/>
+
+				<ref bean="predict.PredictAdminMenuModelInterceptor"/>
+				<ref bean="predict.PredictBalanceModelInterceptor"/>
+				<ref bean="predict.PredictDashboardModelInterceptor"/>
+				<ref bean="predict.PredictCategoriesModelInterceptor"/>
+				<ref bean="predict.PredictUserMenuModelInterceptor"/>
+
+				<!-- surveyUserMenuModelInterceptor depends on the categories -->
+				<ref bean="research.ResearchAdminMenuModelInterceptor"/>
+				<ref bean="research.ResearchUserMenuModelInterceptor"/>
+				<ref bean="research.PollCategoriesModelInterceptor"/>
+				<ref bean="research.SurveyCategoriesModelInterceptor"/>
+			</list>
+		</property>
+	</bean>
+
+	<bean id="classpathResourceLoader" class="com.i4one.base.spring.ClasspathResourceLoader">
+		<property name="prefix" value="com/i4one/"/>
+		<property name="packageSuffix" value="/vm/"/>
+		<property name="suffix" value=""/>
+	</bean>
+
+	<bean id="messageResourceLoader" class="com.i4one.base.spring.MessageResourceLoader" init-method="init">
+		<property name="clientManager" ref="base.ReadOnlySingleClientManager"/>
+		<property name="messageManager" ref="base.ReadOnlyMessageManager"/>
+
+		<property name="fallbackResourceLoader" ref="classpathResourceLoader"/>
+	</bean>
+
+	<bean id="velocityConfig" class="com.i4one.base.spring.VelocityConfigurer">
+		<property name="overrideLogging" value="false"/>
+		<property name="velocityPropertiesMap">
+			<map>
+				<entry key="runtime.log.logsystem.class" value="org.apache.velocity.runtime.log.CommonsLogLogChute"/>
+
+				<entry key="resource.loader" value="msg,class"/>
+				<entry key="msg.resource.loader.instance"><ref bean="messageResourceLoader"/></entry>
+				<!--
+				// It's much more efficient to have the resource loaders be chained together and call each
+				// other rather than having exceptions thrown (and thus stack traces built) each time a
+				// message is not found
+				// 
+				<entry key="resource.loader" value="msg,vmfiles,class"/>
+				<entry key="msg.resource.loader.instance"><ref bean="messageResourceLoader"/></entry>
+
+				// The custom class path resource loader that removes the client and language prefixes
+				<entry key="vmfiles.resource.loader.instance"><ref bean="classpathResourceLoader"/></entry>
+				-->
+
+				<!-- If all else fails fall back to the default classpath loader -->
+				<entry key="class.resource.loader.class" value="org.apache.velocity.runtime.resource.loader.ClasspathResourceLoader"/>
+			</map>
+		</property>
+	</bean>
+
+</beans>

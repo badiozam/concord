@@ -1,0 +1,95 @@
+#**
+ * MIT License
+ * 
+ * Copyright (c) 2018 i4one Interactive, LLC
+ * 
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ * 
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ * 
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ *#
+#**
+ * @author Hamid Badiozamani
+ */
+#parseVm( "base/user/template/start.vm" )
+
+<style>
+#trivia div#label h1
+{
+	font-size: 3.5rem;
+}
+
+#trivia .intro
+{
+	font-size: 1.3rem;
+	color: #428bca;
+}
+
+#trivia .response
+{
+	font-size: 1.1rem;
+}
+#pageCSS()
+</style>
+
+<section class="container" id="trivia">
+	<div class="row">
+		<div class="hidden-xs col-sm-2 hidden-md hidden-lg"></div>
+		<div class="$editClass col-xs-12 col-sm-8 col-md-12 col-lg-12" data-ser="$triviaResponse.trivia.ser">
+			<div class="form-group row">
+				<div class="col-xs-12">#i4oneAttachableStatus('triviaResponse')</div>
+			</div>
+
+			#if ( $triviaResponse.triviaAnswer.exists )
+			<div class="form-group row">
+				<div id="label" class="col-xs-12">
+					<h1>#IString($triviaResponse.trivia.title)</h1>
+					<div class="outro">#IString($triviaResponse.trivia.outro)</div>
+				</div>
+				<div class="col-xs-12">#i4oneFormBack("index.html?categoryid=$triviaResponse.trivia.category.ser")</div>
+			</div>
+			#else
+			<div id="label" class="col-xs-12 col-md-6">
+				<h1>#IString($triviaResponse.trivia.title)</h1>
+				<p>#IString($triviaResponse.trivia.descr)</p>
+			</div>
+			<div id="form" class="col-xs-12 col-md-6">
+				<form method="post">
+				#springFormHiddenInput("triviaResponse.trivia" " ")
+
+				<div class="intro">#IString($!triviaResponse.trivia.intro)</div>
+				<div class="response">
+					#if ( $triviaResponse.trivia.questionType == 0 )
+						#i4oneFormRadioButtons("triviaResponse.triviaAnswer" $triviaResponse.answerMap '')
+					#elseif ( $triviaResponse.questionType == 1 )
+						#i4oneFormSingleSelect( "triviaResponse.triviaAnswer" $triviaResponse.answerMap '' )
+					#else
+						## Unknown type
+						--
+					#end
+				</div>
+
+				<div class="col-xs-12">#i4oneFormSubmit('msg.promotion.user.trivia.submit' $triviaResponse)</div>
+				<div class="col-xs-12">#i4oneFormBack("index.html?categoryid=$triviaResponse.trivia.category.ser")</div>
+				</form>
+			#end
+			</div>
+		</div>
+		<div class="hidden-xs col-sm-2 hidden-md hidden-lg"></div>
+	</div>
+</section>
+
+#parseVm( "base/user/template/end.vm" )

@@ -1,0 +1,117 @@
+#**
+ * MIT License
+ * 
+ * Copyright (c) 2018 i4one Interactive, LLC
+ * 
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ * 
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ * 
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ *#
+#**
+ * @author Hamid Badiozamani
+ */
+#parseVm( "base/admin/template/instantWinningCrud.vm" )
+#parseVm( "base/admin/template/triggerableCrud.vm" )
+#parseVm( "base/admin/template/terminableCrud.vm" )
+#set($title = ${model.buildMessage('msg.research.admin.surveys.update.pageTitle', 'item', $survey)})
+#parseVm( "base/admin/template/startHead.vm" )
+#parseVm( "base/admin/template/endHead.vm" )
+#parseVm( "base/admin/template/startBody.vm" )
+
+<div id="crud">
+	<form method="post" action="$request.requestURI">
+		#springFormHiddenInput("survey.ser" "")
+		#springFormHiddenInput("survey.client" "")
+		<span id="jq_errors">#i4oneStatus("survey")</span>
+
+		<div class="form-group row">
+			<div class="col-sm-4 col-md-2"><label for="siteGroup">#msg('sitegroup')</label></div>
+			<div class="col-sm-8 col-md-10">#i4oneFormSingleSelect('survey.siteGroup' ${siteGroups} '')</div>
+
+			<div class="col-sm-4 col-md-2"><label for="category">#msg('category')</label></div>
+			<div class="col-sm-8 col-md-10">#i4oneFormSingleSelect('survey.category' ${categories} '')</div>
+
+			<div class="col-sm-4 col-md-2"><label for="title">#msg('title')</label></div>
+			<div class="col-sm-8 col-md-10">#i4oneFormIStringInput('survey.title' '' 'maxlength="128"')</div>
+		</div>
+
+		#terminableCrud("survey")
+
+		<div class="form-group row">
+			<div class="col-sm-4 col-md-2"><label for="perpage">#msg('perpage')</label></div>
+			<div class="col-sm-4 col-md-2">#i4oneFormInput('survey.perPage' '' '')</div>
+
+			#set($randomizeLabel = ${model.buildMessage('msg.research.admin.surveys.update.randomize')})
+			<div class="col-sm-12">#i4oneFormCheckbox('survey.randomize' "$randomizeLabel" '')</div>
+
+			<div class="col-sm-12 col-md-2"><label for="intro">#msg('intro')</label></div>
+			<div class="col-sm-12 col-md-10">#i4oneFormIHtmlarea("survey.intro" '' 'rows="4"')</div>
+
+			<div class="col-sm-12 col-md-2"><label for="outro">#msg('outro')</label></div>
+			<div class="col-sm-12 col-md-10">#i4oneFormIHtmlarea("survey.outro" '' 'rows="4"')</div>
+		</div>
+
+		<div class="form-group row">
+			<div class="col-sm-12">
+				<h3>#msg('questions')</h3>
+				#if ( !$survey.questions.empty )
+					<table class="table table-striped">
+					<tr>
+						<th>#message('msg.research.admin.surveys.updatequestion.orderweight')</th>
+						<th>#message('msg.research.admin.surveys.updatequestion.questiontype')</th>
+						<th>#message('msg.research.admin.surveys.updatequestion.answercount')</th>
+						<th>#message('msg.research.admin.surveys.updatequestion.question')</th>
+						<th></th>
+					</tr>
+					#foreach($currQuestion in $survey.questions)
+					<tr>
+						<td>$currQuestion.orderWeight</td>
+						<td>$currQuestion.questionType</td>
+						<td>$currQuestion.answerCount</td>
+						<td>#IString($currQuestion.question)</td>
+						<td>
+							<a class="btn btn-default btn-block" href="updatequestion.html?questionid=${currQuestion.ser}&surveyid=${survey.ser}">#message('msg.base.admin.general.update')</a>
+							<a class="btn btn-default btn-block" href="clonequestion.html?questionid=${currQuestion.ser}">#message('msg.base.admin.general.clone')</a>
+							<a class="btn btn-default btn-block" href="removequestion.html?questionid=${currQuestion.ser}">#message('msg.base.admin.general.remove')</a>
+						</td>
+					</tr>
+					#end
+					</table>
+				#else
+					#msg('noquestions')
+				#end
+			</div>
+			<div class="col-sm-12">
+				#if ( $survey.exists )
+					<a class="btn btn-default btn-block" href="updatequestion.html?surveyid=${survey.ser}">#message('msg.research.admin.surveys.updatequestion.create')</a>
+				#end
+			</div>
+		</div>
+
+		#triggerableCrud("survey")
+		#instantWinningCrud("survey")
+
+		<div class="form-group row">
+			<div class="col-sm-4">#i4oneFormUpdate($survey)</div>
+			<div class="col-sm-4">#i4oneFormHistory($survey)</div>
+			<div class="col-sm-4">#i4oneTerminableBack($survey)</div>
+		</div>
+	## XXX: Need to add whether we're setting the number of credits per page or at the end of a survey
+	</form>
+</div>
+
+#parseVm( "base/admin/template/endBody.vm" )

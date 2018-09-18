@@ -1,0 +1,112 @@
+#**
+ * MIT License
+ * 
+ * Copyright (c) 2018 i4one Interactive, LLC
+ * 
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ * 
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ * 
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ *#
+#**
+ * @author Hamid Badiozamani
+ */
+#parseVm( "base/admin/template/instantWinningCrud.vm" )
+#parseVm( "base/admin/template/triggerableCrud.vm" )
+#parseVm( "base/admin/template/terminableCrud.vm" )
+#set($title = ${model.buildMessage('msg.promotion.admin.trivias.update.pageTitle', 'item', $trivia)})
+#parseVm( "base/admin/template/startHead.vm" )
+#parseVm( "base/admin/template/endHead.vm" )
+#parseVm( "base/admin/template/startBody.vm" )
+
+<div id="crud">
+	<form method="post" action="$request.requestURI">
+		#springFormHiddenInput("trivia.ser" "")
+		#springFormHiddenInput("trivia.client" "")
+		<span id="jq_errors">#i4oneStatus("trivia")</span>
+
+		<div class="form-group row">
+			<div class="col-sm-4 col-md-2"><label for="siteGroup">#msg('sitegroup')</label></div>
+			<div class="col-sm-8 col-md-10">#i4oneFormSingleSelect('trivia.siteGroup' ${siteGroups} '')</div>
+
+			<div class="col-sm-4 col-md-2"><label for="category">#msg('category')</label></div>
+			<div class="col-sm-8 col-md-10">#i4oneFormSingleSelect('trivia.category' ${categories} '')</div>
+
+			<div class="col-sm-4 col-md-2"><label for="title">#msgWithHelp('title')</label></div>
+			<div class="col-sm-8 col-md-10">#i4oneFormIStringInput('trivia.title' '' 'maxlength="128"')</div>
+
+			<div class="col-sm-4 col-md-2"><label for="title">#msgWithHelp('descr')</label></div>
+			<div class="col-sm-8 col-md-10">#i4oneFormIStringInput('trivia.descr' '' '')</div>
+		</div>
+
+		#terminableCrud("trivia")
+
+		<div class="form-group row">
+			<div class="col-sm-2"><label for="questionType">#msg('questiontype')</label></div>
+			<div class="col-sm-10">#i4oneFormSingleSelect("trivia.questionType" ${validQuestionType} '')</div>
+
+			<div class="col-sm-12 col-md-2"><label for="perpage">#msgWithHelp('intro')</label></div>
+			<div class="col-sm-12 col-md-10">#i4oneFormITextarea('trivia.intro' '' '')</div>
+
+			<div class="col-sm-12 col-md-2"><label for="outro">#msgWithHelp('outro')</label></div>
+			<div class="col-sm-12 col-md-10">#i4oneFormITextarea("trivia.outro" '' 'rows="4"')</div>
+		</div>
+
+		<section name="triviaanswers" class="form-group row">
+		<div class="col-sm-12">
+			<div class="row">
+				<div class="col-xs-12"><h3>#msgWithHelp('triviaanswers')</h3></div>
+			</div>
+			#foreach ( $answer in $trivia.answers )
+				#striping()
+				#set( $currAnswer = "trivia.answers[" + $foreach.index + "]")
+				#set( $currAnswerSer = $currAnswer + ".ser" )
+				#set( $currAnswerAnswer = $currAnswer + ".answer" )
+				#set( $labelAnswerAnswer = "answers" + $foreach.index + ".answer'" + $model.supportedLanguages[0] + "'" )
+
+				<div class="row $rowClass">
+					<div class="col-sm-2 col-md-1">
+						<label for="$labelAnswerAnswer">#msg('answer') #intFormat($foreach.count)</label>
+					</div>
+					<div class="col-sm-8 col-md-9">
+						#springFormHiddenInput($currAnswerSer '')
+						#i4oneFormIStringInput($currAnswerAnswer '' 'maxlength="1024"')
+					</div>
+					<div class="col-sm-2 col-md-1">
+						#i4oneBind("trivia.correctIndex")
+						<div class="radio">
+							<label>
+								<input type="radio" name="${status.expression}" value="$foreach.index" #if("$!status.value" == "$foreach.index")checked="checked"#end/> #msg('correct')
+							</label>
+						</div>
+					</div>
+				</div>
+			#end
+		</div>
+		</section>
+
+		#triggerableCrud("trivia")
+		#instantWinningCrud("trivia")
+
+		<div class="form-group row">
+			<div class="col-sm-4">#i4oneFormUpdate($trivia)</div>
+			<div class="col-sm-4">#i4oneFormHistory($trivia)</div>
+			<div class="col-sm-4">#i4oneTerminableBack($trivia)</div>
+		</div>
+	</form>
+</div>
+
+#parseVm( "base/admin/template/endBody.vm" )

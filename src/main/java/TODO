@@ -1,0 +1,11 @@
+- Instant-win functionality
+	o To have a random currency amount awarded
+- Registration/My Account/Change Password
+- Mobile enabled considerations
+- Work on admin web interface
+	- MessageViewController tests
+
+- Add privileged/historical prize managers
+- Add admin privilege creation/remove
+
+- Error Validation for cell phone field (more than just not empty)

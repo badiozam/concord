@@ -1,0 +1,283 @@
+#**
+ * MIT License
+ * 
+ * Copyright (c) 2018 i4one Interactive, LLC
+ * 
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ * 
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ * 
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ *#
+#**
+ * @author Hamid Badiozamani
+ */
+#parseVm( "base/user/template/start.vm" )
+
+<style>
+#top10 div#label h1
+{
+	font-size: 4.5rem;
+}
+
+#top10 .info
+{
+	font-size: 1.0rem;
+}
+
+#top10 .info.title
+{
+	font-size: 1.2rem;
+}
+
+#top10 .highlighted
+{
+	color: #800;
+	font-weight: bold;
+}
+
+#top10 .info.winstreak,
+#top10 .info.correct,
+#top10 .info.accuracy,
+#top10 .info.totalbids
+{
+	text-align: right;
+	padding-right: 1.25rem;
+}
+
+#top10 .heading input[type="submit"]
+{
+	text-align: right;
+	background-color: inherit;
+	border: 0;
+	margin: 0;
+}
+
+#top10 .heading
+{
+	background-color: rgb(136,0,0);
+	color: #fff;
+	line-height: 2.0rem;
+}
+
+#top10 .odd .heading,
+#top10 .even .heading
+{
+	background-color: inherit;
+	color: inherit;
+	line-height: inherit;
+}
+
+#top10 .heading.winstreak,
+#top10 .heading.correct,
+#top10 .heading.accuracy,
+#top10 .heading.totalbids
+{
+	text-align: right;
+	padding-left: 0;
+}
+
+#top10 .info.winstreak,
+#top10 .info.correct,
+#top10 .info.accuracy,
+#top10 .info.totalbids
+{
+	text-align: right;
+}
+
+#top10 #mobileheadstrip
+{
+	background-color: rgb(136,0,0);
+	min-height: 2rem;
+}
+
+@media (max-width: 991px) /* xs and sm */
+{
+	#top10 .heading
+	{
+		font-size: 1.0rem;
+	}
+
+	#top10 .heading.winstreak,
+	#top10 .heading.correct,
+	#top10 .heading.accuracy,
+	#top10 .heading.totalbids
+	{
+		text-align: left;
+		padding-left: 15px;
+	}
+
+	#top10 .info.winstreak,
+	#top10 .info.correct,
+	#top10 .info.accuracy,
+	#top10 .info.totalbids
+	{
+		text-align: left;
+	}
+
+	#top10 .heading.rank,
+	#top10 .info.rank
+	{
+		padding-top: 1.0rem;
+	}
+
+	#top10 .heading.totalbids,
+	#top10 .info.totalbids
+	{
+		padding-bottom: 1.0rem;
+	}
+}
+
+#pageCSS()
+</style>
+
+<section class="container" id="top10">
+	#msg('pretitle')
+
+	<div class="row">
+		<div id="label" class="col-xs-12">
+			<h1>#msg('title')</h1>
+			<p>#msg('subtitle')</p>
+		</div>
+	</div>
+
+	<div class="hidden-xs hidden-sm row">
+		<div class="heading rank col-md-1">#msg('rank')</div>
+		<div class="heading username col-md-2">#msg('username')</div>
+		<div class="heading city col-md-2">#msg('city')</div>
+		<div class="heading winstreak col-md-1">
+			#if ( $pagination.orderBy == "winstreak" )
+				#msg('winstreak')
+			#else
+				<form action="$request.requestURI" method="get" result="chart">
+					#springFormHiddenInput("pagination.termid" " ")
+					#springFormHiddenInput("pagination.currentPage" " ")
+					#springBind("pagination.orderBy")
+					<input type="hidden" id="${status.expression}" name="${status.expression}" value="winstreak"/>
+					<input type="submit" value="#plainMsg('winstreak')"/>
+				</form>
+			#end
+		</div>
+		<div class="heading correct col-md-2">
+			#if ( $pagination.orderBy == "correct" )
+				#msg('correct')
+			#else
+				<form action="$request.requestURI" method="get" result="chart">
+					#springFormHiddenInput("pagination.termid" " ")
+					#springFormHiddenInput("pagination.currentPage" " ")
+					#springBind("pagination.orderBy")
+					<input type="hidden" id="${status.expression}" name="${status.expression}" value="correct"/>
+					<input type="submit" value="#plainMsg('correct')"/>
+				</form>
+			#end
+		</div>
+		<div class="heading accuracy col-md-2">#msg('accuracy')</div>
+		<div class="heading totalbids col-md-2">#msg('totalbids')</div>
+	</div>
+	<div class="row">
+		<div class="col-xs-12 col-sm-12 hidden-md hidden-lg" id="mobileheadstrip"></div>
+	</div>
+	#foreach ( $player in ${model.players} )
+		#striping()
+		#set( $rank = $foreach.count + ( $pagination.currentPage * $pagination.perPage) )
+		#set ($lastPlayedTime = "--" )
+		#if ( $player.lastPlayedTimeSeconds > 0 )
+			## #set ($lastPlayedTime = "#dateTimeFormat('d-MMM-yyyy hh:mm:ss a', $player.lastPlayedTime)")
+			#set ($lastPlayedTime = "#dateTimeFormat('d-MMM-yyyy', $player.lastPlayedTime)")
+		#end
+
+		#set( $updateTime = $player.updateTimeSeconds * 1000 )
+		#if ( $player.user.ser == $model.User.ser )
+			#set( $highlighted = 'highlighted' )
+		#else
+			#set( $highlighted = '')
+		#end
+
+		<div class="$rowClass row">
+			<div class="$highlighted rank heading col-xs-6 hidden-md hidden-lg">#msg('rank')</div>
+			<div class="$highlighted rank info col-xs-6 col-md-1"><b>$rank</b></div>
+
+			<div class="$highlighted username heading col-xs-6 hidden-md hidden-lg">#msg('username')</div>
+			<div class="$highlighted username info col-xs-6 col-md-2">$!player.user.firstName</div>
+
+			<div class="$highlighted city heading col-xs-6 hidden-md hidden-lg">#msg('city')</div>
+			<div class="$highlighted city info col-xs-6 col-md-2">$!player.user.city</div>
+
+			<div class="$highlighted winstreak heading col-xs-6 hidden-md hidden-lg">#msg('winstreak')</div>
+			<div class="$highlighted winstreak info col-xs-6 col-md-1">#intFormat($player.winStreak)</div>
+
+			<div class="$highlighted correct heading col-xs-6 hidden-md hidden-lg">#msg('correct')</div>
+			<div class="$highlighted correct info col-xs-6 col-md-2">#intFormat($player.correct)</div>
+
+			<div class="$highlighted accuracy heading col-xs-6 hidden-md hidden-lg">#msg('accuracy')</div>
+			<div class="$highlighted accuracy info col-xs-6 col-md-2">#percentFormat($player.correctIncorrectRatio)</div>
+
+			<div class="$highlighted totalbids heading col-xs-6 hidden-md hidden-lg">#msg('totalbids')</div>
+			<div class="$highlighted totalbids info col-xs-6 col-md-2">#intFormat($player.total)</div>
+		</div>
+
+		<div class="clearfix"></div>
+	#end
+
+	<div class="pagination row">
+		#if ( $pagination.currentPage > 0 )
+		<div class="col-xs-12 col-sm-6">
+			<form action="$request.requestURI" method="post" result="chart">
+				#springFormHiddenInput("pagination.termid" " ")
+				#springFormHiddenInput("pagination.currentPage" " ")
+				#springFormHiddenInput("pagination.orderBy" " ")
+				#springBind("pagination.prevPage")
+				<input type="hidden" id="${status.expression}" name="${status.expression}" value="true"/>
+				#i4oneFormSubmit('msg.predict.user.top10.prevpage', $pagination)
+			</form>
+		</div>
+		#else
+		<div class="col-xs-12 col-sm-6">
+			#i4oneFormDisabledButton('msg.predict.user.top10.prevpage' $pagination)
+		</div>
+		#end
+
+		#if ( ${model.players.size()} >= $pagination.perPage ) ## Infinite pagination
+		## #if ( $pagination.currentPage < 3 && ${model.players.size()} >= $pagination.perPage )
+		<div class="col-xs-12 col-sm-6">
+			#set($moreValue = "More")
+			#if ( $pagination.currentPage == 0 )
+				#set($moreValue = "See More")
+			#end
+			<form action="$request.requestURI" method="post" result="chart">
+				#springFormHiddenInput("pagination.termid" " ")
+				#springFormHiddenInput("pagination.currentPage" " ")
+				#springFormHiddenInput("pagination.orderBy" " ")
+				#springBind("pagination.nextPage")
+				<input type="hidden" id="${status.expression}" name="${status.expression}" value="true"/>
+				#i4oneFormSubmit('msg.predict.user.top10.nextpage', $pagination)
+			</form>
+		</div>
+		#else
+		<div class="col-xs-12 col-sm-6">
+			#i4oneFormDisabledButton('msg.predict.user.top10.nextpage' $pagination)
+		</div>
+		#end
+	</div>
+
+	<div class="row">
+		<div class="col-xs-12">#msg('legal')</div>
+	</div>
+
+	<div class="form-group row">
+		## <div class="col-xs-12">#i4oneFormBack()</div>
+	</div>
+</section>
+#parseVm( "base/user/template/end.vm" )

@@ -1,0 +1,213 @@
+/* Moved to /css/style.css, overrides should use the message 'base/cssc/style.cssc' */
+html
+{
+	height: 100%;
+}
+
+@media(max-width:767px) /* @screen-xs-max */
+{
+	html { font-size: 14px; }
+}
+
+@media(min-width:768px) /* @screen-sm-min */
+{
+	html { font-size: 16px; }
+}
+
+@media(min-width:992px) /* @screen-md-min */
+{
+	html { font-size: 18px; }
+}
+
+@media(min-width:1200px) /* @screen-lg-min */
+{
+	html { font-size: 18px; }
+}
+
+body
+{
+	height: 100%;
+
+	/* Needed for the fixed nav bar*/
+	padding-top: 70px;
+}
+
+main
+{
+	padding: 10px;
+	display: table;
+
+	width: 100%;
+	height: 100%;
+}
+
+main > section
+{
+	display: table-cell;
+	vertical-align: middle;
+}
+
+hr
+{
+	border-top-color: #aaa;
+}
+
+.nav-collapse
+{
+	height: auto;
+}
+
+/*
+ * Centers the <div class="brand">..</div> when placed
+ * after all of the other nav divs
+ */
+.navbar-collapse .brand
+{
+	margin-top: 5px;
+	margin-bottom: 5px;
+	margin-left: auto;
+	margin-right: auto;
+
+	float: none;
+	max-width: 60px;
+	max-height: 60px;
+}
+
+.navbar-inner
+{
+	text-align:center;
+}
+
+.form-control
+{
+	font-size: 0.85rem;
+	height: 2.1rem;
+}
+
+.form-group label
+{
+	/* This aligns any labels that are adjacent to the form controls */
+	margin-top: 7px;
+}
+
+.form-group label input[type=radio],
+.form-group label input[type=checkbox]
+{
+	margin-top: 7px;
+}
+
+.btn-primary,
+.btn-alternate
+{
+	font-weight: bold;
+}
+
+.btn-alternate
+{
+	background-color: #fff;
+	color: #428bca;
+	border-color: #428bca;
+}
+
+.btn-alternate:hover,
+.btn-alternate:active,
+.btn-alternate:focus
+{
+	background-color: #fff;
+	color: #3071a9;
+	border-color: #3071a9;
+}
+
+.btn-facebook
+{
+	background-color: #4a6ea8;
+	color: #fff;
+
+	font-size: 1.1rem;
+	line-height: 2.0;
+}
+
+.btn-facebook:hover,
+.btn-facebook:active,
+.btn-facebook:focus
+{
+	background-color: #295679;
+	color: #fff;
+
+	font-size: 1.1rem;
+}
+
+/* 
+ * This renders lines around the content
+ *	---- h3 content ----
+ */
+h3.divider
+{
+	overflow: hidden;
+	text-align: center;
+	text-transform: uppercase;
+
+	font-size: 1.0rem;
+	padding-bottom: 0.7rem;
+	padding-top: 0.7rem;
+	letter-spacing: 1px;
+}
+
+h3.divider:before,
+h3.divider:after
+{
+	background-color: #aaa;
+	content: "";
+	display: inline-block;
+	height: 1px;
+	position: relative;
+	vertical-align: middle;
+	width: 45%;
+}
+
+h3.divider:before
+{
+	right: 0.5em;
+	margin-left: -50%;
+}
+
+h3.divider:after
+{
+	left: 0.5em;
+	margin-right: -50%;
+}
+
+/* A standard heading for displaying information */
+.heading
+{
+	font-size: 0.85rem;
+	font-weight: bold;
+}
+
+/* Striping */
+.even
+{
+	background-color: rgba(190,190,190,0.1);
+}
+
+.odd
+{
+	background-color: rgba(215,215,215,0.65);
+}
+
+div#label
+{
+	margin-bottom: 45px;
+}
+
+div#label p
+{
+	text-transform: lowercase;
+	font-weight: bold;
+}
+
+div#label h1
+{
+	font-family: 'Gotham Thin',Arial,sans-serif;
+	font-size: 2.5rem;
+}

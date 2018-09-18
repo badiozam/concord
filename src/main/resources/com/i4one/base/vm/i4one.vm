@@ -1,0 +1,653 @@
+#**
+ * MIT License
+ * 
+ * Copyright (c) 2018 i4one Interactive, LLC
+ * 
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ * 
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ * 
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ *#
+#**
+ * @author Hamid Badiozamani
+ */
+#**
+ * i4one.vm
+ *
+ * An extension of the spring macros
+ *
+ * @author Hamid Badiozamani
+ *#
+
+#**
+ * Sets a $rowClass variable to 'odd' or 'even' depending on whether the
+ * foreach iteration is in its odd phase or even phase. Useful for striping
+ * rows (or multiple rows) for better readability.
+ *#
+#macro( striping )
+	#set( $rowClass = 'odd' )
+	#if ( $foreach.count % 2 == 0 )
+		#set( $rowClass = 'even' )
+	#end
+#end
+
+#**
+ * springThemeArgs
+ *
+ * Macro to translate a message code into a message.
+ *#
+#macro( springThemeArgs $code $args )$springMacroRequestContext.getThemeMessage($code, $args)#end
+
+#**
+ * springShowErrorsList
+ *
+ * Macro to show errors as list items
+ *#
+#macro( springShowErrorsList )
+	#foreach($error in $status.errorMessages)
+		<li>${error}</li>
+	#end
+#end
+
+#macro( springShowFieldErrors $modelObject $errorClass)
+	#foreach($f in $status.errors.fieldErrors)
+		#springBind("${modelObject}.${f.field}")
+		#foreach($e in $status.errorMessages)
+			<span class="$errorClass">${e}</span>
+		#end
+	#end
+#end
+
+#**
+ * i4oneStatus
+ *
+ * Display the status as well as any errors (must have a modelStatus object defined)
+ *#
+#macro( i4oneStatus $modelObject )
+	#if ( $modelStatus )
+		#springBindEscaped($modelObject, false)
+		#if ( $modelStatus.successful )
+			#set( $alertClass = 'alert-success' )
+		#elseif ( $modelStatus.partial )
+			#set( $alertClass = 'alert-warning' )
+		#else
+			#set( $alertClass = 'alert-danger' )
+		#end
+		<div class="alert $alertClass formError">
+			$modelStatus.title
+			<ul>
+				#springShowErrorsList()
+			</ul>
+		</div>
+	#end
+#end
+
+#macro( i4oneListErrors $errors )
+	#if ( ${errors.allErrorValues.size()} > 1 )
+		<ul>
+			#foreach( $errorMessage in $errors.allErrorValues )
+				<li>$errorMessage</li>
+			#end
+		</ul>
+	#else
+		#foreach( $errorMessage in $errors.allErrorValues )
+			$errorMessage.toString()
+		#end
+	#end
+#end
+
+#**
+ * dateTimeInput
+ * 
+ * Renders a date/time picker input field. This is here so we can switch
+ * date/time pickers easily. If the $attrs field is not specified a class
+ * of form-control is automatically added to the input field type.
+ *#
+#macro( dateTimeInput $paramName $attrs)
+	<div class="dateTimePicker input-group date col-xs-12">
+		#if ( !$attrs.contains('class') )
+			#set( $macro.computedAttrs = "class='form-control'" )
+		#end
+		#set( $macro.computedAttrs = $!macro.computedAttrs + " " + $attrs + " data-format='MM/dd/yyyy HH:mm a'")
+		#springFormInput( $paramName $macro.computedAttrs )
+		<span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
+	</div>
+#end
+
+#**
+ * parseVm
+ *
+ * Macro to parse other scripts with the proper language and client URLs prepended
+ *#
+#macro( parseVm $vm )#set( $macro.computedVm = $request.client.name + "/" + $request.language + "/" + $vm )#parse( $macro.computedVm )#end
+
+#**
+ * Short hand for including a relative path CSS file
+ *#
+#macro( css $src ) #set( $macro.realSrc = $src ) #if ( $src.startsWith("/") ) #set( $macro.realSrc = $request.contextPath + $src ) #end <link rel="stylesheet" href="${request.baseurl}/$macro.realSrc" type="text/css" media="all"/>
+#end
+
+#**
+ * Short hand for including a root CSS file
+ *#
+#macro( rootCSS $src ) #set( $macro.realSrc = $src ) #if ( $src.startsWith("/") ) #set( $macro.realSrc = $request.contextPath + $src ) #end <link rel="stylesheet" href="$macro.realSrc" type="text/css" media="all"/>
+#end
+
+#**
+ * Short hand for including a JavaScript file
+ *#
+#macro( js $src ) #set ( $macro.realSrc = $src) #if ( $src.startsWith("/") ) #set( $macro.realSrc = $request.contextPath + $src ) #end <script type="text/javascript" src="$macro.realSrc"></script>
+#end
+
+#**
+ * Short hand for building a message from the database
+ *#
+#macro( plainMessage $key )${model.buildMessage($key)}#end
+#macro( message $key )<span class="msg" id="$key">${model.buildMessage($key)}</span>#end
+
+#macro( msg $key )#set($macro.internalKey = 'msg.' + $msgPrefix + '.' + $key)#message($macro.internalKey)#end
+#macro( plainMsg $key )#set($macro.internalKey = 'msg.' + $msgPrefix + '.' + $key)#plainMessage($macro.internalKey)#end
+
+#macro( mapMessage $prefix $val)#set($macro.key = $prefix + '.' + $val)#message($macro.key)#end
+
+#macro( messageWithHelp $key )#set($macro.descrKey = $key + ".help")<span class="msg" id="$key">${model.buildMessage($key)}</span> <a data-container="body" data-toggle="popover" title="$esc.html(${model.buildMessage($key)})" data-content="$esc.html(${model.buildMessage($macro.descrKey)})" class="help"><span class="glyphicon glyphicon-question-sign"></span></a>#end
+
+#macro( msgWithHelp $key )#set($macro.internalKey = 'msg.' + $msgPrefix + '.' + $key)#messageWithHelp($macro.internalKey)#end
+
+#macro( errorMessage $errorMessage )<span class="msg" id="$errorMessage.messageKey">${model.buildMessage( $errorMessage.messageKey, $errorMessage.params)}</span>#end
+
+#**
+ * Short hand for getting a client option from the database
+ *#
+#macro( option $key )${model.singleClient.getOptionValue($key)}#end
+
+#**
+ * Short hand for displaying a checkbox's state from the request parameters
+ *#
+#macro( checkboxParam $paramName )
+	#if ( ${request.getParameter($paramName)} )
+		#set( $macro.paramValue = ${request.getParameter($paramName)} )
+		#if ( "true" == $macro.paramValue )checked#end
+	#end
+#end
+
+#macro (i4oneBind $path)
+	#springBind($path)
+	#if ( $status.errorMessages.size() > 0 )
+		#set( $springErrorClass = 'alert alert-danger' )
+	#else
+		#set( $springErrorClass = '' )
+	#end
+#end
+
+#macro (i4oneBindEscaped $path $htmlEscape)
+	#springBindEscaped($path $htmlEscape)
+	#if ( $status.errorMessages.size() > 0 )
+		#set( $springErrorClass = 'alert alert-danger' )
+	#else
+		#set( $springErrorClass = '' )
+	#end
+#end
+
+#**
+ * Show a form input with an error class automatically injected if there is a binding
+ * variable error
+ *#
+#macro( i4oneShowErrors $path )
+	<span id="${path}.error">#springShowErrors(" " "formFieldError")</span>
+#end
+
+#macro( i4oneFieldStatus $path )
+	#i4oneBind($path)
+	<div class="$springErrorClass" id="$path">
+		#i4oneShowErrors($path)
+	</div>
+#end
+
+#macro(i4oneFormStatic $path )
+	#pathToVar($path 'pathValue')
+	#i4oneBind($path)
+	<div class="$springErrorClass form-control-static" id="$path">
+		#i4oneShowErrors($path)
+		$pathValue
+	</div>
+#end
+
+#macro(i4oneFormDisabledInput $path )
+	#pathToVar($path 'pathValue')
+	#i4oneBind($path)
+	<div class="$springErrorClass form-control form-control-static" id="$path" disabled>
+		#i4oneShowErrors($path)
+		$pathValue
+	</div>
+#end
+
+#macro( i4oneFormInput $path $placeHolder $options)
+	#i4oneBind($path)
+	<div class="$springErrorClass" id="$path">
+		#i4oneShowErrors($path)
+		#springFormInput( $path "placeholder='$placeHolder' class='form-control' $!options")
+	</div>
+#end
+
+#macro( i4oneFormUpload $path $classes)
+	#i4oneBind($path)
+	<div class="$springErrorClass" id="$path">
+		#i4oneShowErrors($path)
+		<input type="file" name="${status.expression}" value="$!status.value" class="file $classes" #springCloseTag()
+	</div>
+#end
+
+#macro( i4oneCategoryBack )
+	## The controller's logic for defaulting to the only available category
+	## means we have to put a check here to ensure the back button goes
+	## somewhere other than referring back to the listing page
+	##
+	#if ( ${category.exists()} && !$onlyCategory )
+		<a class="btn btn-default btn-block btn-back" href="index.html">#message('msg.base.general.back')</a>
+	#else
+		<a class="btn btn-default btn-block btn-back" href="$request.baseurl/base/user/index.html">#message('msg.base.general.back')</a>
+	#end
+#end
+
+#macro( i4oneFormBack $toHref $messageKey)
+	#if ( !$toHref || $!toHref == "" )#set($macro.internalHref ="index.html?backout")#else#set($macro.internalHref = $toHref)#end
+	#if ( $request.queryString == "backout" ) #set( $macro.internalHref="$request.baseurl/base/user/index.html") #end
+	#set( $macro.internalKey = $messageKey )
+	#if ( !$messageKey || $!messageKey == "" ) #set( $macro.internalKey = 'msg.base.general.back') #end
+	<a class="btn btn-default btn-block btn-back" href="$macro.internalHref">#message($macro.internalKey)</a>
+#end
+
+#macro( IString $item)$item[$language]#end
+
+#macro( i4oneFormIStringInput $path $placeHolder $options)
+	#i4oneBind($path)
+	<div class="$springErrorClass" id="$path">
+		#i4oneShowErrors($path)
+		#foreach( $lang in $model.supportedLanguages)
+			#set( $macro.langPath = $path + "['" + $lang + "']")
+			#springFormInput( $macro.langPath "placeholder='$placeHolder [$lang]' class='form-control' lang=""$lang"" $!options")
+		#end
+	</div>
+#end
+
+#macro( i4oneFormIStringStatic $path)
+	#pathToVar($path 'pathValue')
+	#i4oneBind($path)
+	<div class="$springErrorClass form-control-static" id="$path">
+		#i4oneShowErrors($path)
+		#IString($pathValue)
+	</div>
+#end
+
+#macro( i4oneFormPasswordInput $path $placeHolder $options)
+	#i4oneBind($path)
+	<div class="$springErrorClass" id="$path">
+		#i4oneShowErrors($path)
+		<input type="password" id="${status.expression}" name="${status.expression}" value="$!status.value" placeholder="$placeHolder" class="form-control" $!options#springCloseTag()
+	</div>
+#end
+
+#macro( i4oneFormEmailInput $path $placeHolder $options)
+	#i4oneBind($path)
+	<div class="$springErrorClass" id="$path">
+		#i4oneShowErrors($path)
+		<input type="email" id="${status.expression}" name="${status.expression}" value="$!status.value" placeholder="$placeHolder" class="form-control" $!options#springCloseTag()
+	</div>
+#end
+
+#macro( i4oneFormPhoneInput $path $placeHolder $options)
+	#i4oneBind($path)
+	<div class="$springErrorClass" id="$path">
+		#i4oneShowErrors($path)
+		<input type="tel" id="${status.expression}" name="${status.expression}" value="$!status.value" placeholder="$placeHolder" class="form-control" $!options#springCloseTag()
+	</div>
+#end
+
+#macro( i4oneFormITextarea $path $placeHolder $options)
+	#i4oneBind($path)
+	<div class="$springErrorClass" id="$path">
+		#i4oneShowErrors($path)
+		#foreach( $lang in $model.supportedLanguages)
+			#set( $macro.langPath = $path + "['" + $lang + "']")
+			#springFormTextarea( $macro.langPath "placeholder='$placeHolder [$lang]' class='form-control' lang=""$lang"" $!options")
+		#end
+	</div>
+#end
+
+#macro( i4oneFormIHtmlarea $path $placeHolder $options)
+	#i4oneBind($path)
+	<div class="$springErrorClass" id="$path">
+		#i4oneShowErrors($path)
+		#foreach( $lang in $model.supportedLanguages)
+			#set( $macro.langPath = $path + "['" + $lang + "']")
+			#springFormTextarea( $macro.langPath "placeholder='$placeHolder [$lang]' class='form-control editable' lang=""$lang"" $!options")
+		#end
+	</div>
+#end
+
+#macro( i4oneFormTextarea $path $placeHolder $options)
+	#i4oneBind($path)
+	<div class="$springErrorClass" id="$path">
+		#i4oneShowErrors($path)
+		#springFormTextarea( $path "placeholder='$placeHolder' class='form-control' $!options")
+	</div>
+#end
+
+#macro( i4oneFormHtmlarea $path $placeHolder $options)
+	#i4oneBind($path)
+	<div class="$springErrorClass" id="$path">
+		#i4oneShowErrors($path)
+		#springFormTextarea( $path "placeholder='$placeHolder' class='form-control editable' $!options")
+	</div>
+#end
+
+#macro( i4oneFormMsgCheckbox $path $labelKey $options)
+	#i4oneBind($path)
+	#set($macro.labelPath = $path.substring($path.indexOf('.')).substring(1) )
+
+	#set($macro.labelMsg = 'msg.' + $msgPrefix + '.' + $labelKey)
+	#set($macro.labelMsgHelp = $labelMsg + '.help')
+
+	#set($macro.label = $esc.html(${model.buildMessage($macro.labelMsg)}))
+	#set($macro.labelHelp = $esc.html(${model.buildMessage($macro.labelMsgHelp)}))
+
+	<div class="$springErrorClass" id="$path">
+		#i4oneShowErrors($path)
+		<div class="checkbox">
+			<label for="$macro.labelPath">#springFormCheckbox( $path "$!options") $macro.label <a data-container="body" data-toggle="popover" title="$macro.label" data-content="$macro.labelHelp" class="help"><span class="glyphicon glyphicon-question-sign"></span></a></label>
+		</div>
+	</div>
+#end
+
+#macro( i4oneFormCheckboxWithHelp $path $label $helpLabel $options)
+	#i4oneBind($path)
+	#set( $macro.labelPath = $path.substring($path.indexOf('.')).substring(1) )
+	<div class="$springErrorClass" id="$path">
+		#i4oneShowErrors($path)
+		<div class="checkbox">
+			<label for="$macro.labelPath">#springFormCheckbox( $path "$!options") $label</label> <a data-container="body" data-toggle="popover" title="$esc.html($label)" data-content="$esc.html($helpLabel)" class="help"><span class="glyphicon glyphicon-question-sign"></span></a>
+		</div>
+	</div>
+#end
+
+#macro( i4oneFormCheckbox $path $label $options)
+	#i4oneBind($path)
+	#set( $macro.labelPath = $path.substring($path.indexOf('.')).substring(1) )
+	<div class="$springErrorClass" id="$path">
+		#i4oneShowErrors($path)
+		<div class="checkbox">
+			<label for="$macro.labelPath">#springFormCheckbox( $path "$!options") $label</label>
+		</div>
+	</div>
+#end
+
+#macro( i4oneFormSingleSelect $path $possibles $options $classes)
+	#i4oneBind($path)
+	<div class="$springErrorClass" id="$path">
+		#i4oneShowErrors($path)
+		#springFormSingleSelect( $path $possibles "class='form-control $!classes' $!options")
+	</div>
+#end
+
+#macro( i4oneFormMultiSelect $path $possibles $options $classes)
+	#i4oneBind($path)
+	<div class="$springErrorClass" id="$path">
+		#i4oneShowErrors($path)
+		#springFormMultiSelect( $path $possibles "class='form-control $!classes' $!options")
+	</div>
+#end
+
+#macro( i4oneFormRadioButtons $path $possibles $classes)
+	#i4oneBind($path)
+	<div class="$springErrorClass" id="$path">
+		#i4oneShowErrors($path)
+
+		#foreach($option in $possibles.keySet())
+        		<div class="radio $!classes"><label><input type="radio" name="${status.expression}" value="${option}" #if("$!status.value" == "$option")checked="checked"#end #springCloseTag() ${possibles.get($option)}</label></div>
+		#end
+	</div>
+
+#end
+#**
+ * Display a form submission button with the given label
+ *#
+#macro( i4oneFormSubmit $label $item)
+	<button class="btn btn-primary btn-block ladda-button" data-style="expand-left" type="submit">
+		<span class="ladda-label">$model.buildMessage($label, 'item', $item)</span>
+	</button>
+#end
+
+#*
+ * Alternative submit button that accepts a name and sets a value of true. This is
+ * to be used where multiple submission buttons are needed with each modifying the
+ * behavior of the servlet by passing in their own name as a parameter.
+ *#
+#macro( i4oneFormAlternateSubmit $label $name $item )
+	<button class="btn btn-primary btn-block ladda-button" data-style="expand-left" name="$name" value="true" type="submit">
+		<span class="ladda-label">$model.buildMessage($label, 'item', $item)</span>
+	</button>
+#end
+
+#macro( i4oneFormDisabledButton $label $item)
+	<button class="btn btn-primary btn-block ladda-button disabled" data-style="expand-left" type="button">
+		<span class="ladda-label">$model.buildMessage($label, 'item', $item)</span>
+	</button>
+#end
+
+#macro( i4oneFormButton $label $options)
+	<button class="btn btn-default btn-block btn-back" type="button" $!options>$label</button>
+#end
+
+#macro( i4oneFormSubformSubmit $label)
+	<button class="btn btn-default btn-block ladda-button" data-style="expand-left" type="submit">
+		<span class="ladda-label">$label</span>
+	</button>
+#end
+
+#macro( i4oneUserBalance $userBalance)
+	#set( $macro.amount = $userBalance.total )
+	#intFormat($macro.amount) #IString(${userBalance.balance.formatName($macro.amount)})
+#end
+
+#**
+ * Convert the given path name to a variable of the given name with the path's value
+ *#
+#macro( pathToVar $path $pathValue)
+	#set( $macro.literal = '#set( $' + $pathValue + ' = $' )
+	#set( $macro.pathValueEval = "$macro.literal$path)" )
+	#evaluate( $macro.pathValueEval )
+#end
+
+#**
+ * Show checkboxes. This is copied from spring.vm and works around the issue of
+ * springBind converting the $path to String and thus circumventing the navigation
+ * of check box values
+ *
+ * @param path the name of the field to bind to
+ * @param options a map (value=label) of all the available options
+ * @param separator the html tag or other character list that should be used to
+ *    separate each option.  Typically '&nbsp;' or '<br>'
+*#
+#macro( i4oneFormCheckboxes $path $options $classes $start $separator $end)
+	#i4oneBind($path)
+	<div class="$springErrorClass" id="$path">
+		#i4oneShowErrors($path)
+		$start
+		#foreach($option in $options.keySet())
+		<div class="checkbox $!classes">
+			<label>
+				<input type="checkbox" name="${status.expression}" value="${option}"
+        			#foreach($item in ${status.actualValue}) 
+            				#if($item == $option) checked="checked" #end 
+        			#end
+        			#springCloseTag()
+				${options.get($option)}
+			</label>
+		</div>
+		$separator
+    		#end
+		$end
+    		<input type="hidden" name="_${status.expression}" value="on"/>
+	</div>
+#end
+
+
+#**
+ * jsLoadVm
+ *
+ * Macro to either include a Vm file or to load it via AJAX
+ *#
+#macro( jsLoadVm $name $divId )
+	#if ( $model.usingAjax )
+		<div id="$divId"></div>
+		#set( $macro.computedHtml = $name  + ".html" )
+		#jsLoad($macro.computedHtml, $divId)
+	#else
+		#set( $macro.computedVm = $name + ".vm" )
+		<div id="$divId">#parseVm($macro.computedVm)</div>
+	#end
+#end
+
+#**
+ * jsLoad
+ *
+ * Macro to load a file using jQuery ajax, checks to ensure the item
+ * has not already been loaded in effect caching based on URL.
+ *
+ * NOTE: This macro depends on the triggerReady javascript function to exist
+ *#
+#macro( jsLoad $url $divId )
+	#set( $macro.trigger = '' )
+	#jsLoadInit($url $divId $macro.trigger)
+#end
+
+#macro( jsLoadInit $url $divId $callback )
+<script language="javascript">
+$(function()
+{
+	#set($macro.computedUrl = $request.baseurl + "/" + $url)
+
+	##loadLink("$macro.computedUrl", $("#$divId"), false, function() { $callback });
+	$.getScript("$macro.computedUrl", $callback );
+});
+</script>
+#end
+
+#**
+ * displayMenu
+ *
+ * Displays a menu consisting of submenus with each element being either
+ * a (Message Key String) -> (URL String) or (Message Key String) -> Submenu 
+ *#
+#macro(displayMenu $menu)
+	<ul>
+		#foreach ( $e in $menu.entrySet() )
+			#set( $foreach.key = $e.key )
+			#set( $foreach.item = $e.value )
+			#set( $foreach.itemType = $foreach.item.class.name )
+
+			<li>
+			#if ( $foreach.itemType == 'java.lang.String' )
+					#set($foreach.href = $request.baseurl + $foreach.item)
+					<a href="$foreach.href">#message($foreach.key)</a>
+			#elseif ( $foreach.itemType == 'com.i4one.base.core.Pair' )
+				#if ( $foreach.item.key == '#' )
+					#set($foreach.href = $request.baseurl + $foreach.item.value)
+					<a href="$foreach.href">#message($foreach.key)</a>
+				#else
+					#set($foreach.href = $request.baseurl + $foreach.item.key)
+					#set($foreach.attrs = $foreach.item.value)
+					<a href="$foreach.href" $foreach.attrs>#message($foreach.key)</a>
+				#end
+			#else
+				#message($foreach.key)
+				#displayMenu($foreach.item)
+			#end
+			</li>
+		#end
+	</ul>
+#end
+
+#**
+ * Shared navigation bar code that traverses a menu tree and outputs its element
+ * in the form of unordered lists and items
+ *
+ * @param $menu The menu that contains the navigation tree
+ * @param $classes A string that contains the CSS classes to use for the top-level <ul> element
+ * @param $level The depth of the menu tree being output
+ *#
+#macro(navBarInternal $menu $classes $level)
+	<ul class="$!menu.classes $!classes">
+		#foreach ( $e in $menu.entrySet() )
+			#set( $foreach.key = $e.key )
+			#set( $foreach.item = $e.value )
+			#set( $foreach.itemType = $foreach.item.class.name )
+
+			#if ( $foreach.itemType == 'java.lang.String' )
+				#if ( $foreach.key == 'classes' || $foreach.key == 'options' )
+					#* Skip the classes configuration parameter *#
+				#else
+				<li>
+					#set($foreach.href = $request.baseurl + $foreach.item)
+					<a href="$foreach.href">#message($foreach.key)</a>
+				</li>
+				#end
+			#elseif ( $foreach.itemType == 'com.i4one.base.core.Pair' )
+			<li>
+				#set($foreach.href = $request.baseurl + $foreach.item.key)
+				#set($foreach.attrs = $foreach.item.value)
+				<a href="$foreach.href" $foreach.attrs>#message($foreach.key)</a>
+			</li>
+			#else
+				#set($foreach.newLevel = $level + 1)
+				#if( $level < 1 )
+					<li class="dropdown">
+						<a href="#" class="dropdown-toggle" data-toggle="dropdown">#message($foreach.key)<b class="caret"></b></a>
+						#navBarInternal($foreach.item 'dropdown-menu' $foreach.newLevel)
+					</li>
+				#else
+					<li class="dropdown-submenu">
+						<a href="#" class="dropdown-toggle" data-toggle="dropdown">#message($foreach.key)</a>
+						#navBarInternal($foreach.item 'dropdown-menu' $foreach.newLevel)
+					</li>
+				#end
+			#end
+		#end
+
+	</ul>
+#end
+
+#*
+ * i18n formatting macros
+ *#
+#macro( dateTimeFormat $pattern $timestamp )$date.format($pattern, $timestamp, $request.locale, $request.timeZone)#end
+#macro( dateFormat $timestamp )#dateTimeFormat('d/MMM/yyyy', $timestamp)#end
+#macro( timeFormat $timestamp )#dateTimeFormat('hh:mma', $timestamp)#end
+#macro( timeDurationFormat $timestampSeconds )
+	#set( $macro.weeks = ($timestampSeconds / (86400*7)))
+	#set( $macro.days = (($timestampSeconds / 86400) % 7) )
+	#set( $macro.hours = ($timestampSeconds % 86400) / 3600 )
+	#set( $macro.minutes = ($timestampSeconds % 3600)/60 )
+	#set( $macro.seconds = ($timestampSeconds%60))
+	#if($macro.weeks > 0)#intFormat($macro.weeks)w #end#if($macro.days > 0) #intFormat($macro.days)d #end#if($macro.hours > 0 || $macro.minutes > 0 || $macro.seconds > 0)#numberFormat('00' $macro.hours):#numberFormat('00' $macro.minutes):#numberFormat('00' $macro.seconds)#end
+#end
+#macro( countDown $timestamp )#dateTimeFormat('d/MMM/yyy hh:mma' $timestamp)#end
+
+#macro( percentFormat $num )$number.format("percent", $num, $request.locale)#end
+#macro( intFormat $num )$number.format("integer", $num, $request.locale)#end
+#macro( currencyFormat $num )$number.format("currency", $num, $request.locale)#end
+#macro( numberFormat $pattern $num )#if( $null.IsNull($num) )null#else$number.format($pattern, $num, $request.locale)#end#end

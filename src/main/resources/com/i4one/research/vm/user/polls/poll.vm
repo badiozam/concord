@@ -1,0 +1,147 @@
+#**
+ * MIT License
+ * 
+ * Copyright (c) 2018 i4one Interactive, LLC
+ * 
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ * 
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ * 
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ *#
+#**
+ * @author Hamid Badiozamani
+ */
+#parseVm( "base/user/template/start.vm" )
+
+<style>
+#poll div#label h1
+{
+	font-size: 3.5rem;
+}
+
+#poll .intro
+{
+	font-size: 1.3rem;
+	color: #428bca;
+}
+
+#poll .response
+{
+	font-size: 1.1rem;
+}
+#pageCSS()
+</style>
+
+<section class="container" id="poll">
+	<div class="row">
+		<div class="hidden-xs col-sm-2 hidden-md hidden-lg"></div>
+		<div class="$editClass col-xs-12 col-sm-8 col-md-12 col-lg-12" data-ser="$pollResponse.poll.ser">
+			<div class="form-group row">
+				<div class="col-xs-12">#i4oneAttachableStatus('pollResponse')</div>
+			</div>
+
+			#* We display the results if the user has answered the poll or if the poll is not answerable *#
+			#if ( $pollResponse.pollAnswer.exists || !$pollResponse.poll.available )
+			<div class="form-group row">
+				<div id="label" class="col-xs-12 col-md-6">
+					<h1>#IString($pollResponse.poll.title)</h1>
+					<div class="outro">#IString($pollResponse.poll.outro)</div>
+				</div>
+				<div id="chart" class="col-xs-12 col-md-6">
+					#js('/js/highcharts/highcharts.js')
+					<script>
+					Highcharts.theme = {
+						colors: ['#981A1E', '#E3D2B8', '#960096', '#DDDF00', '#24CBE5', '#64E572', '#FF9655', '#FFF263', '#6AF9C4'],
+						chart: { backgroundColor: 'rgba(255,255,255,0.1)' },
+						title: { style: { color: '#000' } },
+						subtitle: { style: { color: '#666666' } },
+						legend: {
+							itemStyle: { color: 'black' },
+							itemHoverStyle:{ color: 'gray' }
+						}
+					};
+					Highcharts.setOptions(Highcharts.theme);
+				
+					function showReport(selector, options)
+					{
+						var plotOptions = options['plotOptions'];
+				
+						// Create the object if none exists
+						//
+						if ( !plotOptions )
+						{
+							plotOptions = { };
+						}
+				
+						plotOptions['series'] =
+						{
+							dataLabels:
+							{
+								enabled: true,
+								formatter: function()
+								{
+									return this.point.name + ' (' + Math.round(this.percentage*10)/10 + '%)';
+								}
+							}
+						};
+
+						options['plotOptions'] = plotOptions;
+				
+						// Disable the legend if there's only one series to show
+						//
+						if ( options.series.length == 1 )
+						{
+							options['legend'] = { enabled: 0 };
+						}
+						$(selector).highcharts(options);
+					}
+					// $results
+					$(function(){ showReport("#chart", ${results.toHighChartsJSON($model.language)}); })
+					</script>
+				</div>
+				<div class="col-xs-12">#i4oneFormBack("index.html?categoryid=$pollResponse.poll.category.ser")</div>
+			</div>
+			#else
+			<div id="label" class="col-xs-12 col-md-6">
+				<h1>#IString($pollResponse.poll.title)</h1>
+			</div>
+			<div id="form" class="col-xs-12 col-md-6">
+				<form method="post">
+				#springFormHiddenInput("pollResponse.poll" " ")
+
+				<div class="intro">#IString($!pollResponse.poll.intro)</div>
+				<div class="response">
+					#if ( $pollResponse.poll.questionType == 0 )
+						#i4oneFormRadioButtons("pollResponse.pollAnswer" $pollResponse.answerMap '')
+					#elseif ( $pollResponse.questionType == 1 )
+						#i4oneFormSingleSelect( "pollResponse.pollAnswer" $pollResponse.answerMap '' )
+					#else
+						## Unknown type
+						--
+					#end
+				</div>
+
+				<div class="col-xs-12">#i4oneFormSubmit('msg.research.user.poll.submit' $pollResponse)</div>
+				<div class="col-xs-12">#i4oneFormBack("index.html?categoryid=$pollResponse.poll.category.ser")</div>
+				</form>
+			#end
+			</div>
+		</div>
+		<div class="hidden-xs col-sm-2 hidden-md hidden-lg"></div>
+	</div>
+</section>
+
+#parseVm( "base/user/template/end.vm" )

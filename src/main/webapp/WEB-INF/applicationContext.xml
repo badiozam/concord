@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+		 xmlns:p="http://www.springframework.org/schema/p"
+		 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		 xmlns:aop="http://www.springframework.org/schema/aop"
+		 xmlns:tx="http://www.springframework.org/schema/tx"
+		 xmlns:mvc="http://www.springframework.org/schema/mvc"
+		 xmlns:cache="http://www.springframework.org/schema/cache" 
+		 xmlns:context="http://www.springframework.org/schema/context"
+		 xmlns:security="http://www.springframework.org/schema/security"
+		 xsi:schemaLocation="http://www.springframework.org/schema/beans 
+		   http://www.springframework.org/schema/beans/spring-beans-4.1.xsd
+		   http://www.springframework.org/schema/aop 
+		   http://www.springframework.org/schema/aop/spring-aop-4.1.xsd
+		   http://www.springframework.org/schema/tx 
+		   http://www.springframework.org/schema/tx/spring-tx-4.1.xsd
+		   http://www.springframework.org/schema/cache
+		   http://www.springframework.org/schema/cache/spring-cache-4.1.xsd
+		   http://www.springframework.org/schema/context
+		   http://www.springframework.org/schema/context/spring-context-4.1.xsd
+		   http://www.springframework.org/schema/mvc
+		   http://www.springframework.org/schema/mvc/spring-mvc-4.1.xsd
+		   http://www.springframework.org/schema/security
+		   http://www.springframework.org/schema/security/spring-security-4.1.xsd">
+
+	<bean id="jacksonObjectMapper" class="org.springframework.http.converter.json.Jackson2ObjectMapperFactoryBean">
+		<property name="failOnEmptyBeans" value="false"/>
+		<property name="failOnUnknownProperties" value="false"/>
+	</bean>
+
+	<!-- This needs to be here first since all other beans depend on it -->
+	<!--
+	<bean id="base" class="com.i4one.base.core.Base" init-method="init">
+		<property name="clientOptionManager" ref="base.ClientOptionManager"/>
+
+		<property name="velocityConfig" ref="velocityConfig"/>
+		<property name="jacksonObjectMapper" ref="jacksonObjectMapper"/>
+		<property name="instance" ref="base"/>
+	</bean>
+	-->
+
+	<import resource="base-context.xml"/>
+
+	<bean name="viewNameTranslator" class="org.springframework.web.servlet.view.DefaultRequestToViewNameTranslator"/>
+
+	<bean class="org.springframework.web.servlet.view.ContentNegotiatingViewResolver">
+	        <property name="contentNegotiationManager">
+	            <bean class="org.springframework.web.accept.ContentNegotiationManager">
+	                <constructor-arg>
+	                    <bean class="org.springframework.web.accept.PathExtensionContentNegotiationStrategy">
+	                        <constructor-arg>
+					<map>
+						<entry key="html" value="text/html"/>
+						<entry key="json" value="application/json"/>
+					</map>
+	                        </constructor-arg>
+	                    </bean>
+	                </constructor-arg>
+	            </bean>
+	        </property>
+		<!--
+  		<property name="defaultViews">
+			<list>
+				<bean class="org.springframework.web.servlet.view.json.MappingJackson2JsonView">
+					<property name="objectMapper">
+						<bean class="org.springframework.http.converter.json.Jackson2ObjectMapperFactoryBean"
+							p:failOnUnknownProperties="false"
+							p:failOnEmptyBeans="false"
+							p:indentOutput="true">
+						</bean>
+					</property>
+				</bean>
+			</list>
+		</property>
+		-->
+	</bean>
+
+	<bean class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter">
+		<property name="objectMapper" ref="jacksonObjectMapper"/>
+	</bean>
+
+	<bean id="velocityViewResolver" class="org.springframework.web.servlet.view.velocity.VelocityViewResolver">
+		<property name="viewClass" value="com.i4one.base.spring.VelocityThemedView"/>
+		<property name="cache" value="false"/>
+		<property name="prefix" value=""/>
+		<property name="suffix" value=".vm"/>
+
+		<property name="order" value="1"/>
+		<property name="contentType" value="text/html; charset=utf-8"/>
+	</bean>
+
+	<bean id="themeResolver" class="com.i4one.base.spring.ClientThemeResolver"/>
+	<bean id="themeSource" class="com.i4one.base.spring.ClientThemeSource">
+		<property name="clientManager" ref="base.ReadOnlySingleClientManager"/>
+		<property name="messageManager" ref="base.ReadOnlyMessageManager"/>
+	</bean>
+	<bean id="localeResolver" class="com.i4one.base.spring.LocaleResolver">
+		<property name="defaultLocale" value="en"/>
+	</bean>
+
+	<mvc:interceptors>
+		<bean id="throttlingInterceptor" class="com.i4one.base.web.interceptor.ThrottilngInterceptor">
+	                <constructor-arg type="int" value="25"/> <!-- Max 25 requests per IP -->
+	                <constructor-arg type="int" value="500"/> <!-- Every half second -->
+	                <constructor-arg type="int" value="10000"/> <!-- Keep track of at most 10,000 IPs-->
+		</bean>
+
+		<bean id="indexDotHtmlInterceptor" class="com.i4one.base.web.interceptor.IndexDotHtmlInterceptor">
+		</bean>
+
+		<bean id="clientInterceptor" class="com.i4one.base.web.interceptor.ClientInterceptor" init-method="init">
+			<property name="defaultLanguage" value="en"/>
+			<property name="defaultPage" value="base/user/index.html"/>
+			<property name="defaultClient" value="demo"/>
+		</bean>
+
+		<bean id="adminAuthInterceptor" class="com.i4one.base.web.interceptor.AdminAuthInterceptor">
+			<property name="httpsDomain" value="i4oneinteractive.com"/>
+			<property name="unauthView" value="base/admin/auth/index.html"/>
+			<property name="objectMapper" ref="jacksonObjectMapper" />
+		</bean>
+
+		<bean id="userAuthInterceptor" class="com.i4one.base.web.interceptor.UserAuthInterceptor">
+			<property name="unauthView" value="base/user/account/login.html"/>
+		</bean>
+
+		<bean id="browserInterceptor" class="com.i4one.base.web.interceptor.BrowserInterceptor">
+			<property name="incompatibleView" value="base/user/incompatible.html"/>
+		</bean>
+
+		<bean id="accessCodeInterceptor" class="com.i4one.base.web.interceptor.AccessCodeInterceptor"/>
+	</mvc:interceptors>
+
+	<mvc:default-servlet-handler/>
+
+	<bean id="cacheManager" class="org.springframework.cache.ehcache.EhCacheCacheManager">
+		<property name="cacheManager" ref="ehcache"/>
+	</bean>
+	<bean id="ehcache" class="org.springframework.cache.ehcache.EhCacheManagerFactoryBean">
+		<property name="configLocation" value="/WEB-INF/ehcache.xml"/>
+	</bean>
+
+</beans>

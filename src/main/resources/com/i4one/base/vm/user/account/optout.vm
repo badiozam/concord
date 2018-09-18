@@ -1,0 +1,69 @@
+#**
+ * MIT License
+ * 
+ * Copyright (c) 2018 i4one Interactive, LLC
+ * 
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ * 
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ * 
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ *#
+#**
+ * @author Hamid Badiozamani
+ */
+#parseVm( "base/user/template/start.vm" )
+<div class="breadcrumbs" align="left"><a href="${request.baseurl}/base/user/index.html">Home</a> / Unsubscribe</div>
+
+<div align="left" class="sectiontexthead">No more updates?</div>
+
+<div align="center" class="fullformbox">
+
+#springBind("id")
+#if ( $status.errors.hasErrors() )
+<div id="optout">
+	<br/>
+	<br/>
+	<div id="optout_errors">
+		#springShowErrors(" " "formError")
+	</div>
+	<br/>
+	<br/>
+	<form action="${request.baseurl}/base/user/index.html" target="_top">
+		<input class="silverbutton" type="submit" value="Back"/>
+	</form>
+	<br/>
+	<br/>
+</div>
+#else
+<form action="$request.requestURI" method="post" target="_top">
+<input type="hidden" name="id" value="$model.id"/>
+<div align="left" style="padding-top:20px; padding-left:40px; padding-right:25px;"><p>Are you sure you want to unsubscribe from any future updates?</p></div>
+
+<div id="optout">
+		<div id="optout_errors">
+			#springShowErrors(" " "formError")
+		</div>
+		<br/>
+
+               <input type="submit" align="center" class="orangebutton" style="margin-left:-3px;" value="Yes"/>
+               <input type="button" align="center" class="orangebutton" style="margin-left:-3px;" value="No" onClick="document.location.href='${request.baseurl}/base/user/index.html';"/>
+        <br/>
+</div>
+</form>
+#end
+
+</div>
+#parseVm( "base/user/template/end.vm" )

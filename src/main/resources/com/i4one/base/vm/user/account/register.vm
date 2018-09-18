@@ -1,0 +1,517 @@
+#**
+ * MIT License
+ * 
+ * Copyright (c) 2018 i4one Interactive, LLC
+ * 
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ * 
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ * 
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ *#
+#**
+ * @author Hamid Badiozamani
+ */
+#parseVm( "base/user/template/start.vm" )
+#*
+ * Removed due to erradic nature of having the error messages appearing on phones
+ *
+<script language="javascript">
+
+function setError(path, errorStr)
+{
+	var escapedPath = path.replace('.', '\\.');
+
+	$('#joinform span#' + escapedPath + '\\.error').html(errorStr);
+	//$('#joinform span#' + escapedPath + '\\.check').html('<img src="${model.filesurl}/images/icon-wrong.png" width="24" height="24"/>');
+	$('#joinform div#' + escapedPath).addClass("alert").addClass("alert-danger");
+}
+
+function clearError(path)
+{
+	var escapedPath = path.replace('.', '\\.');
+
+	$('#joinform span#' + escapedPath + '\\.error').html('');
+	//$('#joinform span#' + escapedPath + '\\.check').html('<img src="${model.filesurl}/images/icon-check.png" width="24" height="24"/>');
+	$('#joinform div#' + escapedPath).removeClass("alert").removeClass("alert-danger");
+}
+
+var usernameRegex=/#option('validate.User.username')/;
+function checkUsername()
+{
+	var username = $('#joinform input#username').val();
+
+	if ( username.length > 3 )
+	{
+		if ( usernameRegex.test(username) )
+		{
+			$.getJSON("${request.baseurl}/base/user/account/checkusername.jsc?username=" + username).done(function(json)
+			{
+				var exists = Boolean(json);
+				$('#joinform #newuser_username_error').html('Test');
+				if ( exists )
+				{
+					setError('newuser.username', "#message('msg.base.User.duplicateUsername')");
+				}
+				else
+				{
+					clearError('newuser.username');
+				}
+			});
+		}
+		else
+		{
+			// Doesn't match the regex
+			//
+			setError('newuser.username', "#message('msg.base.User.invalidUsername')");
+		}
+	}
+	else
+	{
+		clearError('newuser.username');
+	}
+}
+
+function checkPassword()
+{
+	var password = $('#joinform input#password').val();
+	if ( password.length > 0 )
+	{
+		if ( password.length < 6 )
+		{
+			setError('newuser.password', "#message('msg.base.User.invalidPassword')");
+			$('#joinform input#password').keyup(checkConfirmPassword).keyup();
+		}
+		else
+		{
+			clearError('newuser.password');
+			$('#joinform input#password').unbind("keyup", checkConfirmPassword);
+		}
+	}
+	else
+	{
+		clearError('newuser.password');
+		$('#joinform input#password').unbind("keyup", checkConfirmPassword);
+	}
+}
+
+function checkConfirmPassword()
+{
+	checkPassword();
+
+	var password = $('#joinform input#password').val();
+	var confirmPassword = $('#joinform input#confirmPassword').val();
+
+	if ( password.length > 0 && confirmPassword.length > 0 )
+	{
+		if ( password !== confirmPassword )
+		{
+			setError('newuser.confirmPassword', "#message('msg.base.User.invalidConfirmPassword')");
+			$('#joinform input#confirmPassword').keyup(checkConfirmPassword).keyup();
+		}
+		else
+		{
+			clearError('newuser.confirmPassword');
+			$('#joinform input#confirmPassword').unbind("keyup", checkConfirmPassword);
+		}
+	}
+	else
+	{
+		clearError('newuser.confirmPassword');
+		$('#joinform input#confirmPassword').unbind("keyup", checkConfirmPassword);
+	}
+}
+
+var emailRegex=/#option('validate.User.email')/;
+function checkEmail()
+{
+	var email = $('#joinform input#email').val();
+
+	if ( email.length > 0 )
+	{
+		if ( email.length > 6 && emailRegex.test(email) )
+		{
+			$.getJSON("${request.baseurl}/base/user/account/checkusername.jsc?email=" + email).done(function(json)
+			{
+				var exists = Boolean(json);
+				console.log("exists = " + exists + " from json " + json);
+				if ( exists )
+				{
+					setError('newuser.email', "#message('msg.base.User.duplicateEmail')");
+				}
+				else
+				{
+					clearError('newuser.email');
+				}
+			});
+		}
+		else if ( email.length > 6 )
+		{
+			setError('newuser.email', "#message('msg.base.User.invalidEmail')");
+		}
+		else
+		{
+			clearError('newuser.email');
+		}
+	}
+	else
+	{
+		clearError('newuser.email');
+	}
+}
+
+var phoneRegex=/#option('validate.User.phone')/;
+/*
+function checkHomePhone()
+{
+	var homePhone = $('#joinform input#homePhone').val();
+	homePhone = homePhone.replace(/[^0-9]/g, '');
+
+	if ( homePhone.length > 0 )
+	{
+		if ( !phoneRegex.test(homePhone) )
+		{
+			$('#joinform span#homePhoneCheck').html('<img src="${model.filesurl}/images/icon-wrong.png">');
+			$('#joinform input#homePhone').addClass("error");
+		}
+		else
+		{
+			$('#joinform span#homePhoneCheck').html('<img src="${model.filesurl}/images/icon-check.png">');
+			$('#joinform input#homePhone').removeClass("error");
+		}
+	}
+	else
+	{
+		$('#joinform span#homePhoneCheck').html('');
+		$('#joinform input#homePhone').removeClass("error");
+	}
+}
+*/
+
+function checkCellPhone()
+{
+	var cellPhone = $('#joinform input#cellPhone').val();
+	cellPhone = cellPhone.replace(/[^0-9]/g, '');
+
+	if ( cellPhone.length > 0 )
+	{
+		if ( !phoneRegex.test(cellPhone) )
+		{
+			setError('newuser.cellPhone', "#message('msg.base.User.invalidCellPhone')");
+			$('#joinform input#cellPhone').keyup(checkCellPhone).keyup();
+		}
+		else
+		{
+			clearError('newuser.cellPhone');
+			$('#joinform input#cellPhone').unbind("keyup", checkCellPhone);
+		}
+	}
+	else
+	{
+		clearError('newuser.cellPhone');
+		$('#joinform input#cellPhone').unbind("keyup", checkCellPhone);
+	}
+}
+
+var zipcodeRegex=/#option('validate.User.zipcode')/;
+function checkZipcode()
+{
+	var zipcode = $('#joinform input#zipcode').val();
+
+	if ( zipcode.length > 0 )
+	{
+		if ( !zipcodeRegex.test(zipcode) )
+		{
+			setError('newuser.zipcode', "#message('msg.base.User.invalidZipcode')");
+			$('#joinform input#zipcode').keyup(checkZipcode).keyup();
+		}
+		else
+		{
+			clearError('newuser.zipcode');
+			$('#joinform input#zipcode').unbind("keyup", checkZipcode);
+		}
+	}
+	else
+	{
+		clearError('newuser.zipcode');
+		$('#joinform input#zipcode').unbind("keyup", checkZipcode);
+	}
+}
+
+$(function()
+{
+	$('#joinform input#username').blur(checkUsername);
+	$('#joinform input#password').blur(checkConfirmPassword);
+	$('#joinform input#confirmPassword').blur(checkConfirmPassword);
+	$('#joinform input#email').blur(checkEmail);
+	//$('#joinform input#homePhone').blur(checkHomePhone);
+	$('#joinform input#cellPhone').blur(checkCellPhone);
+	$('#joinform input#zipcode').blur(checkZipcode);
+});
+</script>
+*#
+
+<style>
+#joinform div#label h1
+{
+	font-size: 3.5rem;
+}
+
+#joinform div.sidebar h3
+{
+	font-size: 1.3rem;
+	font-weight: bold;
+	color: #860000;
+}
+
+#joinform div.sidebar
+{
+	font-family: Helvetica, Arial ,sans-serif;
+	font-size: 0.75rem;
+}
+
+#joinform label
+{
+	font-size: 15px;
+	font-weight: bold;
+}
+
+#joinform input[type=text],
+#joinform input[type=password],
+#joinform select
+{
+	margin-top: 3px;
+	margin-bottom: 7px;
+}
+
+
+#facebook
+{
+	margin-top: 40px;
+	text-align: center;
+}
+
+#facebook .btn-facebook
+{
+	background-image: url("${model.filesurl}/images/fb-26x26.png");
+	background-repeat: no-repeat;
+	background-position: 10% 50%;
+}
+#pageCSS()
+</style>
+
+<section class="container" id="joinform">
+	<div class="row">
+		<div class="hidden-xs col-sm-2 col-md-1 hidden-lg"></div>
+		<div class="col-xs-12 col-sm-8 col-md-10 col-lg-12">
+			<div class="row">
+				<div id="label" class="col-xs-12">
+					<h1>#msg('title')</h1>
+					<p>#msg('subtitle')</p>
+				</div>
+			</div>
+	
+			<div class="form-group row">
+				<div class="col-xs-12">#i4oneStatus('newuser')</div>
+			</div>
+	
+	 		<form id="registration" name="join" method="post" action="$request.requestURI">
+				#springFormHiddenInput("newuser.client" "")
+				#springFormHiddenInput("newuser.facebookId" "")
+				#springFormHiddenInput("newuser.facebookAccessToken" "")
+	
+				#if ( $newuser.passwordNeeded )
+				<div class="form-group row">
+					<div class="col-sm-12 col-md-6 sidebar">
+						<h3>#message('msg.base.user.account.facebookConnect.title')</h3>
+						<p>#message('msg.base.user.account.facebookConnect.descr')</p>
+					</div>
+					<div class="col-sm-12 col-md-6" id="facebook">
+						<a class="btn btn-block btn-facebook" href="facebookreg.html">#message('msg.base.user.account.facebookConnect.submit')</a>
+					</div>
+				</div>
+	
+				<div class="clearfix"><hr width="100%"/></div>
+				#end
+	
+				<div class="form-group row">
+					#set($emailPlaceholder = ${model.buildMessage('msg.base.user.account.email.placeholder')} )
+					#set($usernamePlaceholder = ${model.buildMessage('msg.base.user.account.username.placeholder')} )
+					<div class="col-sm-12 col-md-6 sidebar">
+						<h3>#message('msg.base.user.account.usernameEmail.title')</h3>
+						<p>#message('msg.base.user.account.usernameEmail.descr')</p>
+					</div>
+					<div class="col-sm-12 col-md-6">
+						<div class="row">
+							<div class="col-xs-12"><label for="email">#message('msg.base.user.account.email')</label></div>
+							<div class="col-xs-12">#i4oneFormEmailInput('newuser.email' "$emailPlaceholder" 'maxlength="100" required')</div>
+						</div>
+	
+						<div class="row">
+							<div class="col-xs-12"><label for="username">#message('msg.base.user.account.username')</label></div>
+							<div class="col-xs-12">#i4oneFormInput('newuser.username' "$usernamePlaceholder" 'maxlength="100" required')</div>
+						</div>
+					</div>
+				</div>
+	
+				<div class="clearfix"><hr width="100%"/></div>
+	
+				#if ( $newuser.passwordNeeded )
+				<div class="form-group row">
+					#set($passwordPlaceholder = ${model.buildMessage('msg.base.user.account.password.placeholder')} )
+					#set($confirmPasswordPlaceholder = ${model.buildMessage('msg.base.user.account.confirmPassword.placeholder')} )
+					<div class="col-sm-12 col-md-6 sidebar">
+						<h3>#message('msg.base.user.account.passwordConfirmPassword.title')</h3>
+						<p>#message('msg.base.user.account.passwordConfirmPassword.descr')</p>
+					</div>
+					<div class="col-sm-12 col-md-6">
+						<div class="row">
+							<div class="col-xs-12"><label for="password">#message('msg.base.user.account.password')</label></div>
+							<div class="col-xs-12">#i4oneFormPasswordInput('newuser.clearPassword' "$passwordPlaceholder" 'maxlength="256"')</div>
+						</div>
+	
+						<div class="row">
+							<div class="col-xs-12"><label for="confirmPassword">#message('msg.base.user.account.confirmpassword')</label></div>
+							<div class="col-xs-12">#i4oneFormPasswordInput('newuser.confirmPassword' "$confirmPasswordPlaceholder" 'maxlength="256"')</div>
+						</div>
+					</div>
+				</div>
+				<div class="clearfix"><hr width="100%"/></div>
+				#end
+	
+				<div class="form-group row">
+					#set($firstnamePlaceholder = ${model.buildMessage('msg.base.user.account.firstname.placeholder')} )
+					#set($lastnamePlaceholder = ${model.buildMessage('msg.base.user.account.lastname.placeholder')} )
+					<div class="col-sm-12 col-md-6 sidebar">
+						<h3>#message('msg.base.user.account.personalinfo.title')</h3>
+						<p>#message('msg.base.user.account.personalinfo.descr')</p>
+					</div>
+					<div class="col-sm-12 col-md-6">
+						<div class="row">
+							<div class="col-xs-12"><label for="firstName">#message('msg.base.user.account.firstname')</label></div>
+							<div class="col-xs-12">#i4oneFormInput('newuser.firstName' "$firstnamePlaceholder" 'maxlength="100" required')</div>
+						</div>
+	
+						<div class="row">
+							<div class="col-xs-12"><label for="lastName">#message('msg.base.user.account.lastname')</label></div>
+							<div class="col-xs-12">#i4oneFormInput('newuser.lastName' "$lastnamePlaceholder" 'maxlength="100" required')</div>
+						</div>
+	
+						<div class="row">
+							<div class="col-xs-12"><label for="gender">#message('msg.base.user.account.gender')</label></div>
+							<div class="col-xs-12">#i4oneFormSingleSelect('newuser.gender' $model.validGenders '' )</div>
+	
+							<div class="col-xs-12"><label for="birthDD">#message('msg.base.user.account.birthdate')</label></div>
+							<div class="col-xs-12">
+								<div class="row">
+									<div class="col-xs-12 col-sm-3">#i4oneFormSingleSelect('newuser.birthDD' $model.validDD '' )</div>
+									<div class="col-xs-12 col-sm-3">#i4oneFormSingleSelect('newuser.birthMM' $model.validMM '' )</div>
+									<div class="col-xs-12 col-sm-3">#i4oneFormSingleSelect('newuser.birthYYYY' $model.validYYYY '' )</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+	
+				<div class="clearfix"><hr width="100%"/></div>
+	
+				<div class="form-group row">
+					#set($cellPhonePlaceholder = ${model.buildMessage('msg.base.user.account.cellphone.placeholder')} )
+					#set($cityPlaceholder = ${model.buildMessage('msg.base.user.account.city.placeholder')} )
+					#set($zipcodePlaceholder = ${model.buildMessage('msg.base.user.account.zipcode.placeholder')} )
+					<div class="col-sm-12 col-md-6 sidebar">
+						<h3>#message('msg.base.user.account.contactinfo.title')</h3>
+						<p>#message('msg.base.user.account.contactinfo.descr')</p>
+					</div>
+					<div class="col-sm-12 col-md-6">
+						<div class="row">
+							<div class="col-xs-12"><label for="cellPhone">#message('msg.base.user.account.cellphone')</label></div>
+							<div class="col-xs-12">#i4oneFormPhoneInput('newuser.cellPhone' "$cellPhonePlaceholder" 'maxlength="15" required')</div>
+						</div>
+	
+						<div class="row">
+							<div class="col-xs-12">
+								<div class="row">
+									<div class="col-xs-12 col-sm-5">
+										<div class="row">
+											<div class="col-xs-12"><label for="city">#message('msg.base.user.account.city')</label></div>
+											<div class="col-xs-12">#i4oneFormInput('newuser.city' "$cityPlaceholder" 'maxlength="100" required')</div>
+										</div>
+									</div>
+									<div class="col-xs-12 col-sm-2">
+										<div class="row">
+											<div class="col-xs-12"><label for="state">#message('msg.base.user.account.state')</label></div>
+											<div class="col-xs-12">#i4oneFormSingleSelect('newuser.state' $model.validStates '')</div>
+										</div>
+									</div>
+									<div class="col-xs-12 col-sm-5">
+										<div class="row">
+											<div class="col-xs-12"><label for="zipcode">#message('msg.base.user.account.zipcode')</label></div>
+											<div class="col-xs-12">#i4oneFormInput('newuser.zipcode' "$zipcodePlaceholder" 'maxlength="15" required')</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+	
+				<div class="clearfix"><hr width="100%"/></div>
+	
+				<div class="form-group row">
+					<div class="col-sm-12 col-md-6 sidebar">
+						<h3>#message('msg.base.user.account.optin.title')</h3>
+						<p>#message('msg.base.user.account.optin.descr')</p>
+					</div>
+					<div class="col-sm-12 col-md-6">
+						<div class="row">
+							<div class="col-xs-12"><label for="canEmail">#message('msg.base.user.account.canemail')</label></div>
+							<div class="col-xs-12">#i4oneFormSingleSelect('newuser.canEmail' $model.validCanEmail '')</div>
+						</div>
+					</div>
+				</div>
+	
+				#if ( $!model.captchaHTML != '' )
+				<div class="clearfix"><hr width="100%"/></div>
+	
+				<div class="form-group row">
+					<div class="col-sm-12 col-md-6 sidebar">
+						<h3>#message('msg.base.user.account.captcha.title')</h3>
+						<p>#message('msg.base.user.account.captcha.descr')</p>
+					</div>
+					<div class="col-sm-12 col-md-6">
+						<div class="col-xs-12">
+							#i4oneBind('newuser.reCaptcha')
+							<div class="$springErrorClass">#springShowErrors(" " "formFieldError")$model.captchaHTML</div>
+						</div>
+					</div>
+				</div>
+				#end
+	
+				<div class="clearfix"><hr width="100%"/></div>
+	
+				<div class="form-group row">
+					#set( $hasAgreedLabel = ${model.buildMessage('msg.base.user.account.register.agreeterms')})
+					<div class="col-xs-12">#i4oneFormCheckbox('newuser.hasAgreedTerms' "$hasAgreedLabel" '')</div>
+					<div class="col-xs-12"> #i4oneFormSubmit('msg.base.user.account.register.submit' $newuser) </div>
+				</div>
+	 
+			</form>
+		</div>
+		<div class="hidden-xs col-sm-2 col-md-1 hidden-lg"></div>
+	</div>
+</section>
+
+#parseVm( "base/user/template/end.vm" )

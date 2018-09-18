@@ -1,0 +1,217 @@
+#**
+ * MIT License
+ * 
+ * Copyright (c) 2018 i4one Interactive, LLC
+ * 
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ * 
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ * 
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ *#
+#**
+ * @author Hamid Badiozamani
+ */
+#parseVm( "base/user/template/start.vm" )
+<style>
+#shoppings div#label h1
+{
+	font-size: 4.5rem;
+}
+
+#shoppings .category
+{
+	text-align: center;
+}
+
+#shoppings .info
+{
+	font-size: 1.0rem;
+}
+
+#shoppings .info.title
+{
+	font-size: 1.2rem;
+}
+
+#shoppings .odd,
+#shoppings .even
+{
+}
+
+#*
+#shoppings .listing
+{
+	margin-left: 15px;
+	margin-right: 15px;
+}
+*#
+
+#shoppings .shopping
+{
+	margin-bottom: 5px;
+
+	padding-left: 0px;
+	padding-right: 7px;
+}
+
+#shoppings .shopping .wrapper
+{
+	border-top: 1px solid #333;
+	border-left: 1px solid #666;
+	border-right: 1px solid #666;
+	border-bottom: 2px solid #888;
+
+	border-radius: 5px;
+}
+
+#shoppings .btn-back
+{
+	margin-top: 15px;
+}
+
+#shoppings .soldout a
+{
+	color: #555;
+}
+
+#shoppings .soldout img
+{
+	filter: grayscale(100%);
+	-webkit-filter: grayscale(100%);
+}
+
+#shoppings .shoppingthumbnail
+{
+	position: relative;
+}
+
+#shoppings .shoppingthumbnail .caption
+{
+	position: absolute;
+	visibility: hidden;
+
+	top: 2rem;
+	left: 1.2rem;
+
+	font-size: 1rem;
+	font-weight: bold;
+	text-transform: uppercase;
+
+	color: #c00;
+	background-color: #fff;
+
+	border: 2px solid #c00;
+	padding: 5px;
+
+	-ms-transform: rotate(-30deg); /* IE 9 */
+	-webkit-transform: rotate(-30deg); /* Chrome, Safari, Opera */
+	transform: rotate(-30deg);
+
+	-ms-transform-origin: 1rem 5rem; /* IE 9 */
+	-webkit-transform-origin: 1rem 5rem; /* Chrome, Safari, Opera */
+	transform-origin: 1rem 5rem;
+}
+
+#shoppings .shoppingthumbnail .caption.comingsoon
+{
+	color: #080;
+	border: 2px solid #080;
+}
+
+#shoppings .shoppingthumbnail .caption.soldout,
+#shoppings .shoppingthumbnail .caption.comingsoon
+{
+	visibility: visible;
+}
+
+@media (max-width:767px) /* @screen-xs-max */
+{
+	#shoppings .shopping
+	{
+		margin-top: 15px;
+		margin-bottom: 15px;
+	}
+}
+
+@media (min-width:768px) /* @screen-sm-max */
+{
+	#shoppings .shopping:nth-child(2n+1)
+	{
+		clear: both;
+	}
+}
+
+@media (min-width:992px) /* @screen-md-max */
+{
+	#* This is the same as lg since we want 3 in a row *#
+	#shoppings .shopping:nth-child(2n+1)
+	{
+		clear: none;
+	}
+
+	#shoppings .shopping:nth-child(3n+1)
+	{
+		clear: both;
+	}
+}
+
+
+#pageCSS()
+</style>
+
+<section class="container" id="shoppings">
+	#if ( $category.exists )
+		<div class="row">
+			<div id="label" class="$editClass col-xs-12" data-ser="$category.ser" data-item="categoryid">
+				<h1>#IString($category.title)</h1>
+				<p>#IString($!category.descr)</p>
+			</div>
+		</div>
+
+		<div class="listing row">
+			#foreach ($entry in $shoppings.entrySet())
+				#striping()
+				#set( $shopping = $entry.key )
+
+				#if ( !$shopping.soldOut || $shopping.soldOutDisplay)
+					#set( $soldoutClass = "")
+					#if ( $shopping.soldOut )
+						#set( $soldoutClass = "soldout")
+					#end
+					#set( $comingSoon = $shopping.startTimeSeconds < $shopping.purchaseStartTimeSeconds && $request.timeInSeconds < $shopping.purchaseStartTimeSeconds )
+					<div class="col-xs-12 col-sm-6 col-md-4 col-lg-4 shopping $soldoutClass">
+						<div class="col-xs-12 wrapper $editClass $rowClass" data-ser="$shopping.ser">
+							<div class="col-xs-12 info title"><a href="shopping.html?shoppingid=$shopping.ser">#IString($shopping.title)</a></div>
+							<div class="col-xs-12 info thumbnailimg">
+								<a href="shopping.html?shoppingid=$shopping.ser"><div class="shoppingthumbnail"><img class="img-responsive" src="$shopping.prize.thumbnailURL"/>#if ( $shopping.soldOut)<div class="caption $soldoutClass">#msg('soldout')</div>#elseif ( $comingSoon )<div class="caption comingsoon">#msg('comingsoon')</div>#end</div></a>
+							</div>
+							<div class="col-xs-5 heading expenses">$model.buildMessage('msg.rewards.user.shoppings.index.expenses', 'shopping', $shopping)</div>
+							<div class="col-xs-7 info expenses">
+								$model.buildMessage('msg.rewards.user.shoppings.index.expenselisting','expenses',$shopping.balanceExpenses)
+							</div>
+						</div>
+					</div>
+				#end
+			#end
+		</div>
+	#else
+		#displayCategories( $categories )
+	#end
+	<div class="form-group row">
+		<div class="col-xs-12">#i4oneCategoryBack()</div>
+	</div>
+</section>
+#parseVm( "base/user/template/end.vm" )

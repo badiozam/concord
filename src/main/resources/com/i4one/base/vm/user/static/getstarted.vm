@@ -1,0 +1,68 @@
+#**
+ * MIT License
+ * 
+ * Copyright (c) 2018 i4one Interactive, LLC
+ * 
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ * 
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ * 
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ *#
+#**
+ * @author Hamid Badiozamani
+ */
+#parseVm( "base/user/template/start.vm" )
+<div class="breadcrumbs" align="left"><a href="index.html">Home</a> / Get Started!</div>
+<br/>
+<div align="left" class="sectiontexthead">Get Started!</div>
+
+<div align="center" class="fullformbox">
+
+<div align="left" style="padding-top:20px; padding-left:40px; padding-right:25px;">
+<style type="text/css">
+.getstarted {
+	font-family: Georgia, "Times New Roman", Times, serif; font-size: 14px;
+	padding-left: 10px; color: rgb(102,102,102);
+}
+.wins{font-family: Georgia, "Times New Roman", Times, serif; font-size: 14px;
+	padding-left: 10px; padding-top: 15px; color: rgb(102,102,102);
+}
+.play {
+	font-size: 10px; line-height: 20px; font-style: italic; padding-left: 2px;
+}
+</style>
+
+<table width="850" border="0">
+  <tr>
+    <td width="50" height="55"><div align="center"><img src="http://mass2one.media.streamtheworld.com/barb/predictions/1.png" width="50" height="50"></div></td>
+    
+    <td width="545" class="getstarted"><strong><a link="${request.baseurl}/base/user/account/register.html" result="contentContainer">Join FREE</a> and Login as an official Prediction Player!</strong></td>
+    <td width="241" rowspan="3"><div align="center"><img src="http://mass2one.media.streamtheworld.com/barb/predictions/crystal_ball.jpg" width="150" height="150" /></div>    </tr>
+  <tr>
+    <td height="55"><div align="center"><img src="http://mass2one.media.streamtheworld.com/barb/predictions/2.png" width="50" height="50"></div></td>
+    <td class="getstarted"><strong>Click on &quot;<a link="${request.baseurl}/predict/user/index.html" result="contentContainer">Games</a>&quot; and Select any "Game Category" to Play!<br><span class="play">(Review How to Play and Tips for Game strategy)</span></strong></td>
+  </tr>
+  <tr>
+    <td height="55"><div align="center"><img src="http://mass2one.media.streamtheworld.com/barb/predictions/3.png" width="50" height="50"></div></td>
+    <td class="wins"><strong>High Score Wins! <span style="margin-left: 2px;">Score increases upon Correct Predictions.</span> <br>
+  <span class="play">(Play every day for chances at Instant Win Cash and Score advance)</span></strong></td>
+  </tr>
+</table>
+</font>
+<br>
+</div>
+</div>
+#parseVm( "base/user/template/end.vm" )

@@ -1,0 +1,91 @@
+#**
+ * MIT License
+ * 
+ * Copyright (c) 2018 i4one Interactive, LLC
+ * 
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ * 
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ * 
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ *#
+#**
+ * @author Hamid Badiozamani
+ */
+#set($title = ${model.buildMessage('msg.base.admin.instantwins.attach.pageTitle', 'attachment', $attachment)})
+#parseVm( "base/admin/template/startHead.vm" )
+#parseVm( "base/admin/template/endHead.vm" )
+#parseVm( "base/admin/template/startBody.vm" )
+
+<section id="crud">
+	<form method="post" action="$request.requestURI" class="form">
+		#springFormHiddenInput("attachment.feature.ser" "")
+		#springFormHiddenInput("attachment.feature.tableName" "")
+		#springFormHiddenInput("attachment.feature.schemaName" "")
+		#springFormHiddenInput("attachment.displayName" "")
+		#springFormHiddenInput("attachment.redir" "")
+		<span id="jq_errors">#i4oneStatus("attachment")</span>
+
+		<div class="form-group row">
+			<div class="col-sm-12"><h3>#msgWithHelp('unattachedinstantwins')</h3></div>
+			<div class="col-sm-12">
+				#if ( ${unattachedInstantWins.isEmpty()} )
+					#msg('noeligibleinstantwins')
+				#else
+					#springBind("attachment.instantWins")
+					#springShowErrors(" " "formFieldError")
+					<div class="$springErrorClass">
+						#i4oneFormCheckboxes("attachment.instantWins" $unattachedInstantWins '' '<div class="col-sm-4 col-md-2">' '</div><div class="col-sm-4 col-md-2">' '</div>')
+					</div>
+				#end
+			</div>
+		</div>
+
+		<div class="form-group row">
+			<div class="col-sm-12"><h3>#msgWithHelp('attachedinstantwins')</h3></div>
+			<div class="col-sm-12">
+				#foreach( $instantwin in $attachment.instantWins )
+					#striping()
+
+					<div class="row $rowClass">
+						<div class="heading col-sm-3 visible-sm visible-xs">#message('msg.base.admin.general.instantwinable.starttime')</div>
+						<div class="col-sm-9 col-md-2">#formatDateTime($instantwin.startTime)</div>
+
+						<div class="heading col-sm-3 visible-sm visible-xs">#message('msg.base.admin.general.instantwinable.title')</div>
+						<div class="col-sm-9 col-md-3">#IString($instantwin.title)</div>
+
+						<div class="heading col-sm-3 visible-sm visible-xs">#message('msg.base.admin.general.instantwinable.percent')</div>
+						<div class="col-sm-9 col-md-3">#percentFormat($instantwin.percentWin)</div>
+
+						<div class="heading col-sm-3 visible-sm visible-xs">#message('msg.base.admin.general.instantwinable.endtime')</div>
+						<div class="col-sm-9 col-md-2">#formatDateTime($instantwin.endTime)</div>
+
+						<div class="col-sm-12 col-md-2">#updateButtonHref($instantwin "_blank")</div>
+					</div>
+				#end
+			</div>
+		</div>
+
+		<div class="form-group row">
+			#set( $submitLabel = ${model.buildMessage('msg.base.admin.instantwins.attach.submit')} )
+			<div class="col-sm-6">#i4oneFormSubmit($submitLabel $attachment)</div>
+
+			#i4oneUpdateURL($attachment.feature)
+			<div class="col-sm-6">#if($attachment.feature.ser > 0)#i4oneFormBack($updateURL)#else#i4oneFormBack($attachment.redir)#end</div>
+		</div>
+	</form>
+</section>
+
+#parseVm( "base/admin/template/endBody.vm" )

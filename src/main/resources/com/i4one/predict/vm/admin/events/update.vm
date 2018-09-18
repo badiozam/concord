@@ -1,0 +1,141 @@
+#**
+ * MIT License
+ * 
+ * Copyright (c) 2018 i4one Interactive, LLC
+ * 
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ * 
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ * 
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ *#
+#**
+ * @author Hamid Badiozamani
+ */
+#parseVm( "base/admin/template/expendableCrud.vm" )
+#parseVm( "base/admin/template/terminableCrud.vm" )
+#set($title = ${model.buildMessage('msg.predict.admin.events.update.pageTitle', 'item', $event)})
+#parseVm( "base/admin/template/startHead.vm" )
+#parseVm( "base/admin/template/endHead.vm" )
+#parseVm( "base/admin/template/startBody.vm" )
+
+<div id="crud">
+	<form method="post" action="$request.requestURI">
+		#springFormHiddenInput("event.ser" "")
+		#springFormHiddenInput("event.client" "")
+		<span id="jq_errors">#i4oneStatus("event")</span>
+
+		<div class="form-group row">
+			<div class="col-sm-4 col-md-2"><label for="siteGroup">#msg('sitegroup')</label></div>
+			<div class="col-sm-8 col-md-10">#i4oneFormSingleSelect('event.siteGroup' ${siteGroups} '')</div>
+
+			<div class="col-sm-2"><label for="balance">#message('msg.predict.admin.events.update.category')</label></div>
+			<div class="col-sm-10">#i4oneFormSingleSelect('event.category' ${categories} '')</div>
+
+			<div class="col-sm-2"><label for="title">#message('msg.predict.admin.events.update.title')</label></div>
+			<div class="col-sm-10">#i4oneFormIStringInput('event.title' '' 'maxlength="128"')</div>
+		</div>
+
+		#terminableCrud("event")
+
+		<div class="form-group row">
+			#*
+			<div class="col-sm-2"><label for="postsBy">#message('msg.predict.admin.events.update.closesby')</label></div>
+			<div class="col-sm-4">#dateTimeInput("event.closesByString" "placeholder='10/21/1978 3:35 PM'")</div>
+			*#
+
+			<div class="col-sm-2"><label for="postsBy">#message('msg.predict.admin.events.update.postsby')</label></div>
+			<div class="col-sm-4">#dateTimeInput("event.postsByString" "placeholder='10/21/1978 3:35 PM'")</div>
+
+			<div class="col-sm-6">#* Place holder since we no longer have closes by *# </div>
+			<div class="clearfix"></div>
+
+			<div class="col-sm-2 col-md-2"><label for="minbid">#message('msg.predict.admin.events.update.minbid')</label></div>
+			<div class="col-sm-10 col-md-4">#i4oneFormInput('event.minBid' '1' 'maxlength="3"')</div>
+
+			<div class="col-sm-2 col-md-2"><label for="maxbid">#message('msg.predict.admin.events.update.maxbid')</label></div>
+			<div class="col-sm-10 col-md-4">#i4oneFormInput('event.maxBid' '1' 'maxlength="5"')</div>
+
+			<div class="col-sm-12 col-md-2"><label for="descr">#msgWithHelp('msg.predict.admin.events.update.reference')</label></div>
+			<div class="col-sm-12 col-md-10">#i4oneFormIStringInput("event.reference" '' 'maxlength="512"')</div>
+
+			<div class="col-sm-12 col-md-2"><label for="brief">#message('msg.predict.admin.events.update.brief')</label></div>
+			<div class="col-sm-12 col-md-10">#i4oneFormITextarea("event.brief" '' 'rows="2" maxlength="256"')</div>
+
+			<div class="col-sm-12 col-md-2"><label for="brief">#message('msg.predict.admin.events.update.promo')</label></div>
+			<div class="col-sm-12 col-md-10">#i4oneFormITextarea("event.promo" '' 'rows="2" maxlength="256"')</div>
+
+			<div class="col-sm-12 col-md-2"><label for="descr">#message('msg.predict.admin.events.update.descr')</label></div>
+			<div class="col-sm-12 col-md-10">#i4oneFormITextarea("event.descr" '' 'rows="4"')</div>
+
+			<div class="col-sm-12">
+				#if ( !$outcomes.empty )
+					<table class="table table-striped">
+					<tr>
+						<th>#message('msg.predict.admin.events.updateoutcome.baseline')</th>
+						<th>#message('msg.predict.admin.events.updateoutcome.usagecount')</th>
+						<th>#message('msg.predict.admin.events.updateoutcome.likelihood')</th>
+						<th>#message('msg.predict.admin.events.updateoutcome.descr')</th>
+						<th></th>
+					</tr>
+					#foreach($currOutcome in $event.possibleOutcomes)
+					<tr>
+						<td>$currOutcome.baseline</td>
+						<td>$currOutcome.usageCount</td>
+						<td>
+							<meter value="$currOutcome.likelihood">#percentFormat($currOutcome.likelihood)</meter>
+							#percentFormat($currOutcome.likelihood)
+						</td>
+						<td>#IString($currOutcome.descr)</td>
+						<td>
+							#if ( !${event.title[$model.language].contains('[CLONE')} )
+							<a class="btn btn-default btn-block" href="updateoutcome.html?outcomeid=${currOutcome.ser}&eventid=${event.ser}">#message('msg.base.admin.general.update')</a>
+							#end
+						</td>
+					</tr>
+					#end
+					</table>
+				#else
+					#message('msg.predict.admin.events.update.nooutcomes')
+				#end
+			</div>
+			<div class="col-sm-12">
+				#if ( $event.exists && !${event.title[$model.language].contains('[CLONE')} )
+					<a class="btn btn-default btn-block" href="updateoutcome.html?eventid=${event.ser}">#message('msg.predict.admin.events.updateoutcome.create')</a>
+				#end
+			</div>
+		</div>
+
+		#expendableCrud("event")
+
+		<div class="form-group row">
+			<div class="col-sm-4">#i4oneFormUpdate($event)</div>
+			<div class="col-sm-4">#i4oneFormHistory($event)</div>
+			<div class="col-sm-4">#i4oneTerminableBack($event)</div>
+		</div>
+
+#*
+		#if ( $event.exists )
+			<li>
+				<label for="usageCount">#message('msg.predict.admin.events.update.usagecount')
+				</label>
+				$number.format($event.usageCount)
+			</li>
+		#end
+*#
+	</form>
+</div>
+
+#parseVm( "base/admin/template/endBody.vm" )

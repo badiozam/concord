@@ -1,0 +1,233 @@
+#**
+ * MIT License
+ * 
+ * Copyright (c) 2018 i4one Interactive, LLC
+ * 
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ * 
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ * 
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ *#
+#**
+ * @author Hamid Badiozamani
+ */
+#parseVm( "base/user/template/start.vm" )
+<style>
+#activity div#label h1
+{
+	font-size: 3.5rem;
+}
+
+#activity .info
+{
+	line-height: 1.8rem;
+	border-bottom: 1px dotted #ccc;
+}
+
+#activity .descr
+{
+	font-size: 1.1rem;
+	color: #860000;
+}
+
+#activity .timestamp
+{
+	font-weight: bold;
+}
+
+#activity .timestamp,
+#activity .balance,
+#activity .prevbal,
+#activity .balxacted,
+#activity .newbal
+{
+	font-family: monospace;
+	text-align: right;
+}
+
+#activity .child .descr,
+#activity .status
+{
+	text-align: right;
+	font-style: italic;
+
+	color: inherit;
+}
+
+#activity .heading
+{
+	font-family: inherit;
+	font-style: inherit;
+}
+
+@media(max-width:991px) /* @screen-xs-max and @screen-md-min */
+{
+	#activity .timestamp,
+	#activity .balance,
+	#activity .prevbal,
+	#activity .balxacted,
+	#activity .newbal
+	{
+		text-align: inherit;
+	}
+
+	#activity .child .descr,
+	#activity .status
+	{
+		text-align: inherit;
+	}
+
+	#activity .heading
+	{
+		font-size: inherit;
+		text-align: right;
+	}
+}
+#pageCSS()
+</style>
+
+<section id="activity" class="container">
+	<div class="row">
+		<div id="label" class="col-xs-12">
+			<h1>#msg('title')</h1>
+			<p>#msg('subtitle')</p>
+		</div>
+	</div>
+
+	<div class="row pagination">
+		<div class="col-xs-6">
+			#if ( $pagination.currentPage > 0 )
+			<form action="$request.requestURI" method="post" result="contentContainer">
+				#springFormHiddenInput("pagination.currentPage" " ")
+				#springFormHiddenInput("pagination.orderBy" " ")
+				#springBind("pagination.prevPage")
+				<input type="hidden" id="${status.expression}" name="${status.expression}" value="true"/>
+				#i4oneFormSubmit('msg.base.user.account.activity.prevpage' $pagination)
+			</form>
+			#else
+				#i4oneFormDisabledButton('msg.base.user.account.activity.prevpage' $pagination)
+			#end
+		</div>
+		
+		#if ( ${model.transactions.size()} >= $pagination.perPage ) ## Infinite pagination
+		<div class="col-xs-6">
+			#* Handled by the message itself now
+			#set($moreValue = "More")
+			#if ( $pagination.currentPage == 0 )
+				#set($moreValue = "See More")
+			#end
+			*#
+			<form action="$request.requestURI" method="post" result="contentContainer">
+				#springFormHiddenInput("pagination.currentPage" " ")
+				#springFormHiddenInput("pagination.orderBy" " ")
+				#springBind("pagination.nextPage")
+				<input type="hidden" id="${status.expression}" name="${status.expression}" value="true"/>
+				#i4oneFormSubmit('msg.base.user.account.activity.nextpage' $pagination)
+			</form>
+		</div>
+		#else
+		<div class="col-xs-6">
+			#i4oneFormDisabledButton('msg.base.user.account.activity.nextpage' $pagination)
+		</div>
+		#end
+	</div>
+
+	<div class="row hidden-xs hidden-sm">
+		<div class="col-md-6 heading balance">#msg('balance')</div>
+		<div class="col-md-2 heading prevbal">#msg('prevbal')</div>
+		<div class="col-md-2 heading balxacted">#msg('balxacted')</div>
+		<div class="col-md-2 heading newbal">#msg('newbal')</div>
+	</div>
+	#foreach($currTransaction in $transactions)
+	#striping()
+	<div class="row $rowClass info">
+		<div class="col-xs-12 col-md-2 col-lg-2 info timestamp">#dateFormat($currTransaction.timeStamp) #timeFormat($currTransaction.timeStamp)</div>
+		<div class="col-xs-12 col-md-10 col-lg-10 info descr">#IString($currTransaction.descr)</div>
+	</div>
+
+	#if ( $currTransaction.prevBalance || $currTransaction.amountTransacted || $currTransaction.newBalance )
+	<div class="row $rowClass">
+		<div class="col-xs-6 hidden-md hidden-lg heading balance">#msg('balance')</div>
+		<div class="col-xs-6 col-md-6 info balance">#IString($currTransaction.balance.pluralName)</div>
+		<div class="col-xs-6 hidden-md hidden-lg heading prevbal">#msg('prevbal')</div>
+		<div class="col-xs-6 col-md-2 info prevbal">#intFormat($!currTransaction.prevBalance)</div>
+		<div class="col-xs-6 hidden-md hidden-lg heading balxacted">#msg('balxacted')</div>
+		<div class="col-xs-6 col-md-2 info balxacted">#intFormat($!currTransaction.amountTransacted)</div>
+		<div class="col-xs-6 hidden-md hidden-lg heading newbal">#msg('newbal')</div>
+		<div class="col-xs-6 col-md-2 info newbal">#intFormat($!currTransaction.newBalance)</div>
+	</div>
+	#end
+
+		#foreach( $childTransaction in $currTransaction.children)
+			#if ( $childTransaction.prevBalance || $childTransaction.amountTransacted || $childTransaction.newBalance )
+			<div class="row $rowClass info child child${currTransaction.ser}">
+				#* <div class="hidden-xs col-xs-4 info descr">#IString($childTransaction.descr)</div> *#
+				<div class="col-xs-6 hidden-md hidden-lg heading balance">#msg('balance')</div>
+				<div class="col-xs-6 col-md-6 info balance">#IString(${childTransaction.balance.pluralName})</div>
+				<div class="col-xs-6 hidden-md hidden-md hidden-lg heading prevbal">#msg('prevbal')</div>
+				<div class="col-xs-6 col-md-2 info prevbal">#intFormat($!{childTransaction.prevBalance})</div>
+				<div class="col-xs-6 hidden-md hidden-md hidden-lg heading balxacted">#msg('balxacted')</div>
+    				<div class="col-xs-6 col-md-2 info balxacted">#intFormat($!{childTransaction.amountTransacted})</div>
+				<div class="col-xs-6 hidden-md hidden-md hidden-lg heading newbal">#msg('newbal')</div>
+				<div class="col-xs-6 col-md-2 info newbal">#intFormat($!{childTransaction.newBalance})</div>
+			</div>
+			#else
+			<div class="row $rowClass info child child${currTransaction.ser}">
+				<div class="col-xs-12 info descr">#IString($childTransaction.descr)</div>
+			</div>
+			#end
+		#end
+	#end
+
+	<div class="row pagination">
+		<div class="col-xs-6">
+			#if ( $pagination.currentPage > 0 )
+			<form action="$request.requestURI" method="post" result="contentContainer">
+				#springFormHiddenInput("pagination.currentPage" " ")
+				#springFormHiddenInput("pagination.orderBy" " ")
+				#springBind("pagination.prevPage")
+				<input type="hidden" id="${status.expression}" name="${status.expression}" value="true"/>
+				#i4oneFormSubmit('msg.base.user.account.activity.prevpage' $pagination)
+			</form>
+			#else
+				#i4oneFormDisabledButton('msg.base.user.account.activity.prevpage' $pagination)
+			#end
+		</div>
+		
+		#if ( ${model.transactions.size()} >= $pagination.perPage ) ## Infinite pagination
+		<div class="col-xs-6">
+			#* Handled by the message itself now
+			#set($moreValue = "More")
+			#if ( $pagination.currentPage == 0 )
+				#set($moreValue = "See More")
+			#end
+			*#
+			<form action="$request.requestURI" method="post" result="contentContainer">
+				#springFormHiddenInput("pagination.currentPage" " ")
+				#springFormHiddenInput("pagination.orderBy" " ")
+				#springBind("pagination.nextPage")
+				<input type="hidden" id="${status.expression}" name="${status.expression}" value="true"/>
+				#i4oneFormSubmit('msg.base.user.account.activity.nextpage' $pagination)
+			</form>
+		</div>
+		#else
+		<div class="col-xs-6">
+			#i4oneFormDisabledButton('msg.base.user.account.activity.nextpage' $pagination)
+		</div>
+		#end
+	</div>
+</section>
+#parseVm( "base/user/template/end.vm" )

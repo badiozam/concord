@@ -1,0 +1,424 @@
+html
+{
+	font-family: Trebuchet MS, Tahoma, Verdana, Arial, sans-serif;
+
+	font-size: 100%;
+	font-size: 1.4rem;
+}
+
+body
+{
+	padding-top: 70px;
+
+	margin-left: 5px;
+	margin-right: 5px;
+
+	background: linear-gradient( to right, rgb(255,255,255), rgb(240,240,240));
+}
+
+.navbar
+{
+	background: linear-gradient( to right, rgb(255,255,255), rgb(240,240,240));
+}
+
+#attachment
+{
+	position: fixed;
+	top: 50px;
+	right: 0px;
+	min-height: 50px;
+	z-index: 1024;
+
+	background-color: transparent;
+	text-align: center;
+}
+
+#attachment #attachinfo
+{
+	background-color: #009900;
+	color: #fff;
+
+	font-size: 1.2em;
+	padding-left: 0.5em;
+	padding-right: 0.5em;
+
+	-webkit-border-radius:0px 0 6px 6px;-moz-border-radius:0px 0 6px 6px;border-radius:0px 0 6px 6px;
+}
+
+section.listing > .row.highlight
+{
+	background-color: #981A1E;
+	color: #fff;
+
+	cursor: crosshair;
+}
+
+section.listing > .row
+{
+}
+
+header h1
+{
+	text-align: center;
+}
+
+a
+{
+	color: #981A1E;
+}
+
+a:hover, a:active, a:focus
+{
+	color: #880A0E;
+}
+
+.help
+{
+	color: #981a1e;
+	font-size: 0.8rem;
+}
+
+.help:hover,
+.help:active,
+.help:focus
+{
+	color: #880A0E;
+	cursor: help;
+}
+
+.form-control:focus
+{
+	border-color: #333;
+	box-shadow: 0 1px 1px rgba(0, 0, 0, 0.075) inset, 0 0 8px rgba(64, 64, 64, 0.6);
+}
+
+.form-group,
+.form-group > div
+{
+	padding-top: 5px;
+	padding-bottom: 5px;
+}
+
+.form-group h3
+{
+}
+
+.btn
+{
+	margin-top: 5px;
+	margin-bottom: 5px;
+}
+
+#crud .btn
+{
+	margin-top: 0;
+}
+
+.btn-primary,input[type=submit]
+{
+	background-color: #981A1E;
+	border-color: #888;
+	color: #fff;
+}
+
+.btn-primary:active,
+.btn-primary:hover,
+.btn-primary:focus,
+.dropdown-toggle.btn-primary
+{
+	background-color: #880A0E;
+	border-color: #000;
+}
+
+.open
+{
+	border-color: #000;
+}
+
+.btn-primary.disabled,
+.btn-primary[disabled],
+fieldset[disabled] .btn-primary,
+.btn-primary.disabled:hover,
+.btn-primary[disabled]:hover,
+fieldset[disabled] .btn-primary:hover,
+.btn-primary.disabled:focus,
+.btn-primary[disabled]:focus,
+fieldset[disabled] .btn-primary:focus,
+.btn-primary.disabled:active,
+.btn-primary[disabled]:active,
+fieldset[disabled] .btn-primary:active,
+.btn-primary.disabled.active,
+.btn-primary.active[disabled],
+fieldset[disabled] .btn-primary.active
+{
+	background-color: #999;
+	color: #fff;
+	border-color: #000;
+}
+
+.btn-default
+{
+	background-color: #E3D2B8;
+}
+
+.btn-default:active,
+.btn-default:hover,
+.btn-default:focus,
+.dropdown-toggle.btn-default
+{
+	background-color: #CCBDA5;
+	border-color: #000;
+}
+
+.btn-back
+{
+	background-color: #eee;
+}
+
+.btn-back:active,
+.btn-back:hover,
+.btn-back:focus,
+.dropdown-toggle.btn-back
+{
+	background-color: #ccc;
+	border-color: #000;
+}
+
+.bootstrap-datetimepicker-widget table td.active,
+.bootstrap-datetimepicker-widget table td.active:hover
+{
+	background-color: #981A1E;
+}
+
+.bootstrap-datetimepicker-widget table td.today
+{
+}
+
+.bootstrap-datetimepicker-widget th.picker-switch,
+.bootstrap-datetimepicker-widget .picker-switch td span
+{
+	background-color: #e0e0e0;
+}
+
+.formError
+{
+	font-weight: bold;
+}
+
+.formError ul
+{
+	font-weight: normal;
+
+	color: #880000;
+}
+
+.formFieldError
+{
+	display: block;;
+}
+
+.even
+{
+	background-color: rgba(190,190,190,0.1);
+}
+
+.odd
+{
+	background-color: rgba(215,215,215,0.65);
+}
+
+.heading
+{
+	font-weight: bolder;
+	text-decoration: underline;
+}
+
+#lookup #profile fieldset
+{
+	font-family: Consolas,'Lucida Console','DejaVu Sans Mono',monospace;
+
+	border: 1px dashed #981A1E;
+	background-color: #eee;
+}
+
+#crud form fieldset
+{
+	font-family: Consolas,'Lucida Console','DejaVu Sans Mono',monospace;
+
+	border: 1px dashed #981A1E;
+	background-color: #eeeeee;
+}
+
+#crud form table.table th
+{
+	border-left: 2px solid black;
+	border-top: 2px solid black;
+}
+
+#crud form table.table td
+{
+	border-left: 1px solid black;
+	border-top: 1px solid black;
+}
+
+#crud form fieldset label
+{
+	display: inline-block;
+}
+
+#crud form fieldset label.textarea
+{
+}
+
+#crud form textarea
+{
+}
+
+#crud form input[type="text"]
+{
+}
+
+#terminable table td, #profile table td
+{
+	border-left: 1px solid black;
+	border-top: 1px solid black;
+}
+
+#reports .chart
+{
+}
+
+#reports .title h2,
+#reports .title h3
+{
+	text-align: center;
+	padding-top: 0.5rem;
+	padding-bottom: 1.0rem;
+}
+
+#reports .tabulated table th
+{
+	text-align: right;
+}
+
+/** Bootstrap 3 submenu addon */
+.dropdown-submenu { position:relative; }
+.dropdown-submenu > .dropdown-menu{ top:0;left:100%;margin-top:-6px;margin-left:-1px;-webkit-border-radius:0 6px 6px 6px;-moz-border-radius:0 6px 6px 6px;border-radius:0 6px 6px 6px; }
+/* .dropdown-submenu:hover > .dropdown-menu { display:block; } */
+.dropdown-submenu>a:after { display:block; content:" ";float:right;width:0;height:0;border-color:transparent;border-style:solid;border-width:5px 0 5px 5px;border-left-color:#888;margin-top:5px;margin-right:-10px; }
+.dropdown-submenu:hover > a:after{border-left-color:#000;}
+.dropdown-submenu.pull-left {float:none;}
+.dropdown-submenu.pull-left>.dropdown-menu {left:-100%;margin-left:10px;-webkit-border-radius:6px 0 6px 6px;-moz-border-radius:6px 0 6px 6px;border-radius:6px 0 6px 6px;}
+
+
+/** Either/or side-by-side or above/below divs unused in favor accordion */
+.panel-title h4
+{
+	width: 100%;
+}
+
+.panel-title a.collapsed .glyphicon
+{
+	-webkit-transition: all 0.25s linear;
+	-moz-transition: all 0.25s linear;
+	-o-transition: all 0.25s linear;
+	transition: all 0.25s linear;
+
+	-ms-transform: rotate(90deg); /* IE 9 */
+	-webkit-transform: rotate(90deg); /* Safari */
+	transform: rotate(90deg);
+}
+
+.panel-title a .glyphicon
+{
+	-webkit-transition: all 0.25s linear;
+	-moz-transition: all 0.25s linear;
+	-o-transition: all 0.25s linear;
+	transition: all 0.25s linear;
+
+	-ms-transform: rotate(0deg); /* IE 9 */
+	-webkit-transform: rotate(0deg); /* Safari */
+	transform: rotate(0deg);
+}
+
+/*
+.eitheror h4
+{
+	text-align: center;
+	font-weight: bold;
+
+	margin-bottom: 10px;
+}
+
+.eitheror > .eitherleft,
+.eitheror > .orright
+{
+	border-top: 1px solid transparent;
+}
+
+.eitheror > .eitherleft:hover,
+.eitheror > .eitherleft:active,
+.eitheror > .eitherleft:focus,
+.eitheror > .orright:hover,
+.eitheror > .orright:active,
+.eitheror > .orright:focus
+{
+	border-top: 1px solid #000;
+	background-color: #eee;
+}
+*/
+
+@media (max-width: 767px) /* @screen-xs-max */
+{
+	/** When the menu is collapsed, offset the submenu by a few pixels */
+	.dropdown-submenu > .dropdown-menu
+	{
+		margin-left: 10px;
+	}
+
+	/*
+	.eitheror > .orright
+	{
+		border-top: 1px solid #000;
+	}
+ 	*/
+}
+
+@media (min-width:768px) /* @screen-sm-min */
+{
+	/*
+	.eitheror > .orright
+	{
+		border-top: 1px solid #000;
+	}
+ 	*/
+}
+
+@media (min-width:992px) /* @screen-md-min */
+{
+	/*
+	.eitheror
+	{
+		display: table;
+	}
+
+	.eitheror > .eitherleft,
+	.eitheror > .orright
+	{
+		float: none;
+		display: table-cell;
+		vertical-align: middle;
+	}
+	
+	.eitheror > .eitherleft
+	{
+		border-top: 1px solid transparent;
+		border-right: 1px solid #000;
+	}
+
+	.eitheror > .orright
+	{
+		border-top: 1px solid transparent;
+	}
+	*/
+}

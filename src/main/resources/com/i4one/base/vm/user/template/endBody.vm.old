@@ -1,0 +1,69 @@
+<div align="center">
+<div id="footer1">
+
+<div class="footwidget">
+<div align="left" class="foothead">About</div>
+<div class="footlinks">
+    
+<ul>
+<li><a href="http://${request.serverName}:${request.serverPort}${request.baseurl}/base/user/howto.html">How To Play</a></li>
+<li><a href="http://${request.serverName}:${request.serverPort}${request.baseurl}/base/user/faqs.html">FAQ</a></li>
+##<li><a href="http://${request.serverName}:${request.serverPort}${request.baseurl}/predict/user/strategy.html">Strategy Guide</a></li>
+<li><a href="http://${request.serverName}:${request.serverPort}${request.baseurl}/base/user/rules.html">Rules</a></li>
+<li><a href="http://${request.serverName}:${request.serverPort}${request.baseurl}/base/user/support.html">Contact</a></li>
+</ul>
+</div>
+
+</div>
+
+
+
+<div class="footwidget">
+<div align="left" class="foothead">Games</div>
+<div class="footlinks">
+    
+<ul>
+#foreach ( $category in ${model.eventCategories} )
+	<li><a href="http://${request.serverName}:${request.serverPort}${request.baseurl}/predict/user/bid.html?categoryid=$category.ser" result="contentContainer">$category.title</a></li>
+#end
+</ul>
+</div>
+
+</div>
+
+
+
+<div class="footwidget">
+<div align="left" class="foothead">Prizes</div>    
+<div class="footlinks">
+    
+<ul>
+#foreach ( $prize in ${model.livePrizes} )
+	<li><a href="http://${request.serverName}:${request.serverPort}${request.baseurl}/base/user/prizes/detail.html?prizeid=$prize.ser" result="contentContainer">$prize.name</a></li>
+#end
+</ul>
+</div>
+
+</div>
+
+<div class="footwidget">
+<div align="left" class="foothead">Top 100</div> 
+<div class="footlinks">
+    
+<ul>
+<li><a href="http://${request.serverName}:${request.serverPort}${request.baseurl}/predict/user/top10.html">Top Predictors</a></li>
+## <li><a href="http://${request.serverName}:${request.serverPort}${request.baseurl}/base/user/comingsoon.html">Top Teams</a></li>
+<li><a href="http://${request.serverName}:${request.serverPort}${request.baseurl}/predict/user/toptitles.html">Top Titles</a></li>
+</ul>
+</div>
+</div>
+
+</div>
+
+
+
+<div id="footer2">
+<div align="right" class="footer2text">Copyright #dateTimeFormat('yyyy' $model.currentTime) | <a href="http://${request.serverName}:${request.serverPort}${request.baseurl}/base/user/rules.html">Terms of Service</a> | <a href="http://${request.serverName}:${request.serverPort}${request.baseurl}/base/user/privacy.html">Privacy Policy</a></div>
+</div>
+
+</div>

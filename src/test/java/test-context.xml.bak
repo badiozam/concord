@@ -1,0 +1,407 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+		 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		 xmlns:aop="http://www.springframework.org/schema/aop"
+		 xmlns:tx="http://www.springframework.org/schema/tx"
+		 xmlns:context="http://www.springframework.org/schema/context"
+		 xsi:schemaLocation="http://www.springframework.org/schema/beans 
+		   http://www.springframework.org/schema/beans/spring-beans-2.0.xsd
+		   http://www.springframework.org/schema/aop 
+		   http://www.springframework.org/schema/aop/spring-aop-2.0.xsd
+		   http://www.springframework.org/schema/tx 
+		   http://www.springframework.org/schema/tx/spring-tx-2.0.xsd
+		   http://www.springframework.org/schema/context
+		   http://www.springframework.org/schema/context/spring-context-2.5.xsd
+		   http://www.springframework.org/schema/security
+		   http://www.springframework.org/schema/security/spring-security-3.1.xsd">
+
+	<bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
+	        <property name="driverClassName" value="${jdbc.driverClassName}"/>
+	        <property name="url" value="${jdbc.url}"/>
+	        <property name="username" value="${jdbc.username}"/>
+			<property name="password" value="${jdbc.password}"/>
+			<property name="defaultAutoCommit" value="true"/>
+	</bean>
+
+	<!-- Transaction Management via Annotation -->
+	<tx:annotation-driven transaction-manager="transactionManager"/>
+
+	<bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+		<property name="dataSource" ref="dataSource"/>
+	</bean>
+
+	<bean id="propertyConfigurer" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+		<property name="locations">
+			<list>
+				<value>classpath:jdbc.properties</value>
+			</list>
+		</property>
+	</bean>
+
+	<!-- This needs to be here first since all other beans depend on it -->
+	<bean id="base" class="com.i4one.base.core.Base" init-method="init">
+		<constructor-arg ref="daoManager"/>
+
+		<property name="messageManager" ref="messageManager"/>
+		<property name="clientManager" ref="clientManager"/>
+		<property name="clientOptionManager" ref="clientOptionManager"/>
+		<property name="velocityConfig" ref="velocityConfig"/>
+		<property name="instance" ref="base"/>
+	</bean>
+
+	<!-- DAO classes -->
+	<bean id="daoManager" class="com.i4one.base.dao.DaoManager">
+		<property name="daoMap">
+			<map>
+				<entry><key><value>adminDao</value></key><ref bean="adminDao"/></entry>
+				<entry><key><value>clientAdminPrivilegeDao</value></key><ref bean="clientAdminPrivilegeDao"/></entry>
+				<entry><key><value>privilegeDao</value></key><ref bean="privilegeDao"/></entry>
+				<entry><key><value>adminHistoryDao</value></key><ref bean="adminHistoryDao"/></entry>
+				<entry><key><value>userDao</value></key><ref bean="userDao"/></entry>
+				<entry><key><value>balanceDao</value></key><ref bean="balanceDao"/></entry>
+				<entry><key><value>userBalanceDao</value></key><ref bean="userBalanceDao"/></entry>
+				<entry><key><value>singleClientDao</value></key><ref bean="clientDao"/></entry>
+				<entry><key><value>clientOptionDao</value></key><ref bean="clientOptionDao"/></entry>
+				<entry><key><value>transactionDao</value></key><ref bean="transactionDao"/></entry>
+				<entry><key><value>messageDao</value></key><ref bean="messageDao"/></entry>
+				<entry><key><value>prizeDao</value></key><ref bean="prizeDao"/></entry>
+
+				<entry><key><value>termDao</value></key><ref bean="termDao"/></entry>
+				<entry><key><value>eventDao</value></key><ref bean="eventDao"/></entry>
+				<entry><key><value>eventOutcomeDao</value></key><ref bean="eventOutcomeDao"/></entry>
+				<entry><key><value>eventPredictionDao</value></key><ref bean="eventPredictionDao"/></entry>
+				<entry><key><value>eventCategoryDao</value></key><ref bean="eventCategoryDao"/></entry>
+			</map>
+		</property>
+	</bean>
+
+	<bean id="adminDao" class="com.i4one.base.model.admin.JdbcAdminRecordDao" init-method="init">
+		<property name="dataSource" ref="dataSource"/>
+	</bean>
+
+	<bean id="privilegeDao" class="com.i4one.base.model.admin.JdbcPrivilegeRecordDao" init-method="init">
+		<property name="dataSource" ref="dataSource"/>
+	</bean>
+
+	<bean id="clientAdminPrivilegeDao" class="com.i4one.base.model.admin.JdbcClientAdminPrivilegeRecordDao" init-method="init">
+		<property name="dataSource" ref="dataSource"/>
+	</bean>
+
+	<bean id="adminHistoryDao" class="com.i4one.base.model.admin.JdbcAdminHistoryRecordDao" init-method="init">
+		<property name="dataSource" ref="dataSource"/>
+	</bean>
+
+	<bean id="clientDao" class="com.i4one.base.model.client.JdbcClientRecordDao" init-method="init">
+		<property name="dataSource" ref="dataSource"/>
+	</bean>
+
+	<bean id="clientOptionDao" class="com.i4one.base.model.client.JdbcClientOptionRecordDao" init-method="init">
+		<property name="dataSource" ref="dataSource"/>
+	</bean>
+
+	<bean id="userDao" class="com.i4one.base.model.user.JdbcUserRecordDao" init-method="init">
+		<property name="dataSource" ref="dataSource"/>
+	</bean>
+
+	<bean id="balanceDao" class="com.i4one.base.model.balance.JdbcBalanceRecordDao" init-method="init">
+		<property name="dataSource" ref="dataSource"/>
+	</bean>
+
+	<bean id="userBalanceDao" class="com.i4one.base.model.user.JdbcUserBalanceRecordDao" init-method="init">
+		<property name="dataSource" ref="dataSource"/>
+	</bean>
+
+	<bean id="transactionDao" class="com.i4one.base.model.transaction.JdbcTransactionRecordDao" init-method="init">
+		<property name="dataSource" ref="dataSource"/>
+	</bean>
+
+	<bean id="messageDao" class="com.i4one.base.model.message.JdbcMessageRecordDao" init-method="init">
+		<property name="dataSource" ref="dataSource"/>
+	</bean>
+
+	<bean id="prizeDao" class="com.i4one.base.model.prize.JdbcPrizeRecordDao" init-method="init">
+		<property name="dataSource" ref="dataSource"/>
+	</bean>
+
+	<!-- Prediction Daos -->
+	<bean id="termDao" class="com.i4one.predict.model.term.JdbcTermRecordDao" init-method="init">
+		<property name="dataSource" ref="dataSource"/>
+	</bean>
+
+	<bean id="eventDao" class="com.i4one.predict.model.event.JdbcEventRecordDao" init-method="init">
+		<property name="dataSource" ref="dataSource"/>
+	</bean>
+
+	<bean id="eventOutcomeDao" class="com.i4one.predict.model.event.JdbcEventOutcomeRecordDao" init-method="init">
+		<property name="dataSource" ref="dataSource"/>
+	</bean>
+
+	<bean id="eventPredictionDao" class="com.i4one.predict.model.event.JdbcEventPredictionRecordDao" init-method="init">
+		<property name="dataSource" ref="dataSource"/>
+	</bean>
+
+	<bean id="eventCategoryDao" class="com.i4one.predict.model.category.JdbcEventCategoryRecordDao" init-method="init">
+		<property name="dataSource" ref="dataSource"/>
+	</bean>
+
+	<!-- Managers -->
+	<bean id="simpleClientManager" class="com.i4one.base.model.client.SimpleClientManager" init-method="init"/>
+
+	<bean id="cachedClientManager" class="com.i4one.base.model.client.CachedClientManager" init-method="init">
+		<constructor-arg index="0" type="int" value="100"/> <!-- maxSize = 100 items -->
+		<constructor-arg index="1" type="long" value="200"/> <!-- maxAge = 200ms -->
+		<property name="simpleClientManager" ref="simpleClientManager"/>
+	</bean>
+
+	<bean id="privilegedClientManager" class="com.i4one.base.model.client.PrivilegedClientManager" init-method="init" scope="prototype">
+		<property name="clientManager" ref="cachedClientManager"/>
+	</bean>
+
+	<bean name="clientManager,historicalClientManager" class="com.i4one.base.model.client.HistoricalClientManager" init-method="init" scope="prototype">
+		<property name="privilegedClientManager" ref="privilegedClientManager"/>
+	</bean>
+
+	<bean id="simpleClientOptionManager" class="com.i4one.base.model.client.SimpleClientOptionManager" init-method="init">
+	</bean>
+
+	<bean id="cachedClientOptionManager" class="com.i4one.base.model.client.CachedClientOptionManager" init-method="init">
+		<constructor-arg index="0" type="int" value="100"/> <!-- maxSize = 100 keys -->
+		<constructor-arg index="1" type="long" value="100"/> <!-- maxAge = 100 ms -->
+		<property name="simpleClientOptionManager" ref="simpleClientOptionManager"/>
+	</bean>
+
+	<bean id="privilegedClientOptionManager" class="com.i4one.base.model.client.PrivilegedClientOptionManager" init-method="init" scope="prototype">
+		<property name="clientOptionManager" ref="cachedClientOptionManager"/>
+	</bean>
+
+	<bean name="clientOptionManager,historicalClientOptionManager" class="com.i4one.base.model.client.HistoricalClientOptionManager" init-method="init" scope="prototype">
+		<property name="privilegedClientOptionManager" ref="privilegedClientOptionManager"/>
+	</bean>
+
+	<bean id="simpleUserManager" class="com.i4one.base.model.user.SimpleUserManager" init-method="init"/>
+
+	<bean id="triggeredUserManager" class="com.i4one.base.model.user.TriggeredUserManager" init-method="init">
+		<property name="userManager" ref="simpleUserManager"/>
+	</bean>
+
+	<bean id="privilegedUserManager" class="com.i4one.base.model.user.PrivilegedUserManager" init-method="init" scope="prototype">
+		<property name="userManager" ref="triggeredUserManager"/>
+	</bean>
+
+	<bean id="historicalUserManager" class="com.i4one.base.model.user.HistoricalUserManager" init-method="init" scope="prototype">
+		<property name="privilegedUserManager" ref="privilegedUserManager"/>
+	</bean>
+
+	<bean name="userManager,transactionalUserManager" class="com.i4one.base.model.user.TransactionalUserManager" init-method="init" scope="prototype">
+		<property name="historicalUserManager" ref="historicalUserManager"/>
+	</bean>
+
+	<!-- Balance Managers -->
+	<bean id="simpleBalanceManager" class="com.i4one.base.model.balance.SimpleBalanceManager" init-method="init"/>
+
+	<bean name="balanceManager,cachedBalanceManager" class="com.i4one.base.model.balance.CachedBalanceManager" init-method="init">
+		<constructor-arg index="0" type="int" value="100"/> <!-- maxSize = 100 items -->
+		<constructor-arg index="1" type="long" value="200"/> <!-- maxAge = 200ms -->
+		<property name="balanceManager" ref="simpleBalanceManager"/>
+	</bean>
+
+	<!-- The decorator pattern is used for the userBalanceManager -->
+	<bean id="simpleUserBalanceManager" class="com.i4one.base.model.user.SimpleUserBalanceManager" init-method="init"/>
+
+	<bean id="privilegedUserBalanceManager" class="com.i4one.base.model.user.PrivilegedUserBalanceManager" init-method="init">
+		<property name="userBalanceManager" ref="simpleUserBalanceManager"/>
+	</bean>
+
+	<bean id="historicalUserBalanceManager" class="com.i4one.base.model.user.HistoricalUserBalanceManager" init-method="init">
+		<property name="privilegedUserBalanceManager" ref="privilegedUserBalanceManager"/>
+	</bean>
+
+	<bean name="userBalanceManager,transactionalUserBalanceManager" class="com.i4one.base.model.user.TransactionalUserBalanceManager" init-method="init">
+		<property name="historicalUserBalanceManager" ref="historicalUserBalanceManager"/>
+	</bean>
+
+	<bean id="adminManager" class="com.i4one.base.model.admin.SimpleAdminManager" init-method="init"/>
+
+	<!--
+		 The admin privilege manager delegate chain:
+		 SimpleAdminPrivilegeManager: Singleton
+		 PrivilegedAdminPrivilegeManager: Prototype, checks privileges before granting/revoking (needs setAdmin)
+		 HistoricalAdminPrivilegeManager: Prototype, records admin history log (needs setSourceIP)
+	-->
+	<bean id="simpleAdminPrivilegeManager" class="com.i4one.base.model.admin.SimpleAdminPrivilegeManager" init-method="init"/>
+
+	<bean id="cachedAdminPrivilegeManager" class="com.i4one.base.model.admin.CachedAdminPrivilegeManager" init-method="init">
+		<constructor-arg index="0" type="int" value="100"/> <!-- maxSize = 100 items -->
+		<constructor-arg index="1" type="long" value="0"/> <!-- maxAge = infinite -->
+		<property name="simpleAdminPrivilegeManager" ref="simpleAdminPrivilegeManager"/>
+	</bean>
+
+	<bean id="privilegedAdminPrivilegeManager" class="com.i4one.base.model.admin.PrivilegedAdminPrivilegeManager" init-method="init" scope="prototype">
+		<property name="adminPrivilegeManager" ref="cachedAdminPrivilegeManager"/>
+	</bean>
+
+	<bean name="adminPrivilegeManager,historicalAdminPrivilegeManager" class="com.i4one.base.model.admin.HistoricalAdminPrivilegeManager" init-method="init" scope="prototype">
+		<property name="privilegedAdminPrivilegeManager" ref="privilegedAdminPrivilegeManager"/>
+	</bean>
+
+	<!--
+		MessageManagers
+
+		Might be a good idea to instantate return by the client object instead of being instantiated here
+	-->
+	<bean id="simpleMessageManager" class="com.i4one.base.model.message.SimpleMessageManager" init-method="init"/>
+
+	<bean id="cachedMessageManager" class="com.i4one.base.model.message.CachedMessageManager" init-method="init">
+		<constructor-arg index="0" type="int" value="100"/> <!-- maxSize = 100 keys -->
+		<constructor-arg index="1" type="long" value="100"/> <!-- maxAge = 100 ms -->
+		<property name="messageManager" ref="simpleMessageManager"/>
+	</bean>
+
+	<bean id="privilegedMessageManager" class="com.i4one.base.model.message.PrivilegedMessageManager" init-method="init" scope="prototype">
+		<property name="messageManager" ref="cachedMessageManager"/>
+	</bean>
+
+	<bean name="messageManager,historicalMessageManager" class="com.i4one.base.model.message.HistoricalMessageManager" init-method="init" scope="prototype">
+		<property name="privilegedMessageManager" ref="privilegedMessageManager"/>
+	</bean>
+
+	<!--
+		PrizeManager
+	-->
+	<bean id="simplePrizeManager" class="com.i4one.base.model.prize.SimplePrizeManager" init-method="init"/>
+
+	<bean name="prizeManager,cachedPrizeManager" class="com.i4one.base.model.prize.CachedPrizeManager" init-method="init">
+		<constructor-arg index="0" type="int" value="1000"/> <!-- maxSize = 1000 keys -->
+		<constructor-arg index="1" type="long" value="15000"/> <!-- maxAge = 15 seconds -->
+		<property name="prizeManager" ref="simplePrizeManager"/>
+	</bean>
+
+	<!-- Prediction Managers -->
+	<bean id="simpleTermManager" class="com.i4one.predict.model.term.SimpleTermManager" init-method="init"/>
+	<bean id="simpleEventManager" class="com.i4one.predict.model.event.SimpleEventManager" init-method="init"/>
+	<bean id="simpleEventOutcomeManager" class="com.i4one.predict.model.event.SimpleEventOutcomeManager" init-method="init"/>
+	<bean id="simpleEventPredictionManager" class="com.i4one.predict.model.event.SimpleEventPredictionManager" init-method="init"/>
+
+	<bean name="termManager,cachedTermManager" class="com.i4one.predict.model.term.CachedTermManager" init-method="init">
+		<constructor-arg index="0" type="int" value="100"/> <!-- maxSize = 100 items -->
+		<constructor-arg index="1" type="long" value="200"/> <!-- maxAge = 200ms -->
+		<property name="termManager" ref="simpleTermManager"/>
+	</bean>
+
+	<bean id="cachedEventManager" class="com.i4one.predict.model.event.CachedEventManager" init-method="init">
+		<constructor-arg index="0" type="int" value="100"/> <!-- maxSize = 100 items -->
+		<constructor-arg index="1" type="long" value="200"/> <!-- maxAge = 200ms -->
+		<property name="eventManager" ref="simpleEventManager"/>
+	</bean>
+
+	<bean id="privilegedEventManager" class="com.i4one.predict.model.event.PrivilegedEventManager" init-method="init" scope="prototype">
+		<property name="eventManager" ref="cachedEventManager"/>
+	</bean>
+
+	<bean name="eventManager,historicalEventManager" class="com.i4one.predict.model.event.HistoricalEventManager" init-method="init" scope="prototype">
+		<property name="privilegedEventManager" ref="privilegedEventManager"/>
+	</bean>
+
+	<bean id="cachedEventOutcomeManager" class="com.i4one.predict.model.event.CachedEventOutcomeManager" init-method="init">
+		<constructor-arg index="0" type="int" value="100"/> <!-- maxSize = 100 items -->
+		<constructor-arg index="1" type="long" value="200"/> <!-- maxAge = 200ms -->
+		<property name="eventOutcomeManager" ref="simpleEventOutcomeManager"/>
+	</bean>
+
+	<bean id="privilegedEventOutcomeManager" class="com.i4one.predict.model.event.PrivilegedEventOutcomeManager" init-method="init" scope="prototype">
+		<property name="eventOutcomeManager" ref="cachedEventOutcomeManager"/>
+	</bean>
+
+	<bean name="eventOutcomeManager,historicalEventOutcomeManager" class="com.i4one.predict.model.event.HistoricalEventOutcomeManager" init-method="init" scope="prototype">
+		<property name="privilegedEventOutcomeManager" ref="privilegedEventOutcomeManager"/>
+	</bean>
+
+	<!--
+		CategoryManager
+	-->
+	<bean id="simpleEventCategoryManager" class="com.i4one.predict.model.category.SimpleEventCategoryManager" init-method="init"/>
+
+	<bean name="eventCategoryManager,cachedEventCategoryManager" class="com.i4one.predict.model.category.CachedEventCategoryManager" init-method="init">
+		<constructor-arg index="0" type="int" value="1000"/> <!-- maxSize = 1000 keys -->
+		<constructor-arg index="1" type="long" value="15000"/> <!-- maxAge = 15 seconds -->
+		<property name="categoryManager" ref="simpleEventCategoryManager"/>
+	</bean>
+
+
+	<!-- WebApp related beans -->
+	<bean id="userAdminModelInterceptor" class="com.i4one.base.web.UserAdminModelInterceptor" init-method="init"/>
+	<bean id="menuModelInterceptor" class="com.i4one.base.web.UserMenuModelInterceptor" init-method="init"/>
+	<bean id="predictMenuModelInterceptor" class="com.i4one.predict.web.PredictUserMenuModelInterceptor" init-method="init"/>
+	<bean id="modelManager" class="com.i4one.base.web.SimpleModelManager" init-method="init">
+		<property name="modelInterceptors">
+			<list>
+				<ref bean="userAdminModelInterceptor"/>
+				<ref bean="menuModelInterceptor"/>
+				<ref bean="predictMenuModelInterceptor"/>
+			</list>
+		</property>
+	</bean>
+
+	<bean id="messageResourceLoader" class="com.i4one.base.spring.MessageResourceLoader" init-method="init">
+	</bean>
+
+	<bean id="classpathResourceLoader" class="com.i4one.base.spring.ClasspathResourceLoader">
+		<property name="prefix" value="com/i4one/"/>
+		<property name="packageSuffix" value="/vm/"/>
+		<property name="suffix" value=""/>
+	</bean>
+
+	<bean id="velocityConfig" class="com.i4one.base.spring.VelocityConfigurer">
+		<property name="overrideLogging" value="false"/>
+		<property name="velocityPropertiesMap">
+			<map>
+				<entry key="runtime.log.logsystem.class" value="org.apache.velocity.runtime.log.CommonsLogLogChute"/>
+
+				<entry key="resource.loader" value="msg,vmfiles,class"/>
+				<entry key="msg.resource.loader.instance"><ref bean="messageResourceLoader"/></entry>
+
+				<!-- The custom class path resource loader that removes the client and language prefixes -->
+				<entry key="vmfiles.resource.loader.instance"><ref bean="classpathResourceLoader"/></entry>
+
+				<!-- If all else fails fall back to the default classpath loader -->
+				<entry key="class.resource.loader.class" value="org.apache.velocity.runtime.resource.loader.ClasspathResourceLoader"/>
+			</map>
+		</property>
+	</bean>
+
+	<bean id="viewResolver" class="org.springframework.web.servlet.view.velocity.VelocityViewResolver">
+		<property name="cache" value="true"/>
+		<property name="prefix" value=""/>
+		<property name="suffix" value=".vm"/>
+	</bean>
+
+	<!-- Web controller testing -->
+	<bean id="handlerMapping" class="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping">
+		<property name="interceptors">
+			<list>
+				<ref bean="clientInterceptor"/>
+				<ref bean="adminAuthInterceptor"/>
+				<ref bean="userAuthInterceptor"/>
+			</list>
+		</property>
+		<property name="defaultHandler">
+			<bean class="com.i4one.base.web.controller.DefaultViewController"/>
+		</property>
+	</bean>
+
+	<bean id="clientInterceptor" class="com.i4one.base.web.interceptor.ClientInterceptor">
+		<property name="clientManager" ref="clientManager"/>
+	</bean>
+
+	<bean id="adminAuthInterceptor" class="com.i4one.base.web.interceptor.AdminAuthInterceptor">
+		<property name="modelManager" ref="modelManager"/>
+		<property name="unauthView" value="base/admin/auth/index.html"/>
+	</bean>
+
+	<bean id="userAuthInterceptor" class="com.i4one.base.web.interceptor.UserAuthInterceptor">
+		<property name="modelManager" ref="modelManager"/>
+		<property name="unauthView" value="base/user/auth/index.html"/>
+	</bean>
+
+</beans>

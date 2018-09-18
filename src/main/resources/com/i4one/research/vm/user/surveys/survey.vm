@@ -1,0 +1,115 @@
+#**
+ * MIT License
+ * 
+ * Copyright (c) 2018 i4one Interactive, LLC
+ * 
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ * 
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ * 
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ *#
+#**
+ * @author Hamid Badiozamani
+ */
+#parseVm( "base/user/template/start.vm" )
+
+<style>
+#survey div#label h1
+{
+	font-size: 3.5rem;
+}
+
+#survey .question
+{
+	font-size: 1.3rem;
+	color: #428bca;
+}
+
+#survey .response
+{
+	font-size: 1.1rem;
+}
+#pageCSS()
+</style>
+
+<section class="container" id="survey">
+	<div class="row">
+		<div class="hidden-xs col-sm-2 hidden-md hidden-lg"></div>
+		<div class="$editClass col-xs-12 col-sm-8 col-md-12 col-lg-12" data-ser="$respondent.survey.ser">
+		#if ( $respondent.hasFinished )
+			<div class="form-group row">
+				<div id="label" class="col-xs-12">
+					<h1>#IString($respondent.survey.title)</h1>
+					<p>#IString($!respondent.survey.outro)</p>
+				</div>
+
+				<div class="col-xs-12">#i4oneAttachableStatus('respondent')</div>
+
+				<div class="col-xs-12">
+					<div class="col-xs-12">#i4oneFormBack()</div>
+				</div>
+			</div>
+		#else
+			<form method="post" class="$editClass" data-ser="$respondent.survey.ser">
+	
+			<div class="form-group row">
+				<div id="label" class="col-xs-12">
+					<h1>#IString($respondent.survey.title)</h1>
+					<p>#IString($!respondent.survey.intro)</p>
+				</div>
+				<div class="col-xs-12">#i4oneAttachableStatus('respondent')</div>
+			</div>
+			
+			#springFormHiddenInput("respondent.survey" " ")
+			#foreach( $currQuestion in $respondent.survey.questions)
+				#striping()
+				<div class="$rowClass form-group row">
+					#set( $questionNo = $foreach.count + $respondent.survey.perPage * ($respondent.currentPage - $respondent.startPage) )
+					<div class="col-xs-12 col-sm-12 col-sm-12 col-md-12 col-lg-12 question">$questionNo#**#. #IString($currQuestion.question)</div>
+					<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 response">
+						#set( $currQuestionSer = ${currQuestion.ser} )
+						#set( $currAnswerMap = $respondent.answerListMap[$currQuestionSer] )
+	
+						#if ( $currQuestion.questionType == 0 )
+							#i4oneFormRadioButtons("respondent.selectionResponses[$currQuestionSer]" $currAnswerMap '')
+						#elseif ( $currQuestion.questionType == 1 )
+							#i4oneFormSingleSelect( "respondent.selectionResponses[$currQuestionSer]" $currAnswerMap '' )
+						#elseif ( $currQuestion.questionType == 2)
+							#i4oneFormCheckboxes( "respondent.selectionResponses[$currQuestionSer]" $currAnswerMap '' '' '' '' )
+						#elseif ( $currQuestion.questionType == 3)
+							#i4oneFormInput( "respondent.openAnswerResponses[$currQuestionSer]" '' )
+						#elseif ( $currQuestion.questionType == 4)
+							#i4oneFormTextarea( "respondent.openAnswerResponses[$currQuestionSer]" '' )
+						#else
+							## Unknown type
+							--
+						#end
+					</div>
+				</div>
+			#end
+	
+			<div class="form-group row">
+				<div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">#i4oneFormSubmit('msg.research.user.surveys.survey.submit' $respondent)</div>
+				<div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">#i4oneFormBack("index.html?categoryid=$respondent.survey.category.ser")</div>
+			</div>
+		
+			</form>
+		#end
+		<div class="hidden-xs col-sm-2 hidden-md hidden-lg"></div>
+	</div>
+</section>
+
+#parseVm( "base/user/template/end.vm" )

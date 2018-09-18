@@ -1,0 +1,123 @@
+#**
+ * MIT License
+ * 
+ * Copyright (c) 2018 i4one Interactive, LLC
+ * 
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ * 
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ * 
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ *#
+#**
+ * @author Hamid Badiozamani
+ */
+#parseVm( "base/user/template/start.vm" )
+
+<section class="container" id="privacy">
+	#msg('body')
+</section>
+
+#*
+<div class="breadcrumbs" align="left"><a href="index.html">Home</a> / Privacy Policy</div>
+
+<div align="left" class="sectiontexthead">Privacy Policy</div>
+
+<div align="center" class="fullformbox">
+
+<div align="left" style="padding-top:0px; padding-left:40px; padding-right:25px;">
+<TABLE CELLPADDING=1 CELLSPACING=0 STYLE="page-break-before: always">
+	<COL>
+	<TR>
+		<TD STYLE="border: none; padding: 0in">
+			<P STYLE="margin-top: 0.07in; margin-bottom: 0.07in"> 
+			</P>
+			<P STYLE="margin-top: 0.07in; margin-bottom: 0.07in"><BR><BR>
+			</P>
+			<P STYLE="margin-top: 0.07in; margin-bottom: 0.07in">
+<b><center>PRIVACY POLICY</center></b>
+<p align="center">Last updated on August 24, 2013</p>
+<p>The Canada Traffic Network Pty Limited (&quot;ATN) and I4ONE INTERACTIVE, LLC (&quot;I4ONE&rdquo;) (together &quot;we,&rdquo; &quot;us&rdquo; or &quot;our&rdquo;) are committed to protecting your privacy. This privacy policy sets out how we collect, hold, use and disclose your personal information through the Canada Predicts website (&quot;Site&rdquo;).</p>
+<p>This privacy policy is a part of the Site&rsquo;s&nbsp;Terms and Conditions&nbsp;which is binding on all Site users. By visiting the Site, applying for use of or using any of our products or services or providing us with your personal information, you agree to your information being collected, held, used and disclosed in the manner set out in this privacy policy. This privacy policy applies only to the personal information collected by us and does not cover any such information collected by any other company unless specifically stated.</p>
+<p><strong>THE PERSONAL INFORMATION WE COLLECT</strong></p>
+<p>We collect and hold information about you, such as your name, address, telephone number, demographic information (such as gender) and email address (&quot;personal information&rdquo;), where this information is necessary for us to provide you with access to the Site and carry out our business activities. In certain cases (such as the claiming of prizes won), we may also request certain types of personal information such as your driver&rsquo;s licence number or other identification.</p>
+<p>We collect your personal information if you choose to provide your details to us through the Site (for example by creating an account with us, completing our online forms or questionnaires), through your IP address (for general demographic information), if you authorise another person to provide us with your personal information or if you contact us by telephone, post or email.</p>
+<p>You do not have to provide us with your personal information but, if you do not, we may not be able to provide you with access to certain features of the Site or our products or services.</p>
+<p>We reserve the right to collect personal information using any new technology yet to be developed and to use such technology to provide new products, services and features to you, as well as for marketing and promotional purposes (if you consent to receiving such). Specific information regarding your choice to Opt-in or to Opt-out to such use will be provided once the new technology, service, or feature is introduced.</p>
+<p>During your communications with us you may also provide us with personal information of another individual (&quot;Third Party Information&rdquo;). If you do provide us with this Third Party Information, you:</p>
+<ul>
+<li> warrant that you have that individual&rsquo;s express consent to provide those details to us;</li>
+<li> must tell that individual that you have provided information about them to us; and</li>
+<li> inform them that their information will be handled in accordance with this privacy policy and provide them with a copy of (or refer them to) this privacy policy.</li>
+</ul>
+<p>We also automatically collect certain non-personally identifiable information when you visit our website, such as the type of browser you are using, the type of operating system you are using and the domain name of your Internet service provider.</p>
+<p>We do not knowingly or intentionally collect personal information from children. If you are under the age of 18, please do not use the products or services on our Site or provide us with your personal information.By providing us with your personal information or using our products or services you warrant that you are 18 years of age or older.</p>
+<p>You can request to remove your personal information from our database, to not receive future communications or to no longer receive our service by submitting your request to <a href="mailto:support@canadapredicts.ca">Member Support </a>.</p>
+<p><strong>PURPOSES FOR WHICH WE USE PERSONAL INFORMATION</strong></p>
+<p>Generally, we use personal information you provide solely for the purpose for which it was provided to us, other related purposes or as permitted or required by law. Such purposes include:</p>
+<ul>
+<li> providing you with the assistance you request as well as the features of the Site and products and services provided in connection with the Site;</li>
+<li> notifying the winners of the Quarterly Games and determining shipping or prize pick-up arrangements;</li>
+<li> using online questionnaire responses to tailor the experience of the users of our Site;</li>
+<li> using demographic and profile data to tailor the user&rsquo;s experience at our Site, showing them content that we think they might be interested in, and displaying the content according to their preferences;</li>
+<li> notifying you about updates, new features, products, services, events and activities in connection with the Site, our Sponsors or our advertisers that may be of interest to you (if you have agreed to receive such) and, if you sign up for an email newsletter, we will use your email address to deliver the newsletter or update requested. To opt-out of any emails, click the unsubscribe link at the bottom of the email you received or update your information on the &quot;My Profile&rdquo; page;</li>
+<li> our operational and business purposes or finding out how we can improve our Site via questionnaires or online tracking mechanisms. We may also aggregate your personal information (such that it no longer personally identifies you) to help us to evaluate and modify our products, services and features of our Site;</li>
+<li> developing new products, services and features or our Site; and</li>
+<li> any other purposes identified at the time of collecting your personal information.</li>
+</ul>
+<p><strong>HOW WE DISCLOSE PERSONAL INFORMATION</strong></p>
+<p>Any personal information you provide to use may be disclosed:</p>
+<ul>
+<li> to our successors in the event that the assets or stock of ATN or I4ONE, their corporate licensees or parent company(s) are sold or transferred, merged with a different company or entity, restructured, or subject to other fundamental corporate changes (such disclosure will include your Confidential Information);</li>
+<li> in respect of online questionnaire responses, demographic and profile information, to our Sponsors, advertisers and other third parties on an aggregate basis (which does not personally identify you); and</li>
+<li> any other third parties identified at the time of collecting your personal information.</li>
+</ul>
+<p>Some of our related entities and third parties referred to above are located in countries outside of Canada (such as the United States).</p>
+<p>You acknowledge that, by agreeing to the disclosure of your personal information to these entities outside of Canada, we will no longer be required to take reasonable steps to ensure the overseas recipient&rsquo;s compliance with the Canadan privacy law in relation to your personal information and we will not be liable to you for any breach of the Canadan privacy law by these overseas recipients and, on this basis, you consent to such disclosure.</p>
+<p>Unless specifically stated above, we will not share your personal information without your consent and we will not sell, exchange, rent, lease or otherwise disclose your personal information to other third party marketers or any such persons that are not associated with the Site or Canada Predicts unless it is necessary to: 1) conform to regulatory and legal requirements or to comply with legal process; 2) to protect the safety and security of our Site users, employees, or property; 3) to defend the rights of the Site; or 4) to enforce the Terms and Conditions of the Site.</p>
+<p><strong>DISCLOSURE TO </strong><strong>SPONSORS </strong></p>
+<p>Sponsor support allows us to offer many great activities and services to our users. Therefore, as mentioned above, we may also use your personal information for the marketing of events, products or services of our generous Sponsors (if you have consented to receiving such). You will only receive information about our Sponsors via newsletters or email directly from the Site. We will not share your personal information with any Sponsors on the Site.</p>
+<p>We give users the option to remove their information from our database, to not receive future communications or to no longer receive our service by submitting your request to&nbsp;<a href="mailto:support@canadapredicts.ca">Member Support</a>.</p>
+<p><strong>SECURITY MEASURES</strong></p>
+<p>We take reasonable steps including any measures required under applicable law to ensure your information is protected from loss, misuse, interference and unauthorised access, alteration or disclosure.<br>
+However, please note that when users transmit personal information over an unsecured Internet connection, we are not responsible for the security of that information during the transmission stage as your email or registration could be copied or intercepted by unknown third parties. Therefore, you understand, acknowledge, and agree that you transmit certain personal information over this Site at your own risk.</p>
+<p><strong>COOKIES/IMAGE TAGS</strong></p>
+<p>We use cookies to deliver content specific to your interests, to save your password so you don&rsquo;t have to re-enter it each time you visit our Site, and for other purposes.</p>
+<p>The use of cookies is an industry standard and they are currently used on most websites, including this Site. Cookies are a small text file containing a unique identification number that is transferred from a website to the hard drive of a user&rsquo;s computer so that the website administrator or a third party operational service provider may identify the computer and passively track the user&rsquo;s activities on the website. Image tags work in conjunction with cookies and are small image files that may be located on select pages of our Site, or with-in web-based email newsletters that we may send. (Image tags are also called web beacons, web bugs, clear GIFs or single-pixel GIFs.) Tracking is important because we can better understand what parts of our website are used the most, when to launch new services and how to enhance current offerings. We may share the information we receive from cookies and image tags with third-parties and our advertisers in aggregate form, which means that such information does not contain specific personal information about any one visitor.</p>
+<p>In short, cookies and image tags collect a user&rsquo;s Internet protocols and server information. Such data files allow our Site to remember your web browser when you visit our Site and are necessary tools for quick and efficient access to the Site. A cookie will not allow the Site to learn any personal information (such as your real name and email address) that you have not otherwise disclosed. Cookies and image tags allow the Site to remember important information that will make the Site easier for you to use and helpful in our administration of various activities. We do not use cookies or image tags to collect other personal information unless you give us permission to do so.</p>
+<p>You can choose to have your computer warn you each time a cookie or image tag is being sent, or you can choose to turn off all such devices. This is done through your browser. If you turn cookies off, you may not have access to many features at our Site that make your Internet experience more efficient and enjoyable - like the features mentioned above - and some of our other services will not function properly.</p>
+<p><strong>HYPER LINKS TO OTHER WEBSITES</strong></p>
+<p>This Site often provides links to third party websites that could be of interest to our users, including the websites of our advertisers. We do not own or control these websites and therefore, we are not responsible for the content, business practices, nor operations of such websites. Third party websites linked on this Site may have different privacy policies and business practices than we do. The presence of a link to a third party website does not constitute or imply our endorsement, recommendation, or sponsorship of the third party content, goods, or services available through, or contained on, the Site. By use of this Site, you have agreed that you will use the hyperlinks to third party sites at your own risk.</p>
+<p><strong>ACCESS AND CORRECTION</strong></p>
+<p>You can change and modify the personal information previously provided to us, by visiting the &quot;My Profile&rdquo; section of the website. You can also make a question to access or seek correction of the personal information we hold about you by submitting your request to&nbsp;<a href="mailto:support@canadapredicts.ca">Member Support</a> or contacting us via the contact details below.</p>
+<p>Unless otherwise required or permitted by applicable law, we will provide you with access to the personal information we hold about you. If we deny you access, we will notify you of the basis for doing so.</p>
+<p><strong>HOW TO MAKE A COMPLAINT</strong></p>
+<p>If you wish to make a complaint about a breach of this privacy policy or the privacy principles of the <em>Privacy Act </em>1988 (Cth), you can contact us using the contact details below or send an email to <a href="mailto:barb@i4oneinteractive.com">privacyissue@i4oneinteractive.com</a>. You will need to provide us with the details of your complaint and any supporting evidence and information.</p>
+<p>We will refer your complaint to our Vice President of Operations, Barbara Lovenguth,<strong> </strong>who will investigate the issue and determine the steps (if any) that we will undertake to resolve your complaint. We will contact you if we require any additional information from you and will notify you in writing of our determination once made. If you are not satisfied with our determination, you can contact us to discuss your concerns or complain to the Canadan Privacy Commissioner via www.oaic.gov.au.</p>
+<p><strong>REVISIONS TO THIS PRIVACY POLICY</strong></p>
+<p>We reserve the right to revise this privacy policy or any part of it from time to time. Please review this privacy policy periodically for changes. If we make material changes to this privacy policy, we will notify you by email or by putting a notice on the Home page of the Site.</p>
+<p>Your continued use of our Site products, services or provision of further personal information to us once you have been notified of the revised privacy policy constitutes your deemed acceptance of the revised privacy policy.</p>
+<p><strong>HOW TO CONTACT US</strong></p>
+<p>If you have any other questions about this privacy policy, the practices of this Site, or your dealings with this Site, you may contact us attn: ATN, Level 42, Northpoint, 100 Miller Street, North Sydney NSW 2060. </p>
+
+			<P STYLE="margin-top: 0.07in">&nbsp; 
+			</P>
+		</TD>
+	</TR>
+</TABLE>
+<br/>
+</div>
+*#
+#parseVm( "base/user/template/end.vm" )

@@ -1,0 +1,282 @@
+#**
+ * MIT License
+ * 
+ * Copyright (c) 2018 i4one Interactive, LLC
+ * 
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ * 
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ * 
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ *#
+#**
+ * @author Hamid Badiozamani
+ */
+#parseVm( "base/admin/template/terminableCrud.vm" )
+
+#macro(terminableRewardsCrud $terminable )
+
+	#terminableCrud($terminable)
+
+	#set( $purchaseStartTimeSeconds = $terminable + ".purchaseStartTimeSeconds" )
+	#set( $purchaseEndTimeSeconds = $terminable + ".purchaseEndTimeSeconds" )
+
+	#i4oneBind($purchaseStartTimeSeconds)
+	#set( $i4oneErrorClass = $springErrorClass )
+
+	#i4oneBind($purchaseEndTimeSeconds)
+	#set( $i4oneErrorClass = "$springErrorClass$i4oneErrorClass" )
+	<div class="form-group row $i4oneErrorClass">
+		<div class="col-sm-12">#springShowErrors(" " "formFieldError")</div>
+		<div class="col-sm-12">#i4oneBind($purchaseStartTimeSeconds) #springShowErrors(" " "formFieldError")</div>
+
+		#set( $purchaseStartTimeString = $terminable + ".purchaseStartTimeString" )
+		<div class="col-sm-2 col-md-2"><label for="startTime">#message('msg.rewards.admin.terminable.update.purchasestarttime')</label></div>
+		<div class="col-sm-10 col-md-4">#dateTimeInput($purchaseStartTimeString "placeholder='10/21/1978 3:35 PM'")</div>
+		<div class="hidden-xs hidden-md hidden-lg clearfix"></div>
+
+		#set( $purchaseEndTimeString = $terminable + ".purchaseEndTimeString" )
+		<div class="col-sm-2 col-md-2"><label for="endTime">#message('msg.rewards.admin.terminable.update.purchaseendtime')</label></div>
+		<div class="col-sm-10 col-md-4">#dateTimeInput($purchaseEndTimeString "placeholder='10/21/1978 3:35 PM'")</div>
+	</div>
+#end
+
+#macro(winnablePrizeTypeCrud $winnablePrizeTypeName )
+
+	<style>
+	#selectprizelisting
+	{
+		margin-top: 5px;
+		margin-bottom: 5px;
+
+		padding-top: 5px;
+		padding-bottom: 5px;
+
+		background-image: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI1IiBoZWlnaHQ9IjUiPgo8cmVjdCB3aWR0aD0iNSIgaGVpZ2h0PSI1IiBmaWxsPSIjZmZmIj48L3JlY3Q+CjxyZWN0IHdpZHRoPSIxIiBoZWlnaHQ9IjEiIGZpbGw9IiNjY2MiPjwvcmVjdD4KPC9zdmc+");
+	}
+
+	#selectprizelisting div.odd,
+	#selectprizelisting div.even
+	{
+		padding-top: 1rem;
+	}
+
+	#selectprizelisting div
+	{
+		text-align: center;
+	}
+	</style>
+
+	<script language="javascript">
+
+	var winnablePrizeTypeName = "$winnablePrizeTypeName";
+	var prizeSearchResults = [];
+	function updatePrizes(prizes)
+	{
+		prizeSearchResults = prizes;
+		updatePrizesRadio();
+	}
+
+	function updatePrizesRadio()
+	{
+		$("div#selectprizelisting").css("visibility: hidden");
+		$("div#selectprizelisting").empty();
+
+		for ( var i = 0;  i < prizeSearchResults.length; i++ )
+		{
+			currPrize = prizeSearchResults[i];
+			prizeTitle = currPrize.title[requestLanguage];
+
+			// This doesn't work because the name of the item being edited isn't
+			// injected into the form field names when spring populates an
+			// @ModelAttribute in the controller.
+			//
+			//inputName = winnablePrizeTypeName + ".prize";
+
+			inputName = "prize";
+			inputId = inputName + ":" + currPrize.ser;
+			oddEven = (i % 2 ) ? "odd" : "even";
+
+			$("div#selectprizelisting")
+			.append(
+				$("<div class='col-xs-12 col-sm-3 " + oddEven + "'></div>")
+					.append($("<div class='col-xs-12'></div>")
+						.append(
+							$("<label></label>").attr("for", inputId).html("<img class='img-responsive' src='" + currPrize.thumbnailURL + "'/>")
+						)
+					)
+					.append($("<div class='col-xs-12'></div>").append($("<input type='radio'></input>").attr("value", currPrize.ser).attr("name", inputName).attr("id", inputId)))
+					.append($("<div class='col-xs-12'></div>").append($("<label></label>").attr("for",inputId).html(prizeTitle)))
+			);
+		}
+		$("div#selectprizelisting").append("<div class='clearfix'></div>");
+		$("div#selectprizelisting").css("visibility: initial");
+	}
+
+	function updatedPrizesSelect(prizes)
+	{
+		$("select#prize").empty();
+		for ( var i = 0;  i < prizeSearchResults.length; i++ )
+		{
+			currPrize = prizeSearchResults[i];
+			prizeTitle = currPrize.title[requestLanguage];
+
+			$("select#prize").append($("<option></option>").attr("value", currPrize.ser).text(prizeTitle));
+		}
+
+		$("select#prize").trigger("chosen:updated");
+	}
+
+	function doSearchByTitle(searchTitle)
+	{
+		var searchResult;
+		$.ajax(
+		{
+			method: "POST",
+			url: "$request.baseurl/rewards/admin/prizes/listing.json",
+			contentType: "application/json; charset=utf-8",
+			dataType: "json",
+			data: JSON.stringify({ search: searchTitle }),
+			success: function(json)
+			{
+				searchResult = json;
+
+				updatePrizes(searchResult);
+			}
+		});
+	}
+
+	function updatePage()
+	{
+		if ( prizeSearchResults.length <= 0 )
+		{
+			$("select#prize").css("display: none;");
+			$("div#prize_chosen").css("display: none;");
+
+			updatePrizes(prizeSearchResults);
+		}
+		else
+		{
+			$("select#prize").css("display: inline-block;");
+			$("div#prize_chosen").css("display: inline-block;");
+		}
+
+		var searchTitle = $("input#searchByTitle").val();
+		if ( searchTitle.length >= $minSearchStrLength )
+		{
+			doSearchByTitle(searchTitle);
+		}
+	}
+
+	$(function()
+	{
+		$("input#searchByTitle").keyup(updatePage);
+		updatePage();
+	});
+	</script>
+
+	#pathToVar( $winnablePrizeTypeName 'item' )
+	<section name="prize" class="form-group row">
+		<div class="col-xs-12"><h3>#msgWithHelp('prize')</h3></div>
+
+		#if ( $item.exists )
+			#set( $prizeString = $winnablePrizeTypeName + ".prize" )
+			#springFormHiddenInput($prizeString "")
+			<div class="col-xs-12 col-md-6">
+				<div class="col-sm-4 col-md-2"><label>#msg('prize')</label></div>
+				<div class="col-sm-8 col-md-10">#IString($item.prize.title)<br/><img class="img-responsive" src="$item.prize.thumbnailURL"/></div>
+			</div>
+			<div class="col-xs-12 col-md-6">
+				#set( $currentInventoryString = $winnablePrizeTypeName + ".prize.currentInventory")
+				<div class="col-xs-4"><label>#messageWithHelp('msg.rewards.admin.winnableprizetype.prize.currentinventory')</label></div>
+				<div class="col-xs-8">#i4oneFormStatic($currentInventoryString)</div>
+				<div class="clearfix"></div>
+
+				#set( $initialReserveString = $winnablePrizeTypeName + ".initialReserve")
+				<div class="col-xs-4"><label>#messageWithHelp('msg.rewards.admin.winnableprizetype.initialreserve')</label></div>
+				<div class="col-xs-8">#i4oneFormStatic($initialReserveString)</div>
+				<div class="clearfix"></div>
+
+				#set( $currentReserveString = $winnablePrizeTypeName + ".currentReserve")
+				<div class="col-xs-4"><label>#messageWithHelp('msg.rewards.admin.winnableprizetype.currentreserve')</label></div>
+				<div class="col-xs-8">#i4oneFormStatic($currentReserveString)</div>
+				<div class="clearfix"></div>
+			</div>
+
+			<div class="col-xs-12">
+				<div class="row">
+					<div class="col-xs-12 col-sm-6"><a class="btn btn-default btn-block" href="$request.fullbaseurl/rewards/admin/prizes/winnings.html?id=${item.prize.ser}&feature.featureName=$item.featureName&feature.ser=$item.ser">#message('msg.rewards.admin.winnableprizetype.prize.fulfillment')</a></div>
+					<div class="col-xs-12 col-sm-6"><a class="btn btn-default btn-block" href="reserve.html?id=${item.ser}">#message('msg.rewards.admin.winnableprizetype.prize.managereserve')</a></div>
+				</div>
+			</div>
+		#else
+			#* If the user has entered a search field, then we default to displaying that *#
+			#set ( $selectprize = "$!item.searchByTitle" != "" )
+			<div class="panel-group" role="tablist" aria-multiselectable="true" id="createorselect">
+				<div id="selectprize" class="panel panel-default">
+					<div class="panel-heading" role="tab" id="selectprizeheading">
+						<h4 class="panel-title"><a #if ( !$selectprize )class="collapsed"#end data-toggle="collapse" data-parent="#createorselect" href="#selectprizebody" aria-expanded="true" aria-controls="selectprizebody"> <span class="glyphicon glyphicon-chevron-right"></span> #message('msg.rewards.admin.winnableprizetype.selectprize')</a></h4>
+					</div>
+					<div id="selectprizebody" class="panel-collapse collapse #if ( $selectprize ) in #end" role="tabpanel" aria-labelledby="selectprizeheading">
+						<div class="panel-body">
+							#set( $selectPrizeTitle = $winnablePrizeTypeName + ".searchByTitle" )
+							<div class="col-xs-12 col-sm-4"><label for="selectprizetitle">#message('msg.rewards.admin.winnableprizetype.selectprize.title')</label></div>
+							<div class="col-xs-12 col-sm-8">#i4oneFormInput( $selectPrizeTitle '' 'maxlength="128"')</div>
+
+							#set( $selectPrize = $winnablePrizeTypeName + ".prize" )
+							<div id="selectprizelisting" class="col-xs-12">#i4oneFormSingleSelect( $selectPrize ${prizes} '' 'chosen-select')</div>
+						</div>
+					</div>
+
+					<div class="panel-heading" role="tab" id="createprizeheading"><h4 class="panel-title">
+						<a #if ( $selectprize ) collapsed #end data-toggle="collapse" data-parent="#createorselect" href="#createprizebody" aria-expanded="true" aria-controls="createprizebody"> <span class="glyphicon glyphicon-chevron-right"></span> #message('msg.rewards.admin.winnableprizetype.createprize') </a></h4></div>
+					<div id="createprizebody" class="panel-collapse collapse #if ( !$selectprize ) in #end" role="tabpanel" aria-labelledby="createprizeheading">
+						<div class="panel-body">
+							#*
+							 * The controller will make the new prize title the same as this item
+							 *
+							#set( $titleString = $winnablePrizeTypeName + ".prize.title" )
+							<div class="col-sm-4"><label for="prize.title">#message('msg.rewards.admin.winnableprizetype.prize.title')</label></div>
+							<div class="col-sm-8">#i4oneFormIStringInput($titleString '' 'maxlength="128"')</div>
+							*#
+				
+							#set( $thumbnailURLString = $winnablePrizeTypeName + ".prize.thumbnailURL" )
+							<div class="col-sm-4"><label for="prize.thumbnailURL">#message('msg.rewards.admin.winnableprizetype.prize.thumbnailurl')</label></div>
+							<div class="col-sm-8">#i4oneFormInput($thumbnailURLString '' 'maxlength="256"')</div>
+				
+							#set( $detailPicURLString = $winnablePrizeTypeName + ".prize.detailPicURL" )
+							<div class="col-sm-4"><label for="prize.detailPicURL">#message('msg.rewards.admin.winnableprizetype.prize.detailpicurl')</label></div>
+							<div class="col-sm-8">#i4oneFormInput($detailPicURLString '' 'maxlength="256"')</div>
+				
+							#set( $descrString = $winnablePrizeTypeName + ".prize.descr" )
+							<div class="col-sm-4"><label for="prize.descr">#messageWithHelp('msg.rewards.admin.winnableprizetype.prize.descr')</label></div>
+							<div class="col-sm-8">#i4oneFormIHtmlarea($descrString '' '')</div>
+				
+							#set( $initialInventoryString = $winnablePrizeTypeName + ".prize.initialInventory" )
+							<div class="col-sm-4"><label for="prize.initialInventory">#message('msg.rewards.admin.winnableprizetype.prize.initialinventory')</label></div>
+							<div class="col-sm-8">#i4oneFormInput($initialInventoryString '' 'size="3" maxlength="5"')</div>
+						</div>
+					</div>
+				</div>
+			</div> #* createorselect *#
+
+			<div class="col-xs-12">
+				#set( $initialReserveString = $winnablePrizeTypeName + ".initialReserve")
+				<div class="col-xs-4"><label>#messageWithHelp('msg.rewards.admin.winnableprizetype.initialreserve')</label></div>
+				<div class="col-xs-8">#i4oneFormInput($initialReserveString '' 'size="3" maxlength="5"')</div>
+			</div>
+		#end
+	</section>
+#end

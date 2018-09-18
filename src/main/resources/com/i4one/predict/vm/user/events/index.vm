@@ -1,0 +1,265 @@
+#**
+ * MIT License
+ * 
+ * Copyright (c) 2018 i4one Interactive, LLC
+ * 
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ * 
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ * 
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ *#
+#**
+ * @author Hamid Badiozamani
+ */
+#parseVm( "base/user/template/start.vm" )
+
+<style>
+#events div#label h1
+{
+	font-size: 3.5rem;
+}
+
+#events .category
+{
+	text-align: center;
+}
+
+#events .info
+{
+	font-size: 1.1rem;
+}
+
+#events .odd,
+#events .even
+{
+	padding-top: 10px;
+	padding-bottom: 10px;
+}
+
+#events .listing,
+#events .results,
+#events .pending
+{
+	margin-left: 15px;
+	margin-right: 15px;
+}
+
+#events .btn-back
+{
+	margin-top: 15px;
+}
+
+#events .listing .headings,
+#events .results .headings,
+#events .pending .headings
+{
+	background-color: rgb(136, 0, 0);
+	color: #fff;
+}
+
+#events div#resultsheading p,
+#events div#pendingheading p
+{
+	text-transform: none;
+	font-weight: bold;
+}
+
+#events .results .info.result
+{
+	color: #428bca;
+}
+
+#events .mobileheadstrip
+{
+	background-color: rgb(136,0,0);
+	min-height: 2rem;
+}
+
+
+#events #resultsheading,
+#events #pendingheading
+{
+	padding-top: 15px;
+}
+
+#events .pending .info .endtime,
+#events .pending .info .postsby
+{
+	display: inline-block;
+
+	font-size: inherit;
+	font-weight: bold;
+
+	padding-top: 0.75rem;
+	padding-bottom: 0.5rem;
+}
+
+#events .pending .info .info.endtime,
+#events .pending .info .info.postsby
+{
+	color: #428bca;
+	font-weight: inherit;
+}
+
+#pageCSS()
+</style>
+
+<section class="container" id="events">
+	#msg('pretitle')
+
+	#if ( $category.exists )
+		<div class="row">
+			<div id="label" class="$editClass col-xs-12" data-ser="$category.ser" data-item="categoryid" data-location="../categories/update">
+				<h1>#IString($category.title)</h1>
+				<p>#IString($!category.descr)</p>
+			</div>
+		</div>
+		<div id="listingheading" class="row">
+			<div class="col-xs-12">
+				<h1>#msg('listing')</h1>
+				<p>#msg('listingdescr')</p>
+			</div>
+		</div>
+		<div class="listing row">
+			<div class="row headings hidden-sm hidden-xs">
+				<div class="col-sm-4 heading event">#msg('event')</div>
+				<div class="col-sm-2 heading minbid">#msg('minbid')</div>
+				<div class="col-sm-2 heading maxbid">#msg('maxbid')</div>
+				<div class="col-sm-4 heading endtime">#msg('endtime')</div>
+			</div>
+			<div class="row">
+				<div class="col-xs-12 col-sm-12 hidden-md hidden-lg mobileheadstrip"></div>
+			</div>
+			#foreach ($event in $events)
+				#striping()
+				<div class="$editClass $rowClass row" data-ser="$event.ser">
+					<div class="col-xs-12 hidden-md hidden-lg heading event">#msg('event')</div>
+					<div class="col-xs-12 col-md-4 info event">
+						<a href="bid.html?eventid=$event.ser">#IString($event.title)</a>
+					</div>
+					<div class="col-xs-6 col-sm-6 hidden-md hidden-lg heading minbid">#msg('minbid')</div>
+					<div class="col-xs-6 col-sm-6 col-md-2 info minbid">
+						#intFormat($event.minBid)
+					</div>
+					<div class="col-xs-6 col-sm-6 hidden-md hidden-lg heading maxbid">#msg('maxbid')</div>
+					<div class="col-xs-6 col-sm-6 col-md-2 info maxbid">
+						#intFormat($event.maxBid)
+					</div>
+					<div class="col-xs-6 col-sm-6 hidden-md hidden-lg heading endtime">#msg('endtime')</div>
+					<div class="col-xs-6 col-sm-6 col-md-4 info endtime">#dateFormat($event.endTime) #timeFormat($event.endTime)</div>
+				</div>
+			#end
+		</div>
+	#else
+		#displayCategories( $categories )
+	#end
+
+	#if ( !$closedEvents.empty )
+	<div id="resultsheading" class="row">
+		<div class="col-xs-12">
+			<h1>#msg('results')</h1>
+			<p>#msg('resultsdescr')</p>
+		</div>
+	</div>
+	<div class="results row">
+		<div class="row headings hidden-sm hidden-xs">
+			<div class="col-sm-6 heading event">#msg('event')</div>
+			<div class="col-sm-2 heading result">#msg('result')</div>
+			<div class="col-sm-4 heading endtime">#msg('posted')</div>
+		</div>
+		<div class="row">
+			<div class="col-xs-12 col-sm-12 hidden-md hidden-lg mobileheadstrip"></div>
+		</div>
+		#foreach ( $event in $closedEvents )
+			#striping()
+			<div class="$editClass $rowClass row" data-ser="$event.ser">
+				<div class="col-xs-12 col-sm-12 hidden-md hidden-lg heading event">#msg('event')</div>
+				<div class="col-xs-12 col-sm-12 col-md-6 info event">
+					#IString($event.title)
+				</div>
+				<div class="col-xs-6 col-sm-6 hidden-md hidden-lg heading result">#msg('result')</div>
+				<div class="col-xs-6 col-sm-6 col-md-2 info result">
+					#IString($event.actualOutcome.descr)
+				</div>
+				<div class="col-xs-6 col-sm-6 hidden-md hidden-lg heading posted">#msg('posted')</div>
+				<div class="col-xs-6 col-sm-6 col-md-4 info posted">#dateFormat($event.postedTime) #timeFormat($event.postedTime)</div>
+			</div>
+		#end
+	</div>
+	#end
+
+	#if ( !$pendingBids.empty )
+	<div id="pendingheading" class="row">
+		<div class="col-xs-12">
+			<h1>#msg('pending')</h1>
+			<p>#msg('pendingdescr')</p>
+		</div>
+	</div>
+	<div class="pending row">
+		<div class="row headings hidden-sm hidden-xs">
+			<div class="col-sm-4 heading event">#msg('event')</div>
+			<div class="col-sm-2 heading prediction">#msg('prediction')</div>
+			<div class="col-sm-2 heading prediction">#msg('amount')</div>
+			<div class="col-sm-2 heading prediction">#msg('payout')</div>
+			<div class="col-sm-2 heading timestamp">#msg('timestamp')</div>
+		</div>
+		<div class="row">
+			<div class="col-xs-12 col-sm-12 hidden-md hidden-lg mobileheadstrip"></div>
+		</div>
+
+		#set( $seconds = ${model.currentTime.time} / 1000 )
+		#set( $seconds = $math.round($seconds) )
+		#foreach ( $bid in $pendingBids )
+			#striping()
+			#set( $payoutAmountFloat = $bid.quantity * $bid.payout )
+			#set( $payoutAmount = $math.round($payoutAmountFloat) )
+			<div class="$editClass $rowClass row" data-ser="$bid.event.ser">
+				<div class="col-xs-12 col-sm-12 hidden-md hidden-lg heading event">#msg('event')</div>
+				<div class="col-xs-12 col-sm-12 col-md-4 info event">
+					#if ( ${bid.event.isPlayable($seconds)} )
+						<div class="title"><a href="bid.html?eventid=$bid.event.ser">#IString($bid.event.title)</a></div>
+						<div class="heading endtime">#msg('endtime')</div>
+						<div class="info endtime">#dateFormat($bid.event.endTime) #timeFormat($bid.event.endTime)</div>
+					#else
+						<div class="title">#IString($bid.event.title)</div>
+						<div class="heading postsby">#msg('postsby')</div>
+						<div class="info postsby">#dateFormat($bid.event.postsBy) #timeFormat($bid.event.postsBy)</div>
+					#end
+				</div>
+				<div class="col-xs-6 col-sm-6 hidden-md hidden-lg heading prediction">#msg('prediction')</div>
+				<div class="col-xs-6 col-sm-6 col-md-2 info prediction">
+					#IString($bid.eventOutcome.descr)
+				</div>
+				<div class="col-xs-6 col-sm-6 hidden-md hidden-lg heading amount">#msg('amount')</div>
+				<div class="col-xs-6 col-sm-6 col-md-2 info amount">
+					#intFormat($bid.quantity)
+				</div>
+				<div class="col-xs-6 col-sm-6 hidden-md hidden-lg heading amount">#msg('payout')</div>
+				<div class="col-xs-6 col-sm-6 col-md-2 info payout">
+					#intFormat($payoutAmount)
+				</div>
+				<div class="col-xs-6 col-sm-6 hidden-md hidden-lg heading timestamp">#msg('timestamp')</div>
+				<div class="col-xs-6 col-sm-6 col-md-2 info timestamp">#dateFormat($bid.timeStamp) #timeFormat($bid.timeStamp)</div>
+			</div>
+		#end
+	</div>
+	#end
+	<div class="form-group row">
+		<div class="col-xs-12">#i4oneCategoryBack()</div>
+	</div>
+</section>
+
+#parseVm( "base/user/template/end.vm" )

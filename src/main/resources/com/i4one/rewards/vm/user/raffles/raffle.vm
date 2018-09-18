@@ -1,0 +1,130 @@
+#**
+ * MIT License
+ * 
+ * Copyright (c) 2018 i4one Interactive, LLC
+ * 
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ * 
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ * 
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ *#
+#**
+ * @author Hamid Badiozamani
+ */
+#parseVm( "base/user/template/start.vm" )
+
+<style>
+#raffle div#label h1
+{
+	font-size: 3.5rem;
+}
+
+#raffle .detailpic .img-responsive
+{
+	margin: 0 auto;
+}
+
+#raffle .info.quantity
+{
+	font-size: 1.1rem;
+}
+
+#raffle .userlimit
+{
+	text-align: right;
+}
+#pageCSS()
+</style>
+
+<section class="container" id="raffle">
+	<div class="row">
+		<div class="$editClass col-xs-12" data-ser="$raffleEntry.raffle.ser">
+			<div class="form-group row">
+				<div class="col-xs-12">#i4oneAttachableStatus('raffleEntry')</div>
+			</div>
+
+			#if ( $raffleEntry.exists )
+				<div class="form-group row">
+					<div class="col-xs-12 detailpic"><img class="img-responsive" src="$raffleEntry.raffle.prize.detailPicURL" alt="#IString($raffleEntry.raffle.title)"/></div>
+					<div id="label" class="col-xs-12">
+						<h1>#IString($raffleEntry.raffle.title)</h1>
+					</div>
+					<div class="col-xs-12 outro">#IString($!raffleEntry.raffle.outro)</div>
+					<div class="col-xs-12">#i4oneFormBack("index.html?categoryid=$raffleEntry.raffle.category.ser")</div>
+				</div>
+			#else
+				<div id="label" class="col-xs-12 col-sm-6 col-md-8">
+					<h1>#IString($raffleEntry.raffle.title)</h1>
+					<p>#IString($raffleEntry.raffle.prize.descr)</p>
+				</div>
+	
+				<div id="form" class="col-xs-12 col-sm-6 col-md-4">
+					<form method="post">
+					#springFormHiddenInput("raffleEntry.raffle" " ")
+	
+					<div class="form-group row">
+						#if ( !$raffleEntry.hideTimeInfo )
+							#if ( $raffleEntry.raffle.available )
+								<div class="col-xs-6 heading quantity">#msg('quantity')</div>
+								<div class="col-xs-6 info quantity">#i4oneFormInput("raffleEntry.quantity" '' '')</div>
+								<div class="col-xs-12 userlimit">$model.buildMessage('msg.rewards.user.raffles.raffle.userlimit', 'item', $raffleEntry.raffle)</div>
+								<div class="clearfix"></div>
+							#else
+								<div class="col-xs-6 heading starttime">#msg('purchasestarttime')</div>
+								<div class="col-xs-6 info starttime">#countDown($raffleEntry.raffle.purchaseStartTime)</div>
+							#end
+						#end
+					</div>
+
+					<div class="form-group row">
+						#if ( !$raffleEntry.hideTimeInfo )
+						<div class="col-xs-6 expenses heading">$model.buildMessage('msg.rewards.user.raffles.raffle.expenses', 'raffle', $raffleEntry.raffle)</div>
+						<div class="col-xs-6 expenses info">$model.buildMessage('msg.rewards.user.raffles.raffle.expenselisting','expenses',$raffleEntry.raffle.balanceExpenses)</div>
+						#end
+					</div>
+
+					<div class="form-group row">
+						#if ( !$raffleEntry.hideTimeInfo )
+						<div class="col-xs-6 heading endtime">#msg('purchaseendtime')</div>
+						<div class="col-xs-6 info endtime">#countDown($raffleEntry.raffle.purchaseEndTime)</div>
+						#end
+					</div>
+
+					#if ( $model.User.exists )
+						<div class="form-group row">
+							<div class="col-xs-6 heading endtime">#msg('myentries')</div>
+							<div class="col-xs-6 info endtime">#userBalanceFormat($raffleEntry.currentBalance)</div>
+						</div>
+					#end
+	
+					#if ( $raffleEntry.raffle.available )
+					<div class="form-group row">
+						<div class="col-xs-12">#i4oneFormSubmit('msg.promotion.user.raffle.submit' $raffleEntry)</div>
+					</div>
+					#end
+					</form>
+				</div>
+				<div class="clearfix"/>
+
+				<div class="col-xs-12 detailpic"><img class="col-xs-12 img-responsive" src="$raffleEntry.raffle.prize.detailPicURL" alt="#IString($raffleEntry.raffle.title)"/></div>
+				<div class="col-xs-12 intro">#IString($!raffleEntry.raffle.intro)</div>
+				<div class="col-xs-12">#i4oneFormBack("index.html?categoryid=$raffleEntry.raffle.category.ser")</div>
+			#end
+		</div>
+	</div>
+</section>
+
+#parseVm( "base/user/template/end.vm" )

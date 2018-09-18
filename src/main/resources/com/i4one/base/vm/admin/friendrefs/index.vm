@@ -1,0 +1,109 @@
+#**
+ * MIT License
+ * 
+ * Copyright (c) 2018 i4one Interactive, LLC
+ * 
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ * 
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ * 
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ *#
+#**
+ * @author Hamid Badiozamani
+ */
+#set($title = ${model.buildMessage('msg.base.admin.friendrefs.index.pageTitle', 'item', $settings)})
+#parseVm( "base/admin/template/startHead.vm" )
+#parseVm( "base/admin/template/endHead.vm" )
+#parseVm( "base/admin/template/startBody.vm" )
+
+#parseVm( "base/admin/template/triggerableCrud.vm" )
+
+## XXX: NEED TO ADD PRIVILEGED AND HISTORICAL BALANCETRIGGERMANAGER AND INSTANTWINMANAGER
+
+<section id="crud">
+	<form method="post" role="form" action="$request.requestURI">
+		<span id="jq_errors">#i4oneStatus("settings")</span>
+
+		<div class="form-group row">
+			<div class="col-xs-12">
+				#set( $enabledLabel = ${model.buildMessage('msg.base.admin.friendrefs.index.enabled')})
+				#i4oneFormCheckbox('settings.enabled' "$enabledLabel" '')
+			</div>
+
+			<div class="clearfix"></div>
+
+			<div class="col-sm-3"><label for="maxFriends">#msgWithHelp('maxfriends')</label></div>
+			<div class="col-sm-3">#i4oneFormInput('settings.maxFriends' '' 'maxlength="5"')</div>
+		</div>
+
+		<div class="form-group row">
+			<div class="col-sm-3"><label for="tricklePercentage">#msgWithHelp('tricklepercentage')</label></div>
+			<div class="col-sm-3">#i4oneFormInput('settings.tricklePercentage' '' 'maxlength="5"')</div>
+
+			<div class="col-sm-3"><label for="trickleDuration">#msgWithHelp('trickleduration')</label></div>
+			<div class="col-sm-3">#i4oneFormInput('settings.trickleDuration' '' 'maxlength="15"')</div>
+		</div>
+
+		<div class="form-group row">
+			<div class="col-sm-3"><label for="defaultMessage">#msgWithHelp('defaultmessage')</label></div>
+			<div class="col-sm-9">#i4oneFormITextarea('settings.defaultMessage' '' '')</div>
+		</div>
+
+		<div class="form-group row">
+			<div class="col-xs-12"><h3>#messageWithHelp('msg.base.admin.friendrefs.index.triggers')</h3></div>
+
+			<div class="hidden-xs hidden-sm">
+				<div class="heading col-md-2">#message('msg.base.admin.triggerable.starttime')</div>
+				<div class="heading col-md-3">#message('msg.base.admin.triggerable.title')</div>
+				<div class="heading col-md-3">#message('msg.base.admin.triggerable.amount')</div>
+				<div class="heading col-md-2">#message('msg.base.admin.triggerable.endtime')</div>
+				<div class="heading col-md-2"></div>
+			</div>
+	
+			<div class="col-xs-12">
+			#foreach ( $trigger in $settings.balanceTriggers )
+				#striping()
+	
+				<div class="row $rowClass">
+					<div class="heading col-sm-3 visible-sm visible-xs">#message('msg.base.admin.triggerable.starttime')</div>
+					<div class="col-sm-9 col-md-2">#formatDateTime($trigger.startTime)</div>
+	
+					<div class="heading col-sm-3 visible-sm visible-xs">#message('msg.base.admin.triggerable.title')</div>
+					<div class="col-sm-9 col-md-3">#IString($trigger.title)</div>
+	
+					<div class="heading col-sm-3 visible-sm visible-xs">#message('msg.base.admin.triggerable.amount')</div>
+					<div class="col-sm-9 col-md-3">$trigger.amount #IString(${trigger.balance.formatName($trigger.amount)})</div>
+	
+					<div class="heading col-sm-3 visible-sm visible-xs">#message('msg.base.admin.triggerable.endtime')</div>
+					<div class="col-sm-9 col-md-2">#formatDateTime($trigger.endTime)</div>
+	
+					<div class="col-sm-12 col-md-2">#detachTriggerableMethodButton('friendRefManager.update' '' $trigger "${request.baseurl}/base/admin/friendrefs/index.html")</div>
+				</div>
+			#end
+			</div>
+		</div>
+
+		<div class="form-group row">
+			<div class="col-xs-12"><a class="btn btn-default btn-block" href="${request.baseurl}/base/admin/balancetriggers/attach.html?redir=${request.baseurl}/base/admin/friendrefs/index.html&featureid=0&featurename=friendRefManager.update&displayname=#IString($settings.nameSingle)">#message('msg.base.admin.general.attachbalancetrigger')</a></div>
+		</div>
+
+		<div class="form-group row">
+			<div class="col-sm-12">#i4oneFormUpdate($settings)</div>
+		</div>
+	</form>
+</section>
+
+#parseVm( "base/admin/template/endBody.vm" )

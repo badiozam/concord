@@ -1,0 +1,144 @@
+#**
+ * MIT License
+ * 
+ * Copyright (c) 2018 i4one Interactive, LLC
+ * 
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ * 
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ * 
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ *#
+#**
+ * @author Hamid Badiozamani
+ */
+#parseVm( "base/user/template/start.vm" )
+
+<style>
+#shopping div#label h1
+{
+	font-size: 3.5rem;
+}
+
+#shopping .detailpic .img-responsive
+{
+	margin: 0 auto;
+}
+
+#shopping .info.quantity
+{
+	font-size: 1.1rem;
+}
+
+#shopping .userlimit
+{
+	text-align: right;
+}
+#pageCSS()
+</style>
+
+<section class="container" id="shopping">
+	<div class="row">
+		<div class="$editClass col-xs-12" data-ser="$shoppingPurchase.shopping.ser">
+			<div class="form-group row">
+				<div class="col-xs-12">#i4oneAttachableStatus('shoppingPurchase')</div>
+			</div>
+
+
+			#if ( $shoppingPurchase.exists )
+				<div class="form-group row">
+					<div id="label" class="col-xs-12 col-sm-6">
+						<h1>#IString($shoppingPurchase.shopping.title)</h1>
+					</div>
+					<div class="col-xs-12 col-sm-6">
+						<div class="form-group row">
+							<div class="col-xs-6 heading">#msg('confno')</div>
+							<div class="col-xs-6 info">$shoppingPurchase.confirmationNumber</div>
+						</div>
+						<div class="form-group row">
+							<div class="col-xs-6 heading">#msg('quantity')</div>
+							<div class="col-xs-6 info">#intFormat($shoppingPurchase.quantity)</div>
+						</div>
+						<div class="form-group row">
+							<div class="col-xs-6 heading">#msg('personalinfo')</div>
+							<div class="col-xs-6 info">
+								#set( $user = $shoppingPurchase.user )
+								$!user.username ($!user.email)<br/>
+								$!user.firstName $!user.lastName<br/>
+								$!user.street<br/>
+								$!user.city, $!user.state, $!user.zipcode<br/>
+							</div>
+						</div>
+						<div class="form-group row">
+							<div class="col-xs-6 heading">#msg('purchasetime')</div>
+							<div class="col-xs-6 info">#dateFormat($shoppingPurchase.timeStamp) #timeFormat($shoppingPurchase.timeStamp)</div>
+						</div>
+					</div>
+					<div class="col-xs-12 outro">#IString($!shoppingPurchase.shopping.outro)</div>
+					<div class="col-xs-12 detailpic"><img class="col-xs-12 img-responsive" src="$shoppingPurchase.shopping.prize.detailPicURL" alt="#IString($shoppingPurchase.shopping.title)"/></div>
+					<div class="col-xs-12">#i4oneFormBack("index.html?categoryid=$shoppingPurchase.shopping.category.ser")</div>
+				</div>
+			#else
+				#if ( $shoppingPurchase.shopping.available )
+				<div id="label" class="col-xs-12 col-md-6">
+					<h1>#IString($shoppingPurchase.shopping.title)</h1>
+					<p>#IString($shoppingPurchase.shopping.prize.descr)</p>
+				</div>
+				<div id="form" class="col-xs-12 col-md-6">
+					<form method="post">
+					#springFormHiddenInput("shoppingPurchase.shopping" " ")
+	
+					<div class="form-group row">
+						#if ( $shoppingPurchase.shopping.available )
+							<div class="col-xs-6 quantity heading">#msg('quantity')</div>
+							<div class="col-xs-6 quantity info">#i4oneFormInput("shoppingPurchase.quantity" '' '')</div>
+							<div class="col-xs-12 userlimit">$model.buildMessage('msg.rewards.user.shoppings.shopping.userlimit', 'item', $shoppingPurchase.shopping)</div>
+						#else
+							#*
+							<div class="col-xs-6 heading starttime">#msg('purchasestarttime')</div>
+							<div class="col-xs-6 info starttime">#countDown($shoppingPurchase.shopping.purchaseStartTime)</div>
+							*#
+						#end
+					</div>
+
+					<div class="form-group row">
+						<div class="col-xs-6 expenses heading">$model.buildMessage('msg.rewards.user.shoppings.index.expenses', 'shopping', $shoppingPurchase.shopping)</div>
+						<div class="col-xs-6 expenses info">$model.buildMessage('msg.rewards.user.shopping.index.expenselisting','expenses',$shoppingPurchase.shopping.balanceExpenses)</div>
+
+					</div>
+	
+					#if ( $shoppingPurchase.shopping.available )
+					<div class="form-group row">
+						<div class="col-xs-12">#i4oneFormSubmit('msg.promotion.user.shopping.submit' $shoppingPurchase)</div>
+					</div>
+					#end
+					</form>
+				</div>
+				#else
+					<div id="label" class="col-xs-12">
+						<h1>#IString($shoppingPurchase.shopping.title)</h1>
+						<p>#IString($shoppingPurchase.shopping.prize.descr)</p>
+					</div>
+				#end
+				<div class="clearfix"/>
+				<div class="col-xs-12 detailpic"><img class="col-xs-12 img-responsive" src="$shoppingPurchase.shopping.prize.detailPicURL" alt="#IString($shoppingPurchase.shopping.title)"/></div>
+				<div class="col-xs-12 intro">#IString($!shoppingPurchase.shopping.intro)</div>
+				<div class="col-xs-12">#i4oneFormBack("index.html?categoryid=$shoppingPurchase.shopping.category.ser")</div>
+			#end
+		</div>
+	</div>
+</section>
+
+#parseVm( "base/user/template/end.vm" )

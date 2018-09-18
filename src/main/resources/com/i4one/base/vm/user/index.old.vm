@@ -1,0 +1,550 @@
+#**
+ * MIT License
+ * 
+ * Copyright (c) 2018 i4one Interactive, LLC
+ * 
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ * 
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ * 
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ *#
+#**
+ * @author Hamid Badiozamani
+ */
+#parseVm( "base/user/template/start.vm" )
+
+#if ( $model.User.exists )
+
+<script language="javascript">
+var hasStarted = false;
+$(function()
+{
+	// Need idempotence so that other panels reloading doesn't affect the slide show
+	//
+	if ( hasStarted )
+	{
+		return;
+	}
+
+	doAllowanceCountdown();
+	hasStarted = true;
+});
+
+function millisecondsToStr (milliseconds)
+{
+	function pluralOrSingle(number)
+	{
+		return (number > 1) ? 's' : '';
+	}
+
+	var seconds = milliseconds / 1000;
+
+	var daysLeft = Math.floor((seconds %= 31536000) / 86400);
+	var hoursLeft = Math.floor((seconds %= 86400) / 3600);
+	var minsLeft = Math.floor((seconds %= 3600) / 60);
+	var secsLeft = Math.floor(seconds % 60);
+
+	var retVal = '';
+	if ( daysLeft ) { retVal = ' <span class="highlight">' + daysLeft + '</span> day' + pluralOrSingle(daysLeft); }
+	if ( hoursLeft ) { retVal = retVal + ' <span class="highlight">' + hoursLeft + '</span> hour' + pluralOrSingle(hoursLeft); }
+	if ( minsLeft ) { retVal = retVal + ' <span class="highlight">' + minsLeft + '</span> min' + pluralOrSingle(minsLeft); }
+	if ( secsLeft ) { retVal = retVal + ' <span class="highlight">' + secsLeft + '</span> sec' + pluralOrSingle(secsLeft); }
+
+	if ( retVal == '' )
+	{
+		retVal = 'Less than a second';
+	}
+
+	return retVal;
+}
+
+#set( $eligibleIn = -1 )
+#foreach ( $currTrigger in ${model.allowanceTriggers} )
+// currTrigger = $currTrigger
+	#if ( $currTrigger < $eligibleIn || $eligibleIn < 0)
+		#set( $eligibleIn = $currTrigger )
+	#end
+#end
+var eligibleMillis = new Date().getTime() + ($eligibleIn * 1000);
+
+function doAllowanceCountdown()
+{
+	var currTime = new Date().getTime();
+	var allowanceMillisRemaining = eligibleMillis - currTime;
+	var quarterMillisRemaining = ( $model.predictionTerm.endTimeSeconds * 1000 ) - currTime;
+
+	if ( allowanceMillisRemaining <= 0 )
+	{
+		// Allowance is available to collect
+		//
+		$('div[id="allowance"]').addClass("vis");
+		$('div[id="allowance"]').removeClass("invis");
+
+		$('div[id="timers"]').addClass("invis");
+		$('div[id="timers"]').removeClass("vis");
+
+		$('div[id="tips"]').addClass("invis");
+		$('div[id="tips"]').removeClass("vis");
+	}
+	else
+	{
+		$('div[id="tips"]').addClass("vis");
+		$('div[id="tips"]').removeClass("invis");
+
+		$('div[id="timers"]').addClass("vis");
+		$('div[id="timers"]').removeClass("invis");
+
+		$('div[id="allowance"]').addClass("invis");
+		$('div[id="allowance"]').removeClass("vis");
+
+		$('div[id="timers"]').html('<div id="allowanceTimer">Collect your next allowance in:<br/>' + millisecondsToStr(allowanceMillisRemaining) + ' </div><br/><div id="quarterTimer">' + "$model.predictionTerm.title" + ' closes in:<br/>' + millisecondsToStr(quarterMillisRemaining) + '</div>');	}
+
+
+	setTimeout(doAllowanceCountdown, 1000);
+}
+
+</script>
+
+##<div align="left" class="sectiontexthead" style="padding-top: 20px; padding-bottom: 20px;">Welcome back, $model.User.firstname!<span style="font-size: 16px; padding-left: 10px;">Your current Game Score is <span style="color: #d64330; font-weight: bold; ">#intFormat($model.predictionUserBalance.total) <span style="font-size: 12px;">(Rank: #intFormat($model.predictionPlayer.rank))</span></span></span></div>
+<div align="left" class="sectiontexthead" style="padding-top: 20px; padding-bottom: 20px;">Welcome back, $model.User.firstname!<span style="font-size: 14px; padding-left: 10px;">Highest <span style="color: #D64330">Score</span> or longest <span style="color: #D64330">Win Streak</span> - which strategy are you playing?</span>
+	<div id="twitterwidget" style="float: right; display: inline-block; padding-right: 15px;"><a href="https://twitter.com/OzPredicts" class="twitter-follow-button" data-show-count="false" data-size="large" data-show-screen-name="false">Follow @OzPredicts</a>
+		<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>
+	</div> ## twitterwidget
+</div> ## sectiontexthead"
+
+<div id="playarea">
+
+<table cellspacing="0" cellpadding="0">
+<tr>
+	<td id="leftside" valign="top">
+		<div class="formbox" id="usermessages">
+			<div align="left" class="formboxhead">Messages - #dateFormat('MMM d, yyyy', $model.request.calendar.time):</div>
+
+			<style type="text/css">
+.more {
+	font-size: 12px;
+	font-style: italic;
+	font-weight: bold;
+}
+.paren {
+	font-size: 12px;
+}
+
+</style>
+<ul>
+<li><b>Thanks to all at ATN</b><br> Our short test is complete.  <b>'atnguy' </b>beat out <b>'peekay'</b> by coming from behind to lead and win "Win Streak" - and in the last moments of the Game advanced over <b>'greaves'</b> to win "High Score".  Awards will be made upon game review and the correct answer to a skill testing question.
+Thank you for your assistance.  Many behind-the-scene systems were being tested with tweaks and adjustments throughout the game.  We learned a bunch, thank you.<br>
+And, thank you for your feedback on content and Prediction questions.  If you'd like to assist in coming up with future Canada Predicts questions from specific Game Categories, please contact Rebecca Tynan (rebecca.tynan@trafficnet.com.au)
+<i>Game Master Tribunal </i> </li>
+			
+		<li><b>What</b> future events do you recommend?<a href=" http://www.canadapredicts.ca/predict.au/en/survey/user/survey.html?surveyid=25" class="more">(more)</a></li>
+<li><b>Coming Soon </b>- Advance your Score:  From 10 to 1,000 Credits, play each day for Instant Win Bonus Credits</li>
+	
+		</div>
+	
+		<div class="formbox" id="timers"></div>
+	
+		<div class="formbox" id="breakdown">
+			<div align="left" class="formboxhead">Investment Breakdown</div>
+			<img src="${request.baseurl}/predict/user/holdings.pngg?width=250&height=250&depth=0.0"/>
+		</div>
+	</td>
+
+	<td id="rightside" valign="top" align="center">
+		<table cellpadding="0" cellspacing="0">
+		<tr>
+			<td colspan="2" align="center" valign="top">
+				<span id="allowanceortips">
+					<div class="formbox invis" id="allowance">
+						<div class="allowance">Have you collected your Game allowance today? <a href="${request.baseurl}/predict/user/allowance.html">Click HERE</a></div>
+					</div>
+					#set ( $tips = ${model.buildMessage('msg.predict.user.tips').split('\n')} )
+					#set ( $tipNum = ${date.systemTime} % ${tips.size()} )
+					#foreach ( $currTip in $tips )
+						#if ( $velocityCount == ($tipNum + 1) )
+							#set ( $tip = $currTip )
+						#end
+					#end
+					<div class="formbox vis" id="tips">
+						<div class="tip">Tip: $tip</div>
+					</div>
+				</div>
+			</td>
+		</tr>
+		
+		#if ( !$model.User.verified )
+		<tr>
+			<td colspan="2" align="center" valign="top">
+				<span id="verified">
+					<div class="formbox" id="verified">
+						<div class="tip">Have you verified your account? <a href="${request.baseurl}/base/user/account/sendverification.html">Click HERE</a> so you can win!</div>
+					</div>
+				</div>
+			</td>
+		</tr>
+		#end
+
+		<tr>
+			<td align="center" valign="top">
+				<div class="formbox smallpanel" id="mygameinfo">
+					<div align="left" class="formboxhead">My Game Info</div>
+					<table class="top10" style="width: 90%;">
+					<tr>
+						<th>Win Streak</th>
+						<td align="right">#intFormat($model.predictionPlayer.winStreak)</td>
+					</tr>
+					<tr>
+						<th>Score</th>
+						<td align="right">#intFormat($model.predictionUserBalance.total)</td>
+					</tr>
+					<tr>
+						<th>Pending</th>
+						<td align="right">#intFormat($model.predictionPlayer.pending)</td>
+					</tr>
+					<tr>
+						<th>Correct</th>
+						<td align="right">#intFormat($model.predictionPlayer.correct)</td>
+					</tr>
+					<tr>
+						<th>Incorrect</th>
+						<td align="right">#intFormat($model.predictionPlayer.incorrect)</td>
+					</tr>
+					</table>
+				</div>
+			</td>
+
+			<td align="center" valign="top">
+				<div class="formbox smallpanel" id="scoreranking">
+					<div align="left" class="formboxhead">My Win Streak Ranking</div>
+					<table class="top10" style="width: 90%;">
+					<tr>
+						<th>#</th>
+						<th>NAME</th>
+						<th style="text-align: right;">WIN STREAK</th>
+					</tr>
+					#foreach ( $currPlayer in ${model.winStreakRankings} )
+					<tr>
+						#if ( $currPlayer.user.ser == $model.User.ser )
+							#set( $rowStyle = "style='color: #800;'" )
+						#else
+							#set( $rowStyle = '')
+						#end
+						<td $rowStyle>$currPlayer.winStreakRank</td>
+						<td $rowStyle>$currPlayer.user.username</td>
+						<td $rowStyle align="right">#intFormat($currPlayer.winStreak)</td>
+					</tr>
+					#end
+					</table>
+					<div style="text-align: center; padding-left: 25px; font-size: 12px; font-weight: bold;"><a href="${request.baseurl}/predict/user/top10.html?orderBy=winstreak">More</a></div>
+				</div>
+			</td>
+		</tr>
+
+		<tr>
+			<td align="center" valign="top">
+				<div class="formbox smallpanel" id="scoreranking">
+					<div align="left" class="formboxhead">My Score Ranking</div>
+					<table class="top10" style="width: 90%;">
+					<tr>
+						<th>#</th>
+						<th>NAME</th>
+						<th style="text-align: right;">SCORE</th>
+					</tr>
+					#foreach ( $currPlayer in ${model.scoreRankings} )
+					<tr>
+						#if ( $currPlayer.user.ser == $model.User.ser )
+							#set( $rowStyle = "style='color: #800;'" )
+						#else
+							#set( $rowStyle = '')
+						#end
+						<td $rowStyle>$currPlayer.scoreRank</td>
+						<td $rowStyle>$currPlayer.user.username</td>
+						<td $rowStyle align="right">#intFormat($currPlayer.score)</td>
+					</tr>
+					#end
+					</table>
+					<div style="text-align: center; padding-left: 25px; font-size: 12px; font-weight: bold;"><a href="${request.baseurl}/predict/user/top10.html">More</a></div>
+				</div>
+			</td>
+
+			<td align="center" valign="top">
+			</td>
+		</tr>
+
+		<tr>
+			<td colspan="2" align="center" valign="top">
+				<div class="formbox" id="recentlyclosed">
+					<div align="left" class="formboxhead">Recently Closed</div>
+					<table class="top10" style="width: 90%;">
+					<tr>
+						<th>GAME</th>
+						<th>OUTCOME</th>
+					</tr>
+					#foreach ( $currEvent in ${model.pastEvents} )
+					<tr>
+						#set( $actualOutcome = ${currEvent.actualOutcome} )
+						#set( $percentage = $actualOutcome.likelihood * 100 )
+						<td>$currEvent.promo</td>
+						<td>$actualOutcome.descr</td>
+					</tr>
+					#end
+					</table>
+					<div style="font-size: 12px; font-weight: bold;"><a href="${request.baseurl}/predict/user/pastevents.html">More</a></div>
+				</div>
+			</td>
+		</tr>
+		
+
+		<tr>
+			<td align="center" valign="top">
+				<div class="formbox smallpanel" id="newgames">
+					<div align="left" class="formboxhead">New Games</div>
+					<ul>
+					#foreach ( $currEvent in ${model.newEvents} )
+						#set( $featuredOutcome = ${currEvent.randomPossibleOutcome} )
+						#set( $percentage = $featuredOutcome.likelihood * 100 )
+						<li style="padding-bottom: 10px;">
+							<a href="${request.baseurl}/predict/user/bid.html?eventid=$currEvent.ser" scrollup="250">$currEvent.title</a><br/>
+							(#numberFormat("#0.00%", ${percentage}) predict "${featuredOutcome.descr}")
+						</li>
+					#end
+					</ul>
+				</div>
+			</td>
+
+			<td align="center" valign="top">
+				<div class="formbox smallpanel" id="endingsoon">
+					<div align="left" class="formboxhead">Ending Soon</div>
+					<ul>
+					#foreach ( $currEvent in ${model.endingSoon} )
+						#set( $featuredOutcome = ${currEvent.randomPossibleOutcome} )
+						#set( $percentage = $featuredOutcome.likelihood * 100 )
+						<li style="padding-bottom: 10px;">
+							<a href="${request.baseurl}/predict/user/bid.html?eventid=$currEvent.ser" scrollup="250">$currEvent.title</a><br/>
+							(##numberFormat("#0.00%", ${percentage}) predict "${featuredOutcome.descr}")
+						</li>
+					#end
+					</ul>
+				</div>
+			</td>
+		</tr>
+
+		<tr>
+			<td colspan="2" align="center" valign="top">
+				<div class="formbox" id="holdings">
+					<div align="left" class="formboxhead">My Recent Predictions</div>
+					<table width="90%" id="activity">
+						<tr>
+							<th align="left">Event</th>
+							<th align="left">Investment</th>
+							<th align="left">Return</th>
+							<th align="right">Posted/Posts By</th>
+						</tr>
+						#foreach ( $currPred in ${model.predictions} )
+							#set( $timestampMillis = ${currPred.event.postsBySeconds} * 1000 )
+							#set( $payoutAmountFloat = ${currPred.bidAmount} * ${currPred.payout} )
+							#set( $payoutAmount = $math.round($payoutAmountFloat))
+							#set( $bidAmountCurrency = ${currPred.balance.formatName($currPred.bidAmount)})
+				
+							#set( $payoutCurrency = ${currPred.balance.formatName($payoutAmount)})
+							#set( $rowClass = 'odd' )
+							#if ( $velocityCount % 2 == 0 )
+								#set( $rowClass = 'even' )
+							#end
+							<tr class="line1 $rowClass">
+								<td colspan="4">${currPred.event.title}</td>
+							</tr>
+							<tr class="line2 $rowClass">
+								<td valign="top">${currPred.eventOutcome.descr}</td>
+								<td valign="top">#intFormat(${currPred.bidAmount}) $bidAmountCurrency</td>
+								<td valign="top">#intFormat(${payoutAmount}) $payoutCurrency</td>
+								<td valign="top" align="right">#dateFormat('d MMM yyyy', ${timestampMillis})</td>
+							</tr>
+						#end
+					</table>
+					<br/>
+					#if ( ${model.predictions.size()} >= 0 )
+					<div style="font-size: 12px; font-weight: bold;"><a href="${request.baseurl}/predict/user/account/mypredictions.html">More</a></div>
+					#end
+				</div>
+			</td>
+		</tr>
+		</table>
+
+	</td>
+</tr>
+</table>
+
+
+</div> ##playarea
+
+
+
+
+
+#else
+## Not logged in
+
+
+<style>
+#home h1,
+#home h2,
+#home h3
+{
+	font-family: 'Gotham Thin',Arial,sans-serif;
+}
+
+#home h1
+{
+	font-size: 3.5rem;
+}
+
+#home h2
+{
+	font-size: 2.5rem;
+}
+
+#home #welcome p
+{
+	padding-top: 15px;
+	padding-bottom: 15px;
+
+	font-size: 1.3rem;
+}
+
+#home #welcome p a.btn-primary
+{
+	margin-top: 15px;
+}
+
+#home #welcome p a.btn-alternate
+{
+	margin-top: 5px;
+}
+
+#home div#benefits
+{
+	text-align: center;
+
+	color: #fff;
+	background-color: #428bca;
+
+	font-size: 1.3rem;
+}
+
+#home div#benefits table
+{
+	width: 100%;
+}
+
+#home div#benefits td
+{
+	border-left: 1px solid #aaa;
+
+	padding-left: 1.0rem;
+	padding-right: 1.0rem;
+
+	padding-top: 4.5rem;
+	padding-bottom: 4.5rem;
+
+	width: 33.33%;
+}
+
+#home div#benefits td:first-child
+{
+	border-left: none;
+}
+
+#home div#benefits a
+{
+	color: #fff;
+	font-weight: bold;
+	text-decoration: underline;
+}
+
+#home div.benefit
+{
+	padding-top: 2.5rem;
+	padding-bottom: 2.5rem;
+}
+
+#home div.benefit
+{
+	border-left: none;
+	border-top: 1px solid #aaa;
+}
+
+#home div.benefit:first-child
+{
+	border-top: none;
+}
+
+#pageCSS()
+</style>
+
+<section class="container-fluid" id="home">
+#*	#msg('content') *#
+	<div class="container">
+		<div class="row" id="welcome">
+			<div class="col-xs-12">
+				<h1>Welcome to My Canada Rewards!</h1>
+			</div>
+			<div class="col-sm-6">
+				<p>
+					My Canada Rewards is your free CANADA GAME... for Canadians only. Simple, easy to play, win and have fun!
+					<a class="btn btn-block btn-primary" href="${request.baseurl}/base/user/account/register.html">JOIN FREE!</a>
+					<a class="btn btn-block btn-alternate" href="${request.baseurl}/base/user/account/login.html">Sign In</a>
+				</p>
+			</div>
+			<div class="col-sm-6"><img class="img-responsive" src="http://files.mycanadarewards.com/images/mainpic.jpg"/></div>
+		</div>
+	</div>
+	<div class="row" id="benefits">
+		<div class="hidden-xs col-sm-12">
+			<table>
+			<tr>
+				<td>
+					<h2>Activate Your Maple Leaf Genius</h2>
+					<p><a href="${request.baseurl}/base/user/account/register.html">Sign up</a> to play FREE!</p>
+				</td>
+				<td>
+					<h2>Challenge Yourself</h2>
+					<p>Play fun games on Canada to earn Reward Points.</p>
+				</td>
+				<td>
+					<h2>Spend your Points</h2>
+					<p>Win cool, fun, unique prizes and cash.</p>
+				</td>
+			</tr>
+			</table>
+		</div>
+		<div class="col-xs-12 hidden-sm hidden-md hidden-lg benefit">
+			<h2>Activate Your Maple Leaf Genius</h2>
+			<a href="${request.baseurl}/base/user/account/register.html">Sign up</a> to play FREE!
+		</div>
+		<div class="col-xs-12 hidden-sm hidden-md hidden-lg benefit">
+			<h2>Challenge Yourself</h2>
+			Play fun games on Canada to earn Reward Points.
+		</div>
+		<div class="col-xs-12 hidden-sm hidden-md hidden-lg benefit">
+			<h2>Spend your Points</h2>
+			Win cool, fun, unique prizes and cash.
+		</div>
+	</div>
+</section>
+
+#end
+#parseVm( "base/user/template/end.vm" )

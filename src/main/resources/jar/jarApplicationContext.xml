@@ -1,0 +1,195 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+		 xmlns:p="http://www.springframework.org/schema/p"
+		 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		 xmlns:aop="http://www.springframework.org/schema/aop"
+		 xmlns:tx="http://www.springframework.org/schema/tx"
+		 xmlns:mvc="http://www.springframework.org/schema/mvc"
+		 xmlns:cache="http://www.springframework.org/schema/cache" 
+		 xmlns:context="http://www.springframework.org/schema/context"
+		 xmlns:security="http://www.springframework.org/schema/security"
+		 xsi:schemaLocation="http://www.springframework.org/schema/beans 
+		   http://www.springframework.org/schema/beans/spring-beans-4.1.xsd
+		   http://www.springframework.org/schema/aop 
+		   http://www.springframework.org/schema/aop/spring-aop-4.1.xsd
+		   http://www.springframework.org/schema/tx 
+		   http://www.springframework.org/schema/tx/spring-tx-4.1.xsd
+		   http://www.springframework.org/schema/cache
+		   http://www.springframework.org/schema/cache/spring-cache-4.1.xsd
+		   http://www.springframework.org/schema/context
+		   http://www.springframework.org/schema/context/spring-context-4.1.xsd
+		   http://www.springframework.org/schema/mvc
+		   http://www.springframework.org/schema/mvc/spring-mvc-4.1.xsd
+		   http://www.springframework.org/schema/security
+		   http://www.springframework.org/schema/security/spring-security-4.1.xsd">
+
+	<bean id="jacksonObjectMapper" class="org.springframework.http.converter.json.Jackson2ObjectMapperFactoryBean">
+		<property name="failOnEmptyBeans" value="false"/>
+		<property name="failOnUnknownProperties" value="false"/>
+	</bean>
+
+	<context:annotation-config/>
+	<cache:annotation-driven />
+
+	<mvc:annotation-driven/>
+
+	<context:component-scan base-package="com.i4one" name-generator="com.i4one.base.spring.I4oneBeanNameGenerator">
+		<context:exclude-filter type="annotation"
+                              expression="org.springframework.stereotype.Controller"/>
+	</context:component-scan>
+
+	<bean id="i4oneDataSource" class="org.apache.commons.dbcp2.BasicDataSource" destroy-method="close">
+	        <property name="driverClassName" value="${jdbc.driverClassName}"/>
+	        <property name="url" value="${jdbc.url}"/>
+	        <property name="username" value="${jdbc.username}"/>
+		<property name="password" value="${jdbc.password}"/>
+		<property name="defaultAutoCommit" value="true"/>
+	</bean>
+
+	<!-- Transaction Management via Annotation -->
+	<tx:annotation-driven transaction-manager="dataSourceTransactionManager"/>
+	<bean id="dataSourceTransactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+		<property name="dataSource" ref="i4oneDataSource"/>
+	</bean>
+
+
+	<bean id="propertyConfigurer" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+		<property name="locations">
+			<list>
+				<value>classpath:jdbc.properties</value>
+			</list>
+		</property>
+	</bean>
+
+	<bean class="org.springframework.beans.factory.config.CustomScopeConfigurer">
+		<property name="scopes">
+			<map>
+				<entry key="thread">
+					<bean class="org.springframework.context.support.SimpleThreadScope"/>
+				</entry>
+			</map>
+		</property>
+	</bean>
+
+	<!-- Handles storing the state in a central location for each incoming request -->
+	<bean name="state,requestState" class="com.i4one.base.spring.BackgroundProcessingRequestState" init-method="init" scope="thread">
+		<aop:scoped-proxy proxy-target-class="false"/>
+	</bean>
+
+	<!-- WebApp related beans -->
+	<bean id="base.ModelManager" class="com.i4one.base.web.SimpleModelManager" init-method="init">
+		<property name="messageManager" ref="base.ReadOnlyMessageManager"/>
+		<property name="modelInterceptors">
+			<list>
+				<ref bean="base.UserAdminModelInterceptor"/>
+				<ref bean="base.FileServerModelInterceptor"/>
+			</list>
+		</property>
+	</bean>
+
+	<bean id="classpathResourceLoader" class="com.i4one.base.spring.ClasspathResourceLoader">
+		<property name="prefix" value="com/i4one/"/>
+		<property name="packageSuffix" value="/vm/"/>
+		<property name="suffix" value=""/>
+	</bean>
+
+	<bean id="messageResourceLoader" class="com.i4one.base.spring.MessageResourceLoader" init-method="init">
+		<property name="clientManager" ref="base.ReadOnlySingleClientManager"/>
+		<property name="messageManager" ref="base.ReadOnlyMessageManager"/>
+
+		<property name="fallbackResourceLoader" ref="classpathResourceLoader"/>
+	</bean>
+
+	<bean id="velocityConfig" class="com.i4one.base.spring.VelocityConfigurer">
+		<property name="overrideLogging" value="false"/>
+		<property name="velocityPropertiesMap">
+			<map>
+				<entry key="runtime.log.logsystem.class" value="org.apache.velocity.runtime.log.CommonsLogLogChute"/>
+
+				<entry key="resource.loader" value="msg,class"/>
+				<entry key="msg.resource.loader.instance"><ref bean="messageResourceLoader"/></entry>
+				<!--
+				// It's much more efficient to have the resource loaders be chained together and call each
+				// other rather than having exceptions thrown (and thus stack traces built) each time a
+				// message is not found
+				// 
+				<entry key="resource.loader" value="msg,vmfiles,class"/>
+				<entry key="msg.resource.loader.instance"><ref bean="messageResourceLoader"/></entry>
+
+				// The custom class path resource loader that removes the client and language prefixes
+				<entry key="vmfiles.resource.loader.instance"><ref bean="classpathResourceLoader"/></entry>
+				-->
+
+				<!-- If all else fails fall back to the default classpath loader -->
+				<entry key="class.resource.loader.class" value="org.apache.velocity.runtime.resource.loader.ClasspathResourceLoader"/>
+			</map>
+		</property>
+	</bean>
+
+
+	<bean name="viewNameTranslator" class="org.springframework.web.servlet.view.DefaultRequestToViewNameTranslator"/>
+
+	<bean class="org.springframework.web.servlet.view.ContentNegotiatingViewResolver">
+	        <property name="contentNegotiationManager">
+	            <bean class="org.springframework.web.accept.ContentNegotiationManager">
+	                <constructor-arg>
+	                    <bean class="org.springframework.web.accept.PathExtensionContentNegotiationStrategy">
+	                        <constructor-arg>
+					<map>
+						<entry key="html" value="text/html"/>
+						<entry key="json" value="application/json"/>
+					</map>
+	                        </constructor-arg>
+	                    </bean>
+	                </constructor-arg>
+	            </bean>
+	        </property>
+		<!--
+  		<property name="defaultViews">
+			<list>
+				<bean class="org.springframework.web.servlet.view.json.MappingJackson2JsonView">
+					<property name="objectMapper">
+						<bean class="org.springframework.http.converter.json.Jackson2ObjectMapperFactoryBean"
+							p:failOnUnknownProperties="false"
+							p:failOnEmptyBeans="false"
+							p:indentOutput="true">
+						</bean>
+					</property>
+				</bean>
+			</list>
+		</property>
+		-->
+	</bean>
+
+	<bean class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter">
+		<property name="objectMapper" ref="jacksonObjectMapper"/>
+	</bean>
+
+	<bean id="velocityViewResolver" class="org.springframework.web.servlet.view.velocity.VelocityViewResolver">
+		<property name="viewClass" value="com.i4one.base.spring.VelocityThemedView"/>
+		<property name="cache" value="false"/>
+		<property name="prefix" value=""/>
+		<property name="suffix" value=".vm"/>
+
+		<property name="order" value="1"/>
+		<property name="contentType" value="text/html; charset=utf-8"/>
+	</bean>
+
+	<bean id="themeResolver" class="com.i4one.base.spring.ClientThemeResolver"/>
+	<bean id="themeSource" class="com.i4one.base.spring.ClientThemeSource">
+		<property name="clientManager" ref="base.CachedSingleClientManager"/>
+		<property name="messageManager" ref="base.MessageManager"/>
+	</bean>
+	<bean id="localeResolver" class="com.i4one.base.spring.LocaleResolver">
+		<property name="defaultLocale" value="en"/>
+	</bean>
+
+	<bean id="cacheManager" class="org.springframework.cache.ehcache.EhCacheCacheManager">
+		<property name="cacheManager" ref="ehcache"/>
+	</bean>
+	<bean id="ehcache" class="org.springframework.cache.ehcache.EhCacheManagerFactoryBean">
+		<property name="configLocation" value="/WEB-INF/ehcache.xml"/>
+	</bean>
+
+</beans>

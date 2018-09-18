@@ -1,0 +1,2313 @@
+/* Legacy CSS */
+@charset "UTF-8";
+/* CSS Document */
+
+body {
+    /* IE10 Consumer Preview */ 
+	background-image: -ms-linear-gradient(top, #FFFFFF 0%, #555555 100%);
+
+	/* Mozilla Firefox */ 
+	background-image: -moz-linear-gradient(top, #FFFFFF 0%, #555555 100%);
+
+	/* Opera */ 
+	background-image: -o-linear-gradient(top, #FFFFFF 0%, #555555 100%);
+
+	/* Webkit (Safari/Chrome 10) */ 
+	background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0, #FFFFFF), color-stop(1, #555555));
+
+	/* Webkit (Chrome 11+) */ 
+	background-image: -webkit-linear-gradient(top, #FFFFFF 0%, #555555 100%);
+
+	/* W3C Markup, IE10 Release Preview */ 
+	background-image: linear-gradient(to bottom, #FFFFFF 0%, #555555 100%);
+
+	text-align: center;
+	margin: 0;
+	padding: 0;
+	
+}
+
+h1
+{
+	line-height:110%;
+}
+
+p {
+	font-family:Verdana, Geneva, sans-serif;
+	font-style:normal;
+	font-size:14px;
+	color:#555;
+	line-height:140%;
+}
+
+a {
+	font-family:Verdana, Geneva, sans-serif;
+	color:#295679;
+	text-decoration:none;
+        cursor: pointer;
+}
+
+a:hover {
+	text-decoration:underline;
+}
+
+#container {
+	width: 990px;
+	background-color:#fefefe;
+	font-family:Verdana, Geneva, sans-serif;
+	font-size:14px;
+	color:#333;
+	margin: 0 auto;
+
+	/* IE10 Consumer Preview */ 
+	background-image: -ms-linear-gradient(top, #fff 0%, #c8c8c8 70%);
+
+	/* Mozilla Firefox */ 
+	background-image: -moz-linear-gradient(top, #fff 0%, #c8c8c8 70%);
+
+	/* Opera */ 
+	background-image: -o-linear-gradient(top, #fff 0%, #c8c8c8 70%);
+
+	/* Webkit (Safari/Chrome 10) */ 
+	background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0, #fff), color-stop(1, #c8c8c8));
+
+	/* Webkit (Chrome 11+) */ 
+	background-image: -webkit-linear-gradient(top, #fff 0%, #c8c8c8 70%);
+
+	/* W3C Markup, IE10 Release Preview */ 
+	background-image: linear-gradient(to bottom, #fff 0%, #c8c8c8 70%);
+}
+
+#contentContainer
+{
+	width: 100%;
+}
+
+#header {
+	width:990px;
+	height:180px;
+	background-image:url(http://f.canadapredicts.ca/images/bg-header.jpg);
+	margin:0px;
+}
+
+.logo
+{
+	position: absolute;
+}
+
+.starbucks {
+	float: left;
+	height: 95px;
+	width: 160px;
+	margin-top: 100px;
+	margin-left: 400px;
+	position: absolute;
+}
+
+
+/*
+.socialicons {
+	width:200px;
+	height:47px;
+	display:inline-block;
+	margin-top:44px;
+	margin-left:117px;
+}
+.facebookicon {
+	float: left;
+	height: 47px;
+	width: 47px;
+	margin-left: 500px;
+	position: absolute;
+	left: -55px;
+	top: 77px;
+}
+
+.twittericon {
+	margin: 100px;
+	height: 47px;
+	width: 47px;
+	position: absolute;
+	left: 406px;
+	top: -24px;
+}
+.rssicon {
+	height: 47px;
+	width: 47px;
+	position: absolute;
+}
+*/
+
+.loginbox
+{
+	width: 270px;
+	height:147px;
+	float:right;
+	margin-right:45px;
+	margin-top:15px;
+	padding-top:5px;
+	padding-right:15px;
+	padding-left:15px;
+	padding-bottom: 5px;
+
+	clear:both;
+	/* background-image:url(http://f.canadapredicts.ca/images/bg-loginbox.png); */
+
+	background-image: linear-gradient(bottom, rgb(225,223,223) 15%, rgb(255,255,255) 58%);
+	background-image: -o-linear-gradient(bottom, rgb(225,223,223) 15%, rgb(255,255,255) 58%);
+	background-image: -moz-linear-gradient(bottom, rgb(225,223,223) 15%, rgb(255,255,255) 58%);
+	background-image: -webkit-linear-gradient(bottom, rgb(225,223,223) 15%, rgb(255,255,255) 58%);
+	background-image: -ms-linear-gradient(bottom, rgb(225,223,223) 15%, rgb(255,255,255) 58%);
+	
+	background-image: -webkit-gradient(
+		linear,
+		left bottom,
+		left top,
+		color-stop(0.15, rgb(225,223,223)),
+		color-stop(0.58, rgb(255,255,255))
+	
+	);
+	
+	-moz-box-shadow:1px 1px 2px 0px #888888;
+	-webkit-box-shadow:1px 1px 2px 0px #888888;
+	box-shadow:1px 1px 2px 0px #888888;
+
+	border: 1px solid #bbbbbb;
+	-moz-border-radius: 5px;
+	-webkit-border-radius: 5px;
+	border-radius: 5px;
+}
+
+div.profilebox
+{
+	width: 300px;
+	height:140px;
+	float:right;
+	margin-right:45px;
+	margin-top:15px;
+	text-align: left;
+
+	clear:both;
+
+	background-image: linear-gradient(bottom, rgb(225,223,223) 15%, rgb(255,255,255) 58%);
+	background-image: -o-linear-gradient(bottom, rgb(225,223,223) 15%, rgb(255,255,255) 58%);
+	background-image: -moz-linear-gradient(bottom, rgb(225,223,223) 15%, rgb(255,255,255) 58%);
+	background-image: -webkit-linear-gradient(bottom, rgb(225,223,223) 15%, rgb(255,255,255) 58%);
+	background-image: -ms-linear-gradient(bottom, rgb(225,223,223) 15%, rgb(255,255,255) 58%);
+	
+	background-image: -webkit-gradient(
+		linear,
+		left bottom,
+		left top,
+		color-stop(0.15, rgb(225,223,223)),
+		color-stop(0.58, rgb(255,255,255))
+	
+	);
+	
+	-moz-box-shadow:1px 1px 2px 0px #888888;
+	-webkit-box-shadow:1px 1px 2px 0px #888888;
+	box-shadow:1px 1px 2px 0px #888888;
+
+	border: 1px solid #bbbbbb;
+	-moz-border-radius: 5px;
+	-webkit-border-radius: 5px;
+	border-radius: 5px;
+}
+
+input
+{
+    font-family: Verdana, Geneva, sans-serif;
+    font-size:18px;
+    background: #ffffff;
+    border: 1px solid #bbbbbb;
+    border-radius:6px;
+	display:inline-block;
+	padding:3px;
+}
+
+input:hover, textarea:hover,  
+input:focus, textarea:focus
+{
+	border-color: #C9C9C9;  
+}
+
+input[type="submit"]
+{
+	cursor: pointer;
+}
+
+input.rounded
+{
+	border: 1px solid #bbbbbb;
+
+	-moz-border-radius: 5px;
+	-webkit-border-radius: 5px;
+	border-radius: 5px;
+
+	font-size: 16px;
+	padding: 4px 7px;
+	outline: 0;
+	margin-top: -7px;
+	-webkit-appearance: none;
+
+	-moz-box-shadow:	0px 1px 1px 0px #888888 inset;
+	-webkit-box-shadow:	0px 1px 1px 0px #888888 inset;
+	box-shadow:		0px 1px 1px 0px #888888 inset;
+}
+
+div.loginbox input.rounded
+{
+	width: 250px;
+}
+
+div.loginbox input.rounded[type=checkbox]
+{
+	width: auto;
+}
+
+input.rounded:focus {
+	border-color: #bbbbbb;
+}
+
+.rememberme {
+	margin-top:-10px;
+	margin-left:-5px;
+}
+
+.rememberme p
+{
+	line-height: 100%;
+}
+
+.loginboxlinks
+{
+	margin-top:-12px;
+	line-height:120%;
+}
+
+.silverbutton
+{
+	min-width:88px;
+	/* background-image:url(http://f.canadapredicts.ca/images/button-silver.png); */
+	font-family:Verdana, Geneva, sans-serif;
+	font-size:18px;
+	font-weight:bold;
+	color: #295679;
+        cursor: pointer;
+
+
+	background-image: linear-gradient(bottom, rgb(225,223,223) 15%, rgb(255,255,255) 58%);
+	background-image: -o-linear-gradient(bottom, rgb(225,223,223) 15%, rgb(255,255,255) 58%);
+	background-image: -moz-linear-gradient(bottom, rgb(225,223,223) 15%, rgb(255,255,255) 58%);
+	background-image: -webkit-linear-gradient(bottom, rgb(225,223,223) 15%, rgb(255,255,255) 58%);
+	background-image: -ms-linear-gradient(bottom, rgb(225,223,223) 15%, rgb(255,255,255) 58%);
+	
+	background-image: -webkit-gradient(
+		linear,
+		left bottom,
+		left top,
+		color-stop(0.15, rgb(225,223,223)),
+		color-stop(0.58, rgb(255,255,255))
+	
+	);
+	
+	-moz-box-shadow:1px 1px 2px 0px #888888;
+	-webkit-box-shadow:1px 1px 2px 0px #888888;
+	box-shadow:1px 1px 2px 0px #888888;
+}
+
+div.loginbox div.loginbutton
+{
+	margin-top:5px;
+	margin-right: 5px;
+	float:right;
+}
+
+div.loginbox div.loginbutton input,
+div.loginbox div.loginbutton img
+{
+	display: block;
+	padding-top: 4px;
+}
+
+div.loginbox div.loginbutton img
+{
+	padding-right: 2px;
+	padding-left: 2px;
+}
+
+div.loginformfields input.silverbutton
+{
+	margin-top: 10px;
+}
+
+.loginboxlinks ul {
+	list-style: none;
+	margin: 0;
+	padding: 0;
+}
+
+.loginboxlinks li {
+	list-style-type:none;
+}
+
+.loginboxlinks a {
+	font-family: Verdana, Geneva, sans-serif;
+	font-size:12px;
+	color:#295679;
+	text-decoration:none;
+}
+
+.loginboxlinks a:hover {
+	font-family: Verdana, Geneva, sans-serif;
+	color:#295679;
+	font-size:12px;
+	text-decoration:underline;
+}
+
+.avatar
+{
+	display: inline-block;
+	padding-top: 15px;
+	padding-left: 15px;
+	text-align: center;
+}
+
+.avatar img
+{
+}
+
+div.profilelinks
+{
+	display: inline-block;
+
+	margin-left: 0px;
+	margin-top: 10px;
+
+	padding-top: 15px;
+	padding-left: 10px;
+	border-left: 1px solid #000;
+	vertical-align: top;
+
+	max-height: 110px;
+	max-width: 178px;
+}
+
+.profilelinks h3
+{
+	color: #333;
+	font-family: Verdana, Geneva, sans-serif;
+	font-size: 16px;
+	text-transform: none;
+	font-weight: bold;
+	text-align: left;
+
+	padding: 0;
+	margin: 0;
+}
+
+.profilelinks h5
+{
+	color: #333;
+	font-family: Verdana, Geneva, sans-serif;
+	font-size: 12px;
+	text-transform: none;
+	font-weight: bold;
+	text-align: left;
+
+	padding: 0;
+	margin: 0;
+}
+
+.profilelinks ul
+{
+	list-style: none;
+	padding: 0px;
+	text-align: left;
+}
+
+.profilelinks a
+{
+	font-family: Verdana, Geneva, sans-serif;
+	font-size:14px;
+	color:#295679;
+	text-decoration:none;
+}
+
+.profilelinks a:hover
+{
+	font-family: Verdana, Geneva, sans-serif;
+	color:#295679;
+	font-size:14px;
+	text-decoration:underline;
+}
+
+.score
+{
+	font-family:Verdana, Geneva, sans-serif;
+	font-weight:bold;
+	font-size:13px;
+	line-height: 11px;
+
+	color:#d64330;
+}
+
+.score h1
+{
+	font-size: 11px;
+	color: #000;
+}
+
+#nav {
+	width:990px;
+	height:48px;
+
+	 /* fallback */
+	background-color: #285576;
+
+	/* Safari 4-5, Chrome 1-9 */
+	background: -webkit-gradient(linear, 0% 0%, 0% 100%,  from(#285576), to(#4f7b9e));
+
+	/* Safari 5.1, Chrome 10+ */ 
+	background: -webkit-linear-gradient(top, #285576 10%, #4f7b9e 75%); 
+	/* Firefox 3.6+ */ 
+	background: -moz-linear-gradient(top, #285576 10%, #4f7b9e 75%);
+	/* IE 10 */ 
+	background: -ms-linear-gradient(top, #285576 10%, #4f7b9e, 75%);
+	/* Opera 11.10+ */ 
+	background: -o-linear-gradient(top, #285576 10%, #4f7b9e 75%);
+}
+
+.navlinks
+{
+   margin:10px 0px 0px 0px;
+   padding:0px;
+   float:left;
+
+}
+
+.navlinks ul
+{
+	margin:0px;
+
+}
+
+.navlinks ul a
+{
+	background-image: url(http://f.canadapredicts.ca/images/nav-divider.jpg);
+	background-repeat: no-repeat;
+	background-position: right;
+}
+
+.navlinks li {
+	margin:0px 10px 0px 0px;
+	display:inline;
+	list-style-type:none;
+}
+
+.navlinks li a
+{
+	font-family:Verdana, Geneva, sans-serif;
+	font-size:22px;
+	color:#ffffff;
+	text-decoration:none;
+	padding-right: 15px;
+}
+
+.navlinks li a:hover
+{
+	text-shadow:4px 4px 4px #333;
+}
+
+#nav .rightbutton
+{
+	float: left;
+	font-size: 24px;
+}
+
+#nav .rightbutton a
+{
+	color: #d64330;
+	text-decoration: none;
+}
+
+#nav .rightbutton a img
+{
+	padding-top: 3px;
+	padding-left: 3px;
+}
+
+#nav .rightbutton a:hover
+{
+}
+
+#leads
+{
+	width:990px;
+	height:490px;
+	background-image:url(http://f.canadapredicts.ca/images/bg-leadshadow.png);
+	background-repeat:no-repeat;
+}
+
+#slides
+{
+	width:680px;
+	/* height:490px; */
+
+	background-image:url(http://f.canadapredicts.ca/images/bg-slideshadow.png);
+	background-repeat:no-repeat;
+	display: inline-block;
+
+	margin-left: 10px;
+}
+
+#slides .caption
+{
+	position: absolute;
+	top:0px;
+
+	height: 60px;
+	padding:5px 20px 0 20px;
+
+	/*
+	background:#000;
+	background:rgba(0,0,0,.5);
+	*/
+
+	background: -moz-linear-gradient(top,  rgba(0,0,0,0.65) 0%, rgba(0,0,0,0.65) 15%, rgba(0,0,0,0) 99%, rgba(0,0,0,0) 100%); /* FF3.6+ */
+	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(0,0,0,0.65)), color-stop(15%,rgba(0,0,0,0.65)), color-stop(99%,rgba(0,0,0,0)), color-stop(100%,rgba(0,0,0,0))); /* Chrome,Safari4+ */
+	background: -webkit-linear-gradient(top,  rgba(0,0,0,0.65) 0%,rgba(0,0,0,0.65) 15%,rgba(0,0,0,0) 99%,rgba(0,0,0,0) 100%); /* Chrome10+,Safari5.1+ */
+	background: -o-linear-gradient(top,  rgba(0,0,0,0.65) 0%,rgba(0,0,0,0.65) 15%,rgba(0,0,0,0) 99%,rgba(0,0,0,0) 100%); /* Opera 11.10+ */
+	background: -ms-linear-gradient(top,  rgba(0,0,0,0.65) 0%,rgba(0,0,0,0.65) 15%,rgba(0,0,0,0) 99%,rgba(0,0,0,0) 100%); /* IE10+ */
+	background: linear-gradient(to bottom,  rgba(0,0,0,0.65) 0%,rgba(0,0,0,0.65) 15%,rgba(0,0,0,0) 99%,rgba(0,0,0,0) 100%); /* W3C */
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#a6000000', endColorstr='#00000000',GradientType=0 ); /* IE6-9 */
+
+
+	width:630px;
+	line-height:1.33;
+
+	font-family:Georgia, "Times New Roman", Times, serif;
+	font-size:24px;
+	font-style:italic;
+
+	color:#fff;
+	border-top:1px solid #000;
+
+	text-align: left;
+	padding-left: 20px;
+
+	text-shadow:none;
+}
+
+.slides_container
+{
+	width:630px;
+	height:490px;
+}
+
+.slides_container div
+{
+	width:730px;
+        display:block;
+}
+
+/*
+	Pagination dots
+*/
+
+#slides .pagination
+{
+	margin-top:-20px;
+	text-align: center;
+}
+
+#slides .pagination li
+{
+	margin: 0 1px;
+	list-style:none;
+	display: inline-block;
+}
+
+#slides .pagination li a
+{
+	display:block;
+	width:12px;
+	height:0;
+	padding-top:12px;
+	background-image:url(http://f.canadapredicts.ca/images/pagination.png);
+	background-position: 0 0;
+	float:left;
+	overflow:hidden;
+}
+
+#slides .pagination li.current a
+{
+	background-position: 0 -12px;
+}
+
+.next, .prev
+{
+	cursor: pointer;
+	
+}
+
+.dots {
+	width:730px;
+	height:30px;
+	margin-top:455px;
+	position:absolute;
+	clear:both;
+	z-index: 10;
+}
+
+.breadcrumbs
+{
+	width:990px;
+	padding-top:10px;
+        padding-bottom: 10px;
+	padding-left:45px;
+}
+	
+#joinform {
+	width:990px;
+	margin:0px;
+}
+
+.formbox, .fullformbox
+{
+	font-family:Georgia, "Times New Roman", Times, serif;
+	color: #666;
+
+	display: inline-block;
+        background-color: #fff;
+        margin: 15px;
+	padding-bottom: 5px;
+
+       -moz-box-shadow: 4px 4px 6px 2px #aaa inset;
+       -webkit-box-shadow: 4px 6px 2px 2px #aaa inset;
+        box-shadow: 4px 4px 6px 2px #aaa inset;
+
+       -moz-border-radius: 10px;
+       -webkit-border-radius: 10px;
+        border-radius: 10px;
+
+	/*
+	background-image: linear-gradient(bottom, rgb(225,225,225) 15%, #eee) 58%);
+	background-image: -o-linear-gradient(bottom, rgb(225,225,225) 15%, #eee 58%);
+	background-image: -moz-linear-gradient(bottom, rgb(225,225,225) 15%, #eee 58%);
+	background-image: -webkit-linear-gradient(bottom, rgb(225,225,225) 15%, #eee 58%);
+	background-image: -ms-linear-gradient(bottom, rgb(225,225,225) 15%, #eee 58%);
+   
+	background-image: -webkit-gradient(
+	linear,
+	left bottom,
+	left top,
+	color-stop(0.15, rgb(225,225,225)),
+	color-stop(0.58, #eee))
+	*/
+}
+
+.fullformbox
+{
+	display: block;
+	min-width:600px;
+
+	margin-right: 45px;
+	margin-left: 45px;
+
+	padding: 0px;
+}
+
+div.joinformbox
+{
+	font-family:Georgia, "Times New Roman", Times, serif;
+	color: #666;
+
+	display: block;
+        background-color: #eee;
+
+	background-image:url(http://f.canadapredicts.ca/images/bg-joinpage.png);
+	background-repeat: no-repeat;
+
+	width:900px;
+	min-height: 694px;
+
+        margin: 15px;
+	margin-right: 45px;
+	margin-left: 45px;
+
+	padding: 0px;
+}
+
+#registration input[type=text],
+#registration input[type=password]
+{
+	width: 270px;
+}
+
+.checkImage
+{
+	vertical-align: text-bottom;
+	display: inline-block;
+	width: 24px;
+	height: 24px;
+}
+
+#getstarted
+{
+	float: left;
+	clear: left;
+
+	height: 694px;
+	width: 400px;
+
+	color: #fff;
+	font-family: Verdana, Geneva, sans-serif;
+}
+
+#getstarted #redsignup
+{
+	font-size: 16px;
+	font-weight: bold;
+	line-height: 28px;
+
+	padding-top: 155px;
+}
+
+#getstarted #redsignup img
+{
+	float: left;
+	clear: left;
+	padding-left: 30px;
+}
+
+#getstarted ul
+{
+	padding-top: 35px;
+	padding-left: 80px;
+
+	height: 282px;
+}
+
+#getstarted ul li
+{
+	list-style-type: none;
+	background: url('http://f.canadapredicts.ca/images/whitecheckbox.png') no-repeat left top;
+	padding-left: 45px;
+	padding-top: 0px;
+	padding-bottom: 20px;
+
+	text-align: left;
+}
+
+#getstarted #questions
+{
+	color: #000;
+
+	font-size: 18px;
+	font-style: italic;
+	font-weight: bold;
+
+	text-align: right;
+
+	padding-top: 5px;
+	margin-top: 0px;
+	padding-right: 30px;
+}
+
+#getstarted #questions a
+{
+	font-style: normal;
+	font-size: 14px;
+
+	padding-right: 2px;
+}
+
+#getstarted #questions img
+{
+	float: left;
+	clear: left;
+
+	padding-left: 120px;
+}
+
+#joinformfields
+{
+	width: 320px;
+	margin-right: 85px;
+	text-align: left;
+
+	float: right;
+	clear: right;
+}
+
+#joinformfields hr
+{
+	border-style: dotted none none none;
+	border-width: 3px 0 0 0;
+	height: 3px;
+	width: 270px;
+}
+
+div#updateformfields
+{
+	width: 305px;
+	text-align: left;
+}
+
+#updateformfields hr
+{
+	border-style: dotted none none none;
+	border-width: 3px 0 0 0;
+	height: 3px;
+	width: 270px;
+}
+
+.loginformfields
+{
+	min-width:600px;
+	margin-left: 50px;
+	line-height: 20px;
+}
+
+input.error
+{
+	-moz-box-shadow:inset 0px 0px 3px 0px #880000;
+	-webkit-box-shadow:inset 0px 0px 3px 0px #880000;
+	box-shadow:inset 0px 0px 3px 0px #880000;
+}
+
+.formError
+{
+	color: #aa0000;
+	display: block;
+	font-style: italic;
+	font-weight: bold;
+
+	margin-bottom: 10px;
+}
+
+textarea {
+	border-radius: 6px;
+	border: 1px solid #bbbbbb;
+	background:#f1f11f1;
+	outline: none; /* removes the default outline */
+    resize: none; /* prevents the user-resizing, adjust to taste */
+}
+
+#prizespage {
+	width:990px;
+	min-height:1020px;
+
+	margin:0px;
+}
+
+.iwantbutton
+{
+	margin-top: 5px;
+	margin-left: 80px;
+	float: left;
+}
+
+
+.bigprizebox
+{
+	width:600px;
+	height:260px;
+	background-image:url(http://f.canadapredicts.ca/images/bg-bigprizebox.png);
+	background-repeat:no-repeat;
+	padding:25px;
+	margin-bottom: -15px;
+}
+
+.bigprizeboxgreen {
+	width:600px;
+	height:260px;
+	background-image:url(http://f.canadapredicts.ca/images/bg-bigprizeboxgreen.png);
+	background-repeat:no-repeat;
+	padding:25px;
+	margin-bottom: -15px;
+}
+
+.bigprizeboxblue {
+	width:600px;
+	height:260px;
+	background-image:url(http://f.canadapredicts.ca/images/bg-bigprizeboxblue.png);
+	background-repeat:no-repeat;
+	padding:25px;
+	margin-bottom: -15px;
+}
+
+.bigprizebox img
+{
+	min-width: 260px;
+	min-height: 150px;
+}
+
+.longsilverbutton {
+	width:152px;
+	height:48px;
+	background-image:url(http://f.canadapredicts.ca/images/button-silverlong.png);
+	background-repeat:no-repeat;
+	font-family:Verdana, Geneva, sans-serif;
+	padding-top:14px;
+	padding-left:0px;
+    font-size:16px;
+}
+
+#playarea
+{
+	width:990px;
+	height:auto;
+
+	 /* fallback */
+	background-color: #285576;
+
+	/* Safari 4-5, Chrome 1-9 */
+	background: -webkit-gradient(linear, 0% 0%, 0% 100%,  from(#285576), to(#4f7b9e));
+	/* Safari 5.1, Chrome 10+ */ 
+	background: -webkit-linear-gradient(top, #285576, #4f7b9e); 
+	/* Firefox 3.6+ */ 
+	background: -moz-linear-gradient(top, #285576, #4f7b9e);
+	/* IE 10 */ 
+	background: -ms-linear-gradient(top, #285576, #4f7b9e);
+	/* Opera 11.10+ */ 
+	background: -o-linear-gradient(top, #285576, #4f7b9e);
+	clear:both;
+	overflow:auto;
+}
+
+.clear { clear: both; }
+
+#pagetext {
+	min-height: 210px;
+	padding: 0px 15px 45px 45px;
+	width: 900px;
+}
+
+.rightbar {
+	float: right;
+	width: 300px;
+	height:400px;
+	padding: 0px 45px 45px 15px;
+}
+
+.socialbuttons {
+	width:300px;
+	height:86px;
+	background-image:url(http://f.canadapredicts.ca/images/bg-socialbuttons.png);
+	margin: 15px 45px 30px 0px;
+}
+
+.adunit300 {
+	width:300px;
+	height:250px;
+}
+	
+#top10chart {
+	width:990px;
+	height:750px;
+	margin:0px;
+}
+
+.chart
+{
+	padding-top: 50px;
+}
+
+.pagination
+{
+	font-family:Verdana, Geneva, sans-serif;
+	font-size: 12px;
+	font-style: normal;
+
+	width: 85%;
+}
+.top10
+{
+	font-family:Verdana, Geneva, sans-serif;
+	font-size: 12px;
+	font-style: normal;
+
+	width: 85%;
+}
+
+table.top10
+{
+	border-collapse:separate;
+	/*
+	background-image: url("http://f.canadapredicts.ca/images/question_watermark_765x606.png");
+	background-repeat:no-repeat;
+	background-position:center; 
+	*/
+}
+
+table.top10 td
+{
+	color: #000;
+
+	padding-left: 10px;
+	padding-right: 10px;
+	padding-top: 2px;
+	padding-bottom: 2px;
+
+	border-top: 2px solid #ccc;
+
+background-image: linear-gradient(bottom, #FFFFFF 26%, #FFFFFF 43%, #e5e5e5 100%);
+background-image: -o-linear-gradient(bottom, #FFFFFF 26%, #FFFFFF 43%, #e5e5e5 100%);
+background-image: -moz-linear-gradient(bottom, #FFFFFF 26%, #FFFFFF 43%, #e5e5e5 100%);
+background-image: -webkit-linear-gradient(bottom, #FFFFFF 26%, #FFFFFF 43%, #e5e5e5 100%);
+background-image: -ms-linear-gradient(bottom, #FFFFFF 26%, #FFFFFF 43%, #e5e5e5 100%);
+
+background-image: -webkit-gradient(
+	linear,
+	left bottom,
+	left top,
+	color-stop(0.26, #FFFFFF),
+	color-stop(0.43, #FFFFFF),
+	color-stop(1, #e5e5e5)
+);
+
+
+}
+
+table.top10 th, table.top10 th input[type="submit"]
+{
+	font-family:Verdana, Geneva, sans-serif;
+	font-size: 12px;
+	font-style: normal;
+	font-weight: normal;
+
+	text-align: left;
+	text-shadow:1px 1px 1px #333333;
+
+	line-height:24px;
+	color:#ffffff;
+
+	border:1px solid #ffffff;
+	border-left: 0px;
+	border-right: 0px;
+	border-bottom:1px solid #333333;
+
+	padding-left: 10px;
+	padding-right: 5px;
+
+	 /* fallback */
+	background-color: #285576;
+
+	/* Safari 4-5, Chrome 1-9 */
+	background: -webkit-gradient(linear, 0% 0%, 0% 100%,  from(#285576), to(#4f7b9e));
+
+	/* Safari 5.1, Chrome 10+ */ 
+	background: -webkit-linear-gradient(top, #285576 10%, #4f7b9e 75%); 
+	/* Firefox 3.6+ */ 
+	background: -moz-linear-gradient(top, #285576 10%, #4f7b9e 75%);
+	/* IE 10 */ 
+	background: -ms-linear-gradient(top, #285576 10%, #4f7b9e, 75%);
+	/* Opera 11.10+ */ 
+	background: -o-linear-gradient(top, #285576 10%, #4f7b9e 75%);
+}
+
+table.top10 th input[type="submit"]
+{
+	height: 24px;
+	font-weight: normal;
+
+	border: none;
+	text-decoration: underline;
+}
+
+table.top10 tr.odd
+{
+	/* background-color: rgba(238,238,238,0.65); */
+
+	background-color: rgba(255,255,255,0.65);
+}
+
+table.top10 tr.even
+{
+	/* background-color: rgba(204,204,204,0.65); */
+
+	background-color: rgba(255,255,255,0.65);
+}
+
+.bluebullet {
+	width:34px;
+	height:34px;
+	background-image:url(http://f.canadapredicts.ca/images/bluebullet.png);
+	background-repeat:no-repeat;
+	color:#fff;
+    position:absolute;
+	margin-top:3px;
+	margin-left:-27px;
+	padding-top:7px;
+}
+
+#messagebox {
+	width:990px;
+	height:125px;
+	background-image:url(http://f.canadapredicts.ca/images/bg-message.png);
+	background-repeat:no-repeat;
+	margin:0px;
+	font-family:Verdana, Geneva, sans-serif;
+	font-size:20px;
+	padding-top:40px;
+}
+
+#messagebox #question
+{
+	font-style: italic;
+	font-size: 24px;
+}
+
+#messagebox #messageContent
+{
+	width: 950px;
+	min-height: 62px;
+}
+
+.percentage
+{
+	font-size: 16px;
+	display: inline-block;
+	padding-top: 4px;
+	font-family:Verdana, Geneva, sans-serif;
+	font-weight:bold;
+	color:#D64330;
+}
+
+div.bluebutton {
+	font-family:Verdana, Geneva, sans-serif;
+	font-size:14px;
+	font-style:normal;
+	color:#ffffff;
+	width:192px;
+	height:59px;
+	background-image:url(http://f.canadapredicts.ca/images/button-blue.png);
+	background-repeat:no-repeat;
+	padding-top:20px;
+	margin-top:0px;
+}
+
+.bluebutton a
+{
+	color: #fff;
+}
+
+#questionbox
+{
+	width:990px;
+	height:155px;
+
+	background-image:url(http://f.canadapredicts.ca/images/bg-message.png);
+	background-repeat:no-repeat;
+	color:#af0856;
+
+	font-family:Verdana, Geneva, sans-serif;
+	font-size:23px;
+}
+
+.poll {
+	width:600px;
+	height:auto;
+	background-color:#ffffff;
+	border-radius:12px;
+	-moz-border-radius:12px;
+	-webkit-border-radius:12px;
+	border:1px solid #cccccc;
+	float:left;
+	margin: 30px 0px 30px 45px;
+	overflow:auto;
+	clear:both;
+	padding: 10px;
+
+       -moz-box-shadow: 4px 4px 6px 2px #aaa inset;
+       -webkit-box-shadow: 4px 6px 2px 2px #aaa inset;
+        box-shadow: 4px 4px 6px 2px #aaa inset;
+}
+
+.poll .tabhead
+{
+	padding-left: 5px;
+}
+
+
+#gameinfo {
+	width:265px;
+	height:auto;
+	background-color:#ffffff;
+	border-radius:12px;
+	-moz-border-radius:12px;
+	-webkit-border-radius:12px;
+	border:1px solid #cccccc;
+	float:left;
+	padding: 0px;
+	font-size:18px;
+	font-weight:bold;
+	margin-left:15px;
+	margin-top:30px;
+	padding:8px;
+	padding-bottom:8px;
+	text-align: left;
+	 /* fallback */
+	background: url(http://f.canadapredicts.ca/images/bg-gameinfo.png);
+	background-repeat: repeat-x; 
+	/* Safari 4-5, Chrome 1-9 */
+	background: -webkit-gradient(linear, 0% 0%, 0% 100%,  from(#ffffff), to(#f3f3f3));
+	/* Safari 5.1, Chrome 10+ */ 
+	background: -webkit-linear-gradient(top, #ffffff, #f3f3f3); 
+	/* Firefox 3.6+ */ 
+	background: -moz-linear-gradient(top, #ffffff, #f3f3f3);
+	/* IE 10 */ 
+	background: -ms-linear-gradient(top, #ffffff, #f3f3f3);
+	/* Opera 11.10+ */ 
+	background: -o-linear-gradient(top, #ffffff, #f3f3f3);
+	overflow:auto;
+}
+
+#myinfo
+{
+	width:265px;
+	height:auto;
+	background-color:#ffffff;
+	border-radius:12px;
+	-moz-border-radius:12px;
+	-webkit-border-radius:12px;
+	border:1px solid #cccccc;
+	float:left;
+	font-size:18px;
+	font-weight:bold;
+	margin-right: 0px;
+	margin-left:15px;
+	padding:8px;
+	padding-bottom:8px;
+	margin-top:15px;
+	clear:right;
+	text-align: left;
+	overflow:auto;
+	 /* fallback */
+	background: url(http://f.canadapredicts.ca/images/bg-myinfo.png);
+	background-repeat: repeat-x; 
+	/* Safari 4-5, Chrome 1-9 */
+	background: -webkit-gradient(linear, 0% 0%, 0% 100%,  from(#ffffff), to(#f3f3f3));
+	/* Safari 5.1, Chrome 10+ */ 
+	background: -webkit-linear-gradient(top, #ffffff, #f3f3f3); 
+	/* Firefox 3.6+ */ 
+	background: -moz-linear-gradient(top, #ffffff, #f3f3f3);
+	/* IE 10 */ 
+	background: -ms-linear-gradient(top, #ffffff, #f3f3f3);
+	/* Opera 11.10+ */ 
+	background: -o-linear-gradient(top, #ffffff, #f3f3f3);
+	margin-bottom:30px;
+}
+
+#bidhistory
+{
+	height:auto;
+	float:left;
+	font-weight:bold;
+	clear:right;
+	overflow:auto;
+	font-size: 12px;
+	font-weight: normal;
+	margin-top: 5px;
+}
+
+#bidhistory table
+{
+	width: 95%;
+}
+
+#bidhistory #nobids
+{
+	margin-top: 10px;
+	margin-bottom: 10px;
+	display: inline-block;
+	padding-left: 5px;
+
+	font-size: 14px;
+}
+
+
+#mygameinfo table td
+{
+	text-align: left;
+}
+
+#mygameinfo table th
+{
+	text-align: right;
+
+	text-shadow: none;
+	font-weight: bold;
+	color: #295679;
+
+	padding-left: 10px;
+	padding-right: 10px;
+	padding-top: 2px;
+	padding-bottom: 2px;
+
+	border-top: 2px solid #ccc;
+	border-bottom: 0px;
+
+background-image: linear-gradient(bottom, #FFFFFF 26%, #FFFFFF 43%, #e5e5e5 100%);
+background-image: -o-linear-gradient(bottom, #FFFFFF 26%, #FFFFFF 43%, #e5e5e5 100%);
+background-image: -moz-linear-gradient(bottom, #FFFFFF 26%, #FFFFFF 43%, #e5e5e5 100%);
+background-image: -webkit-linear-gradient(bottom, #FFFFFF 26%, #FFFFFF 43%, #e5e5e5 100%);
+background-image: -ms-linear-gradient(bottom, #FFFFFF 26%, #FFFFFF 43%, #e5e5e5 100%);
+
+background-image: -webkit-gradient(
+	linear,
+	left bottom,
+	left top,
+	color-stop(0.26, #FFFFFF),
+	color-stop(0.43, #FFFFFF),
+	color-stop(1, #e5e5e5)
+);
+}
+
+.formboxhead
+{
+	font-size: 18px;
+	font-weight: bold;
+	font-family:Verdana, Geneva, sans-serif;
+
+	padding-top: 10px;
+	padding-bottom: 10px;
+	text-align: center;
+}
+
+.formboxhead, .tabhead
+{
+	background-image:url(http://f.canadapredicts.ca/images/bg-tabhead.png);
+	background-rclearepeat:no-repeat;
+}
+
+.tabhead
+{
+	width:265;
+	height:34;
+
+	padding-bottom:8px;
+	font-size: 18px;
+	font-weight: bold;
+}
+
+
+#gamecardtopnavbg
+{
+	width:990px;
+	background-color: #3E3C3D;
+}
+
+#gamecardtopnavtop
+{
+	background: -moz-linear-gradient(top,  rgba(0,0,0,0.65) 0%, rgba(0,0,0,0) 100%); /* FF3.6+ */
+	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(0,0,0,0.65)), color-stop(100%,rgba(0,0,0,0))); /* Chrome,Safari4+ */
+	background: -webkit-linear-gradient(top,  rgba(0,0,0,0.65) 0%,rgba(0,0,0,0) 100%); /* Chrome10+,Safari5.1+ */
+	background: -o-linear-gradient(top,  rgba(0,0,0,0.65) 0%,rgba(0,0,0,0) 100%); /* Opera 11.10+ */
+	background: -ms-linear-gradient(top,  rgba(0,0,0,0.65) 0%,rgba(0,0,0,0) 100%); /* IE10+ */
+	background: linear-gradient(to bottom,  rgba(0,0,0,0.65) 0%,rgba(0,0,0,0) 100%); /* W3C */
+
+	width: 100%;
+	height: 20px;
+}
+
+#gamecardtopnavcontent img
+{
+	padding: 10px;
+}
+
+#gamecardtopnavbottom
+{
+	background: -moz-linear-gradient(top,  rgba(0,0,0,0) 0%, rgba(0,0,0,0.65) 100%); /* FF3.6+ */
+	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(0,0,0,0)), color-stop(100%,rgba(0,0,0,0.65))); /* Chrome,Safari4+ */
+	background: -webkit-linear-gradient(top,  rgba(0,0,0,0) 0%,rgba(0,0,0,0.65) 100%); /* Chrome10+,Safari5.1+ */
+	background: -o-linear-gradient(top,  rgba(0,0,0,0) 0%,rgba(0,0,0,0.65) 100%); /* Opera 11.10+ */
+	background: -ms-linear-gradient(top,  rgba(0,0,0,0) 0%,rgba(0,0,0,0.65) 100%); /* IE10+ */
+	background: linear-gradient(to bottom,  rgba(0,0,0,0) 0%,rgba(0,0,0,0.65) 100%); /* W3C */
+
+	width: 100%;
+	height: 20px;
+}
+
+.gamecard {
+	width:260px;
+	height:auto;
+	float:left;
+	margin-left:15px;
+	clear:right;
+	padding-bottom:15px;
+	overflow:auto;	
+
+	font-size: 12px;
+}
+
+.gamecard img#thumbnail
+{
+	-moz-box-shadow:5px 5px 10px 0px #666;
+	-webkit-box-shadow:5px 5px 10px 0px #666;
+	box-shadow:5px 5px 10px 0px #666;
+}
+
+
+.gamequestion
+{
+	width:280px;
+	height:auto;
+	float:left;
+    	margin-left:15px;
+	font-weight:bold;
+	clear:right;
+	overflow:auto;
+	font-size: 12px;
+	font-weight: normal;
+}
+
+.possibleanswers
+{
+	line-height: 18px;
+}
+
+table.possibleanswers th
+{
+	color: #AF0856;
+	font-style: italic;
+	font-weight: bold;
+
+	text-decoration: underline;
+	text-align: center;
+}
+
+table.possibleanswers td
+{
+	padding-top: 5px;
+}
+
+.hquestion
+{
+	font-size:24px;
+	font-family:Georgia, "Times New Roman", Times, serif;
+	font-style:italic;
+	color:#626262;	
+	float:left;
+	margin-left:15px;
+	margin-bottom:25px;
+	margin-top:15px;
+	line-height: 32px;
+	clear:both;
+}
+
+#gamenav
+{
+	width:900px;
+	height:50px;
+	margin-top: 5px;
+	margin-bottom: -5px;
+	text-align: right;
+}
+
+.gamebuttonselect, .gamebutton
+{
+	width:115px;
+	height:47px;
+	background-repeat:no-repeat;
+	color:#af0856;
+	font-size:17px;
+	font-family:Verdana, Geneva, sans-serif;
+	font-weight:bold;
+	margin:7px;
+	padding-top:7px;
+	text-align: center;
+	display: inline-block;
+}
+
+
+.gamebuttonselect
+{
+	background-image:url(http://f.canadapredicts.ca/images/button-gameselect.png);
+}
+
+.gamebutton
+{
+	background-image:url(http://f.canadapredicts.ca/images/button-game.png);
+}
+	
+input.orangebutton[type="submit"]
+{
+	-moz-border-radius: 5px;
+	-webkit-border-radius: 5px;
+	border-radius: 5px;
+
+	margin-top: 5px;
+	margin-bottom: 5px;
+	text-align: center;
+	padding: 10px 20px;
+	background-repeat:no-repeat;
+	color:#fff;
+	font-family:Verdana, Geneva, sans-serif;
+	font-size:14px;
+	border: 0px;	
+	font-weight: bold;
+
+	background-color: #d64330;
+}
+	
+input.orangebutton[type="submit"]:active
+{
+	-moz-border-radius: 5px;
+	-webkit-border-radius: 5px;
+	border-radius: 5px;
+
+	margin-top: 5px;
+	margin-bottom: 5px;
+	text-align: center;
+	padding: 10px 20px;
+	background-repeat:no-repeat;
+	color:#fff;
+	font-family:Verdana, Geneva, sans-serif;
+	font-size:14px;
+	border: 0px;	
+	font-weight: bold;
+
+	background-color: #c63320;
+
+}
+	
+.pointbox {
+	text-align: center;
+	width:90px;
+	height:25px;
+	border-style:solid;
+	border-color:#285578;
+	border-radius:6px;
+	-moz-border-radius:6px;
+	-webkit-border-radius:6px;
+	font-size:18px;
+	color:#d64330;
+	padding:3px;
+	margin-bottom:30px;
+	border-width:2px;
+	float:left;
+	clear:right;
+
+}
+
+.pointminmax {
+	width:130px;
+	height:25px;
+	padding:3px;
+	float:left;
+	margin-left:15px;
+	font-size:12px;
+	color:#666;
+	font-family:Verdana, Geneva, sans-serif;
+	font-style:italic;
+	font-weight:normal;
+	clear:right;
+}
+
+.pointscore {
+	width:97px;
+	height:57px;
+	float:left;
+	background-image:url(http://f.canadapredicts.ca/images/pointscore.png);
+	background-repeat:no-repeat;
+	font-size:18px;
+	color:#5cbd05;
+	font-family:Verdana, Geneva, sans-serif;
+	font-weight:bold;
+	padding-top:25px;
+	padding-left:15px;
+	margin-top: 10px;
+	text-align: right;
+}
+
+#prizes
+{
+	display: inline-block;
+
+	font-family:Georgia, "Times New Roman", Times, serif;
+	font-size:24px;
+	font-style:italic;
+
+	color:#666;
+	margin:0px;
+}
+
+.sectiontexthead
+{
+	text-align: left;
+	font-family:Georgia, "Times New Roman", Times, serif;
+	font-size:24px;
+	font-style:italic;
+	color:#666;
+
+	line-height: 31px;
+	padding-bottom:10px;
+        padding-top: 10px;
+	padding-left:45px;
+}
+	
+.subsectiontexthead
+{
+	width:100%;
+	font-family:Georgia, "Times New Roman", Times, serif;
+	font-size:12px;
+	color:#666;
+}
+
+.prizebox
+{
+ 	display:block;
+
+	width:284px;
+	min-height:175px;
+	border-color:#bbbbbb;
+
+	vertical-align: top;
+}
+
+.prizebox input
+{
+	display: block;
+	margin-top: 2px;
+	margin-bottom: 2px;
+
+	width: 185px;
+}
+
+.prizebox input[type="submit"]
+{
+	margin-top: 20px;
+}
+
+#miniregbox
+{
+	width: 260px; /* Same as prizebox content */
+	color: #fff;
+
+	font-family:Verdana, Geneva, sans-serif;
+	font-size: 12px;
+	font-style: normal;
+
+	margin-bottom: 15px;
+
+	-moz-border-radius: 5px;
+	-webkit-border-radius: 5px;
+	border-radius: 5px;
+
+	-webkit-appearance: none;
+
+	-moz-box-shadow:	0px 1px 1px 0px #888888;
+	-webkit-box-shadow:	0px 1px 1px 0px #888888;
+	box-shadow:		0px 1px 1px 0px #888888;
+
+	background-image: linear-gradient(top, #d64331, #a72613);
+	background-image: -o-linear-gradient(top, #d64331, #a72613);
+	background-image: -moz-linear-gradient(top, #d64331, #a72613);
+	background-image: -webkit-linear-gradient(top, #d64331, #a72613);
+	background-image: -ms-linear-gradient(top, #d64331, #a72613);
+}
+
+#miniregbox h1
+{
+	font-size: 24px;
+	font-weight: bold;
+
+	margin: auto;
+	padding-top: 5px;
+	padding-bottom: 5px;
+}
+
+#miniregbox #regform
+{
+	padding: 5px 5px 15px;
+}
+
+img.preload
+{
+	opacity: 0;
+}
+
+div.prizeboxContent
+{
+ 	display:block;
+
+	width:284px;
+	min-height:175px;
+	border-color:#bbbbbb;
+	background-image:url(http://f.canadapredicts.ca/images/bg-prizeboxshadow.png);
+	background-repeat:no-repeat;
+	padding-top:10px;
+
+	vertical-align: top;
+}
+
+.prizeboxContent img
+{
+	width: 260px;
+	height: 150px;
+}
+
+.prizedesc
+{
+	width:284px;
+	min-height: 50px;
+	font-family:Verdana, Geneva, sans-serif;
+	font-style:normal;
+	font-size:14px;
+	color:#666;
+	word-wrap:break-word;
+	text-align:center;
+	margin: 20px 0px 10px 0px;
+}
+
+
+#footer1 {
+        margin-top: 40px;
+	width:990px;
+	min-height:275px;
+	background-repeat: no-repeat;
+	background-image:url(http://f.canadapredicts.ca/images/bg-footer.jpg);
+	background-color: #302e2f;
+}
+
+#footer2 {
+	width:990px;
+	min-height:50px;
+	color:#333;
+	font-family:Verdana, Geneva, sans-serif;
+	font-size:12px;
+	background-color:#999;
+	margin:0px;
+	
+}
+
+.footer2text {
+	font-family:Verdana, Geneva, sans-serif;
+	font-size:12px;
+	padding:18px 45px 0px 0px;
+}
+
+.footwidget {
+	width:235px;
+	display:inline-block;
+	margin-top:36px;
+	vertical-align: top;
+}
+
+.foothead {
+	font-family:Verdana, Geneva, sans-serif;
+	color:#888888;
+	font-size:18px;
+	margin: 0px 0px 15px 40px;
+}
+	
+.footlinks {
+
+}
+
+.footlinks ul {
+	margin-left:0px;
+}
+
+.footlinks li {
+	list-style-type:none;
+	text-align:left;
+	text-decoration:none;
+}
+
+.footlinks li a {
+	font-family:Verdana, Geneva, sans-serif;
+	font-size:12px;
+	color:#ddd;
+	text-decoration:none;
+}
+
+.footlinks li a:hover {
+	font-family:Verdana, Geneva, sans-serif;
+	font-size:12px;
+	color:#ffffff;
+	text-decoration:underline;
+}
+
+.greenbutton {
+	font-family:Verdana, Geneva, sans-serif;
+	font-size:16px;
+	font-style:normal;
+	color:#084004;
+	width:152px;
+	height:47px;
+	background-color: transparent;
+	background-image:url(http://f.canadapredicts.ca/images/button-green.png);
+	background-repeat:no-repeat;
+        border: 0px;
+        border-radius: 0px;
+	cursor: pointer;
+}
+
+
+#container #playarea .myinfo table tr td table tr td {
+	font-weight: bold;
+}
+#container #playarea .myinfo table tr td table {
+	text-align: left;
+}
+#container #playarea .myinfo table tr td table tr td {
+	text-align: left;
+}
+
+table#activity
+{
+	width: 90%;
+
+	font-family: monospace;
+	font-size: 12px;
+}
+
+table#activity th
+{
+	line-height: 24px;
+}
+
+table#activity th, table#activity td
+{
+	padding-left: 5px;
+	padding-right: 5px;
+}
+
+table#activity tr.heading th
+{
+	font-family:Verdana, Geneva, sans-serif;
+	font-weight: normal;
+	text-transform: capitalize;
+
+	border-top: 1px solid #000;
+	border-bottom: 1px solid #000;
+
+	background-color: #295679;
+	color: #fff;
+
+	font-size: 14px;
+}
+
+table#activity tr th
+{
+	font-family:Verdana, Geneva, sans-serif;
+
+	font-size: 13px;
+	font-weight: bold;
+}
+
+table#activity tr.line1 td
+{
+	border-top: 1px solid #000;
+	color: #295679;
+	font-weight: bold;
+}
+
+table#activity tr.line2 td
+{
+    border-bottom: none;
+}
+
+table tr.odd
+{
+	background-color: rgba(238,238,238,0.65);
+}
+
+table tr.even
+{
+	background-color: rgba(204,204,204,0.65);
+}
+
+.invis
+{
+	display: none;
+}
+
+/*
+ * Using formbox instead for tips
+ *
+#tips
+{
+	font-family: Georgia, serif;
+	font-size: 24px;
+	font-style: italic;
+
+	clear: right;
+	float: right;
+
+	width: 250px;
+	min-height: 200px;
+	margin-top:20px;
+	margin-right: 15px;
+	margin-left: 10px;
+	padding: 5% 0;
+
+
+	background-color: #ddd;
+
+       -moz-box-shadow: 2px 2px 2px 2px #555;
+       -webkit-box-shadow: 2px 2px 2px 2px #555;
+        box-shadow: 2px 2px 2px 2px #555;
+
+       -moz-border-radius: 10px;
+       -webkit-border-radius: 10px;
+        border-radius: 10px;
+}
+*/
+
+div#playarea div#allowance,
+div#playarea div#tips,
+div#playarea div#verified
+{
+	width: 620px;
+
+	font-family: Georgia, serif;
+	font-size: 20px;
+	font-style: italic;
+
+	padding: 3% 10px;
+}
+
+div#playarea #timers
+{
+	font-family: Georgia, serif;
+	font-size: 16px;
+	font-style: italic;
+
+	width: 270px;
+	padding: 20px 5px 20px 15px;
+}
+
+div#playarea #timers .highlight
+{
+	color: #d64330;
+}
+
+div#playarea div#recentlyclosed,
+div#playarea div#holdings
+{
+	float: left;
+	width: 640px;
+}
+
+div#playarea div#holdings ul
+{
+	font-family:Georgia, "Times New Roman", Times, serif;
+	font-size:12px;
+
+	line-height: 24px;
+	margin: 0px;
+	padding-left: 10px;
+}
+
+div#playarea div#holdings ul li
+{
+	list-style: none;
+	text-align: left;
+}
+
+div#playarea div.smallpanel
+{
+	float: left;
+	width: 305px;
+}
+
+div#playarea div.smallpanel ul
+{
+	padding-left: 25px;
+	padding-right: 10px;
+	text-align: left;
+	list-style: none;
+}
+
+div#playarea div#newgames a,
+div#playarea div#endingsoon a
+{
+	font-family: Georgia, serif;
+	font-size: 14px;
+	font-weight: bold;
+
+	display: inline-block;
+	margin-bottom: 5px;
+}
+
+div#playarea div#breakdown
+{
+	text-align: center;
+	padding:10px;
+	margin: 15px;
+
+	font-size: 16px;
+	width: 270px;
+
+	float: left;
+	clear: left;
+}
+
+div#playarea div#pastevents
+{
+	text-align: center;
+	padding:10px;
+	margin: 15px;
+
+	font-size: 16px;
+	width: 270px;
+
+	float: left;
+	clear: left;
+}
+
+div#playarea div#usermessages
+{
+	text-align: left;
+	padding:10px;
+	margin: 15px;
+
+	font-size: 16px;
+	width: 270px;
+	min-height: 350px;
+
+	float: left;
+	clear: left;
+}
+
+div#playarea div#usermessages ul
+{
+	font-family:Georgia, "Times New Roman", Times, serif;
+	font-size: 14px;
+
+	padding-left: 10px;
+	line-height: 24px;
+}
+
+div#playarea div#usermessages ul li
+{
+	list-style-type: none;
+	background: url('http://f.canadapredicts.ca/images/exclamation.png') no-repeat left top;
+
+	padding-bottom: 15px;
+	padding-left: 40px;
+}
+
+div#extracredit div#surveycategories
+{
+	padding-top: 15px;
+	padding-bottom: 15px;
+}
+
+div#extracredit div#surveycategories img
+{
+	display: inline-block;
+
+	padding-left: 10px;
+	padding-right: 10px;
+}
+
+div#extracredit div#instructions
+{
+	font-size: 20px;
+
+	padding: 15px;
+}
+
+div#extracredit table#surveys
+{
+	font-size: 15px;
+
+	padding: 15px;
+	min-width: 450px;
+}
+
+table.loyalty-table
+{
+	max-width: 990px;
+	background-color: transparent;
+}
+
+td.frameborder
+{
+	background-color: transparent;
+}
+
+table.frameborder table#centercol
+{
+	width: 900px;
+	background-color: transparent;
+}
+
+table.loyalty-table table#surveys
+{
+	width: 810px;
+	background-color: transparent;
+	padding-bottom: 10px;
+}
+
+table.loyalty-table div#survey table
+{
+	width: 810px;
+	padding-bottom: 10px;
+	font-family: Georgia,"Times New Roman",Times,serif;
+}
+
+table.loyalty-table div#survey td
+{
+	font-family: Georgia,"Times New Roman",Times,serif;
+	color:#666;
+	font-size: 15px;
+}
+
+.head
+{
+	font-family: Georgia,"Times New Roman",Times,serif;
+}
+
+table.loyalty-table table#surveys td
+{
+	font-family: Georgia,"Times New Roman",Times,serif;
+	color:#666;
+	font-size: 15px;
+}
+
+div#extracredit
+{
+	padding-bottom: 15px;
+}
+
+div#extracredit span#intro,
+div#extracredit span#outro
+{
+	padding-top: 20px;
+	padding-bottom: 20px;
+
+	display:inline-block;
+	font-size: 18px;
+}
+
+div#extracredit span#outro
+{
+	padding-left: 25px;
+	text-align: left;
+}
+
+div#surveycategories img
+{
+	min-width: 120px;
+	min-height: 120px;
+
+	padding: 10px;
+}
+
+
+ul#surveyquestions
+{
+	list-style: none;
+	margin: 0;
+	padding: 0;
+}
+
+ul#surveyquestions li
+{
+	text-align: left;
+	width: 85%;
+}
+
+ul#surveyquestions li div#num
+{
+	display: inline-block;
+	float: left;
+}
+
+ul#surveyquestions li div#question
+{
+	padding-bottom: 5px;
+}
+
+ul#surveyquestions li div#response
+{
+	padding-bottom: 10px;
+}
+
+ul#surveyquestions li span.multianswercheckbox
+{
+	display: block;
+}
+
+ul#surveyquestions li span.singleanswerradio
+{
+	display: block;
+}
+
+table.loyalty-table input[type=submit]
+{
+	min-width:88px;
+	font-size:16px;
+	/* font-weight:bold; */
+	color: #295679;
+	margin-top:10px;
+	margin-left:10px;
+	float:left;
+
+
+	background-image: linear-gradient(bottom, rgb(225,223,223) 15%, rgb(255,255,255) 58%);
+	background-image: -o-linear-gradient(bottom, rgb(225,223,223) 15%, rgb(255,255,255) 58%);
+	background-image: -moz-linear-gradient(bottom, rgb(225,223,223) 15%, rgb(255,255,255) 58%);
+	background-image: -webkit-linear-gradient(bottom, rgb(225,223,223) 15%, rgb(255,255,255) 58%);
+	background-image: -ms-linear-gradient(bottom, rgb(225,223,223) 15%, rgb(255,255,255) 58%);
+	
+	background-image: -webkit-gradient(
+		linear,
+		left bottom,
+		left top,
+		color-stop(0.15, rgb(225,223,223)),
+		color-stop(0.58, rgb(255,255,255))
+	
+	);
+	
+	-moz-box-shadow:1px 1px 2px 0px #888888;
+	-webkit-box-shadow:1px 1px 2px 0px #888888;
+	box-shadow:1px 1px 2px 0px #888888;
+}
+
+.placeholder
+{
+	color: #bbb;
+}
+
+.gamethumbnail
+{
+	display: inline-block;
+	width: 700px;
+	height: 90px;
+	margin-top: 20px;
+	margin-bottom: 20px;
+
+	border-radius: 30px;
+	-moz-box-shadow: 5px 5px 7px #666;-webkit-box-shadow: 5px 5px 7px #666; box-shadow: 5px 5px 7px #666;
+}
+
+.gamethumbnail img
+{
+	border-radius: 30px;
+}
+
+#roi
+{
+	color: #666;
+}
+
+a.convlinks
+{
+	color: #999;
+}
+
+img.sortbutton
+{
+	background-color: #fff;
+
+	margin-left: 5px;
+	vertical-align: baseline;
+}

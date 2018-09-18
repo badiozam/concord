@@ -1,0 +1,164 @@
+#**
+ * MIT License
+ * 
+ * Copyright (c) 2018 i4one Interactive, LLC
+ * 
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ * 
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ * 
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ *#
+#**
+ * @author Hamid Badiozamani
+ */
+#macro(userNavBar)
+	<div id="defaultNavBar" class="navbar navbar-default navbar-fixed-top" role="navigation">
+		<div class="container">
+			<div id="brand"><a href="$request.baseurl/base/user/index.html"><img class="img-responsive" src="$model.singleClient.logoURL"/></a></div>
+
+			<div class="navbar-header">
+	    			<button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-rightnav-collapse">
+	      				<span class="sr-only">Toggle navigation</span>
+	      				<span class="icon-bar"></span>
+	      				<span class="icon-bar"></span>
+	      				<span class="icon-bar"></span>
+	    			</button>
+			</div>
+
+			<div class="collapse navbar-collapse navbar-rightnav-collapse">
+				#foreach ( $menu in $menus )
+					#if ( $menu.leftAligned )
+						#set( $foreach.classes  = "")
+					#else
+						#set( $foreach.classes  = "navbar-right" )
+					#end
+					#navBarInternal($menu "nav navbar-nav $foreach.classes" 0)
+				#end
+	
+				#*
+				 * By adding this we ensure that the logout links don't hug the right side since
+				 * by default, there's a margin-right:0 set for the last child of a navbar-right
+				 *#
+				<p class="navbar-right"></p>
+	
+				<div class="brand"></div>
+			</div>
+		</div> <!-- container -->
+	</div> <!-- #defaultNavBar -->
+#end
+
+#macro(pageCSS)#set($css = 'css.' + $msgPrefix)${model.buildMessage($css)}#end
+
+#macro( i4oneAttachableStatus $modelObject )
+	#if ( $modelStatus )
+		#springBind($modelObject)
+		#if ( $modelStatus.successful )
+			#set( $alertClass = 'alert-success' )
+		#elseif ( $modelStatus.prevPlayed )
+			#set( $alertClass = 'alert-warning' )
+		#elseif ( $modelStatus.wrong || $modelStatus.expired || $modelStatus.failed )
+			#set( $alertClass = 'alert-danger' )
+		#end
+		<div class="alert $alertClass formError">
+			$modelStatus.title
+			<ul>
+				#springShowErrorsList()
+			</ul>
+		</div>
+
+		#i4oneTriggeredStatus($modelObject)
+		#i4oneInstantWinningStatus($modelObject)
+	#end
+#end
+
+#macro( i4oneTriggeredStatus $modelObject )
+	#set( $managerResults = $modelStatus.managerResults )
+	#foreach ( $managerResult in $managerResults )
+		#if ( $managerResult && $managerResult.processedTriggers && !$managerResult.processedTriggers.empty )
+			<div id="userBalanceTriggers">
+				<ul>
+				#foreach( $processedTrigger in $managerResult.processedTriggers )
+					#set( $userBalanceTrigger = $processedTrigger.post )
+					#set( $trigger = $userBalanceTrigger.balanceTrigger )
+					#set( $balance = $trigger.balance )
+					<li><span class="amount">#intFormat($trigger.amount)</span> <span class="balanceType">#IString(${trigger.balance.formatName($trigger.amount)})</span> <span class="title">#if(!$trigger.exclusive)#IString($trigger.title)#end</span></li>
+				#end
+				</u>
+			</div>
+		#end
+	#end
+#end
+
+#macro( i4oneInstantWinningStatus $modelObject)
+	#set( $managerResults = $modelStatus.managerResults )
+	#foreach ( $managerResult in $managerResults )
+		#if ( $managerResult && $managerResult.processedInstantWins && !$managerResult.processedInstantWins.empty )
+			<div id="instantWins">
+				<ul>
+				#foreach( $processedInstantWin in $managerResult.processedInstantWins )
+					#set( $userInstantWin = $processedInstantWin.post )
+					<li>#if ( $userInstantWin.didWin)<span class="winnerMessage">#IString($userInstantWin.instantWin.winnerMessage)</span>#else<span class="loserMessage">#IString($userInstantWin.instantWin.loserMessage)</span>#end</li>
+				#end
+				</u>
+			</div>
+		#end
+	#end
+#end
+
+#macro ( categoryPlaceHolder $categories $classes $colWidth )
+	#set( $totalCols = 12 / $colWidth )
+	#set( $leftOver = ${categories.size()} % $totalCols )
+	#set( $leftOver = $totalCols - $leftOver )
+	#if ( $leftOver && $leftOver < $totalCols )
+		#foreach ( $i in [1..$leftOver] )
+			<div class="$classes">
+				<div class="row">
+					<div class="col-xs-12 heading"><img class="img-responsive center-block" src="#plainMsg('category.placeholder.img')"/></div>
+					<div class="col-xs-12 info">#msg('category.placeholder.title')</div>
+				</div>
+			</div>
+		#end
+	#end
+#end
+
+ 
+#macro ( displayCategories $categories)
+	<div class="row">
+		<div id="label" class="col-xs-12">
+			<h1>#msg('title')</h1>
+			<p>#msg('subtitle')</p>
+		</div>
+	</div>
+
+	<div class="row" id="categories">
+		#foreach ($category in ${categories})
+			<div class="col-xs-2 hidden-sm hidden-md hidden-lg"></div>
+			<div class="col-xs-8 col-sm-4 col-md-2 category">
+				<div class="row">
+					<div class="col-xs-12 heading"><a href="index.html?categoryid=$category.ser"><img class="img-responsive center-block" src="$category.thumbnailURL" alt="#IString($category.title)"/></a></div>
+					<div class="col-xs-12 info">#IString($category.title)</div>
+				</div>
+			</div>
+			<div class="col-xs-2 hidden-sm hidden-md hidden-lg"></div>
+			<div class="hidden-sm hidden-md hidden-lg clearfix"></div>
+		#end
+
+		#categoryPlaceHolder( $categories "hidden-xs hidden-sm col-md-3 col-lg-3 category" 3)
+		#categoryPlaceHolder( $categories "hidden-xs col-sm-4 hidden-md hidden-lg category" 4)
+	</div>
+#end
+
+#macro ( userBalanceFormat $userBalance )#intFormat($userBalance.total) #IString(${userBalance.balance.formatName($userBalance.total)}) #end

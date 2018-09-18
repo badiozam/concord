@@ -1,0 +1,110 @@
+#**
+ * MIT License
+ * 
+ * Copyright (c) 2018 i4one Interactive, LLC
+ * 
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ * 
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ * 
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ *#
+#**
+ * @author Hamid Badiozamani
+ */
+#set($title = ${model.buildMessage('msg.base.admin.preferences.update.pageTitle', 'item', $preference)})
+#parseVm( "base/admin/template/startHead.vm" )
+#parseVm( "base/admin/template/endHead.vm" )
+#parseVm( "base/admin/template/startBody.vm" )
+
+<script language="javascript">
+function questionTypeChanged(event)
+{
+	$("select#questionType option:selected").each(function()
+	{
+		var optionValue = $(this).attr("value");
+
+		$("[class*=' qt']").each(function() { $(this).addClass("hidden"); });
+		$(".qt" + optionValue).each(function() { $(this).removeClass("hidden"); });
+	});
+}
+
+// Hide/unhide depending on what we have as soon as we start
+//
+$(document).ready(function()
+{
+	questionTypeChanged();
+	$("select#questionType").keyup(questionTypeChanged).change(questionTypeChanged);
+});
+
+</script>
+<div id="crud">
+	<form method="post" action="$request.requestURI">
+		#springFormHiddenInput("preference.ser" "")
+		 #springFormHiddenInput("preference.client" "")
+		<span id="jq_errors">#i4oneStatus("preference")</span>
+
+		<div class="form-group row">
+			<div class="col-sm-4 col-md-2"><label for="siteGroup">#msg('sitegroup')</label></div>
+			<div class="col-sm-8 col-md-10">#i4oneFormSingleSelect('preference.siteGroup' ${siteGroups} '')</div>
+
+			<div class="col-sm-4 col-md-2"><label for="title">#msgWithHelp('title')</label></div>
+			<div class="col-sm-8 col-md-10">#i4oneFormIStringInput('preference.title' '' 'maxlength="128"')</div>
+		</div>
+
+		<div class="form-group row">
+			<div class="col-sm-2"><label for="questionType">#msg('questiontype')</label></div>
+			<div class="col-sm-10">#i4oneFormSingleSelect("preference.questionType" ${validQuestionType} '')</div>
+		</div>
+
+		<div class="form-group row qt3 qt4">
+			<div class="col-sm-2"><label for="validAnswer">#msgWithHelp('validanswer')</div>
+			<div class="col-sm-10">#i4oneFormSingleSelect("preference.validAnswer" ${validAnswerTypes} '')</div>
+		</div>
+
+		<section name="preferenceanswers" class="form-group row qt0 qt1 qt2">
+		<div class="col-sm-12">
+			<div class="row">
+				<div class="col-xs-12"><h3>#msgWithHelp('preferenceanswers')</h3></div>
+			</div>
+			#foreach ( $answer in $preference.answers )
+				#striping()
+				#set( $currAnswer = "preference.answers[" + $foreach.index + "]")
+				#set( $currAnswerSer = $currAnswer + ".ser" )
+				#set( $currAnswerAnswer = $currAnswer + ".answer" )
+				#set( $labelAnswerAnswer = "answers" + $foreach.index + ".answer'" + $model.supportedLanguages[0] + "'" )
+
+				<div class="row $rowClass">
+					<div class="col-sm-2">
+						<label for="$labelAnswerAnswer">#msg('answer') #intFormat($foreach.count)</label>
+					</div>
+					<div class="col-sm-10">
+						#springFormHiddenInput($currAnswerSer '')
+						#i4oneFormIStringInput($currAnswerAnswer '' 'maxlength="1024"')
+					</div>
+				</div>
+			#end
+		</div>
+		</section>
+
+		<div class="form-group row">
+			<div class="col-sm-4">#i4oneFormUpdate($preference)</div>
+			<div class="col-sm-4">#i4oneFormHistory($preference)</div>
+			<div class="col-sm-4">#i4oneFormBack()</div>
+		</div>
+	</form>
+</div>
+
+#parseVm( "base/admin/template/endBody.vm" )

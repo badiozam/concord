@@ -1,0 +1,165 @@
+#**
+ * MIT License
+ * 
+ * Copyright (c) 2018 i4one Interactive, LLC
+ * 
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ * 
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ * 
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ *#
+#**
+ * @author Hamid Badiozamani
+ */
+#set($title = ${model.buildMessage('msg.promotion.admin.trivias.sort.pageTitle')})
+#parseVm( "base/admin/template/startHead.vm" )
+#parseVm( "base/admin/template/endHead.vm" )
+#parseVm( "base/admin/template/startBody.vm" )
+
+
+#* XXX: Conslidate into template as this is almost the same file as user messages sort.vm *#
+<style>
+.listcontrol
+{
+	border: 1px solid #981a1e;
+	font-size: 0.75rem;
+	margin-top: 1px;
+	padding-top: 1px;
+	text-align: center;
+}
+
+.intralist
+{
+	text-align: right;
+}
+
+.intralist .listcontrol
+{
+	display: block;
+}
+
+.interlist
+{
+	text-align: center;
+}
+
+.interlist .listcontrol
+{
+	display: inline-block;
+	min-width: 4rem;
+}
+</style>
+
+<section id="sort">
+
+	<form method="post" action="$request.requestURI" name="sortform" onSubmit="for ( var i = 0; i < document.sortform.elements.length; i++ )
+	{
+		if ( document.sortform.elements[i].type == 'select-multiple' )
+		{
+			selectAll(document.sortform.elements[i]);
+		}
+	}
+	return true;">
+		<span id="jq_errors">#i4oneStatus("listing")</span>
+
+		<div class="form-group row">
+			<div class="col-sm-4 col-md-2"><label for="ordered">#msg('ordered')</label></div>
+			<div class="col-sm-8 col-md-10">
+				<div class="row">
+					<div class="col-xs-2 col-md-1 intralist">
+						<a href="javascript:moveAllFirst(document.sortform['ordered'])"><span class="glyphicon glyphicon-chevron-up listcontrol"></span></a>
+						<a href="javascript:moveAllUp(document.sortform['ordered'])"><span class="glyphicon glyphicon-triangle-top listcontrol"></span></a>
+						<a href="javascript:moveAllDown(document.sortform['ordered'])"><span class="glyphicon glyphicon-triangle-bottom listcontrol"></span></a>
+						<a href="javascript:moveAllLast(document.sortform['ordered'])"><span class="glyphicon glyphicon-chevron-down listcontrol"></span></a>
+					</div>
+					<div class="col-xs-10 col-md-11">#i4oneFormMultiSelect('listing.ordered' ${listing.getOrderedMap($model.language)} '')</div>
+				</div>
+			</div>
+		</div>
+
+		<div class="form-group row">
+			<div class="col-xs-12 interlist">
+				<a href="javascript:makeSorted()"><span class="glyphicon glyphicon-menu-up listcontrol"></span></a>
+				<a href="javascript:makeUnsorted()"><span class="glyphicon glyphicon-menu-down listcontrol"></span></a>
+			</div>
+		</div>
+
+		<div class="form-group row">
+			<div class="col-sm-4 col-md-2"><label for="ordered">#msg('unordered')</label></div>
+			<div class="col-sm-8 col-md-10">#i4oneFormMultiSelect('listing.unordered' ${listing.getUnorderedMap($model.language)} '')</div>
+		</div>
+
+		<div class="form-group row">
+			<div class="col-sm-6">#i4oneFormSubmit('msg.base.admin.general.sort' $item)</div>
+			<div class="col-sm-6">#i4oneTerminableBack($listing)</div>
+		</div>
+	</form>
+
+</section>
+<script language="javascript">
+	// Move an item from the unsorted list to the sorted list
+	//
+	function makeSorted()
+	{
+		var unsorted = document.sortform['unordered'];
+		var sorted = document.sortform['ordered'];
+
+		// Go through all of the unsorted elements and make them sorted
+		//
+		for (var i = unsorted.length - 1; i >= 0; i-- )
+		{
+			var currOpt = unsorted[i];
+
+			// Only move the selected items to the sorted list
+			//
+			if ( currOpt.selected )
+                        {
+                                addToList(sorted, currOpt);
+				delFromList(unsorted, currOpt);
+			}
+		}
+	}
+	// Move an element from the sorted list to the unsorted list
+	//
+	function makeUnsorted(listNo)
+	{
+		var unsorted = document.sortform['unordered'];
+		var sorted = document.sortform['ordered'];
+
+		// Go through all of the sorted elements and make them unsorted
+		//
+		for (var i = sorted.length - 1; i >= 0; i-- )
+		{
+			var currOpt = sorted[i];
+
+			// Only move the selected items to the sorted list
+			//
+			if ( currOpt.selected )
+			{
+				// Add the object to the sorted list
+				//
+				addToList(unsorted, currOpt);
+
+				// Remove from the unsorted list
+				//
+				delFromList(sorted, currOpt);
+			}
+		}
+	}
+
+</script>
+
+#parseVm( "base/admin/template/endBody.vm" )

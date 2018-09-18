@@ -1,0 +1,444 @@
+#**
+ * MIT License
+ * 
+ * Copyright (c) 2018 i4one Interactive, LLC
+ * 
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ * 
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ * 
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ *#
+#**
+ * @author Hamid Badiozamani
+ */
+#parseVm( "base/user/template/start.vm" )
+
+<style>
+#event div#label h1
+{
+	font-size: 3.5rem;
+}
+
+#event #roiAmount
+{
+	font-size: 0.85rem;
+	color: #860000;
+}
+
+#event .question
+{
+	font-size: 1.3rem;
+	color: #428bca;
+}
+
+#event .bid
+{
+	font-size: 1.1rem;
+}
+
+#event .bid .disabled
+{
+	text-decoration: line-through;
+}
+
+#event .bid .likelihood
+{
+	text-align: right;
+}
+
+#event .outcomes
+{
+	margin-left: 0.1rem;
+}
+
+#event .outcome
+{
+	text-align: left;
+}
+
+#event #bidhistory .totals
+{
+	border-top: 1px solid #000;
+	margin-top: 0.85rem;
+}
+
+#event #eventinfo
+{
+	background-color: rgba(215, 215, 215, 0.65);
+}
+
+#event #eventinfo .groupheading
+{
+	text-align: right;
+}
+
+#event .predicted.heading
+{
+	font-size: 1.8rem;
+	font-weight: normal;
+
+	padding-bottom: 5px;
+}
+
+#event .predicted.info
+{
+	font-size: 1.8rem;
+	color: #428bca;
+
+	padding-bottom: 5px;
+}
+
+#event #bidinfo .heading
+{
+	text-align: right;
+	padding-bottom: 5px;
+}
+
+#event #bidinfo .info
+{
+	padding-bottom: 5px;
+}
+
+#pageCSS()
+</style>
+
+<section class="container" id="event">
+	<div class="row">
+		<div class="hidden-xs col-sm-2 hidden-md hidden-lg"></div>
+		<div class="$editClass col-xs-12 col-sm-8 col-md-12 col-lg-12" data-ser="$prediction.event.ser">
+			<div class="form-group row">
+				<div class="col-xs-12">#i4oneAttachableStatus('prediction')</div>
+			</div>
+
+			#if ( $prediction.exists )
+				<div id="label" class="col-xs-12">
+					<h1>#IString($prediction.event.title)</h1>
+					<p>#IString($prediction.event.descr)</p>
+				</div>
+
+				<div id="bidinfo" class="col-xs-12">
+					<div class="row">
+						<div class="predicted heading col-xs-6">#msg('predicted')</div>
+						<div class="predicted info col-xs-6">#IString($prediction.eventOutcome.descr)</div>
+					</div>
+					<div class="row">
+						#set( $likelihood = $prediction.eventOutcome.likelihood * 100)
+						<div class="likelihood heading col-xs-6">#msg('likelihood')</div>
+						<div class="likelihood info col-xs-6">#numberFormat('#0.0', $likelihood)%</div> 
+					</div>
+					<div class="row">
+						<div class="spent heading col-xs-6">#msg('spent')</div>
+						<div class="spent info col-xs-6">
+							${model.buildMessage('msg.predict.user.events.bid.expenses', 'prediction', $prediction)}
+						</div>
+
+						<div class="clearfix"></div>
+
+						<div class="payout heading col-xs-6">#msg('correctroi')</div>
+						<div class="payout info col-xs-6">
+							${model.buildMessage('msg.predict.user.events.bid.roi', 'prediction', $prediction)}
+						</div>
+					</div>
+				</div>
+
+				<div class="clearfix"></div>
+
+				<div class="col-xs-12">
+					#* <div class="col-xs-12 outro">#IString($!prediction.event.outro)</div> *#
+					#* <div class="col-xs-12">#i4oneFormBack("index.html")</div> *#
+					<div class="col-xs-12"><form action="index.html">#i4oneFormSubmit('msg.predict.user.events.continue' "index.html")</form></div>
+				</div>
+			#else
+				<div id="label" class="col-xs-12">
+					<h1>#IString($prediction.event.title)</h1>
+					<p>#IString($!prediction.event.descr)</p>
+				</div>
+				<div class="col-xs-12 col-md-6">
+					<div id="chart" class="hidden-xs hidden-sm col-md-12 outcomechart">
+						#js('/js/highcharts/highcharts.js')
+						<script>
+						Highcharts.theme = {
+							colors: ['#981A1E', '#E3D2B8', '#960096', '#DDDF00', '#24CBE5', '#64E572', '#FF9655', '#FFF263', '#6AF9C4'],
+							chart: { backgroundColor: 'rgba(255,255,255,0.1)' },
+							title: { style: { color: '#000' } },
+							subtitle: { style: { color: '#666666' } },
+							legend: {
+								itemStyle: { color: 'black' },
+								itemHoverStyle:{ color: 'gray' }
+							}
+						};
+						Highcharts.setOptions(Highcharts.theme);
+					
+						function showReport(selector, options)
+						{
+							var plotOptions = options['plotOptions'];
+					
+							// Create the object if none exists
+							//
+							if ( !plotOptions )
+							{
+								plotOptions = { };
+							}
+					
+							plotOptions['series'] =
+							{
+								dataLabels:
+								{
+									enabled: true,
+									formatter: function()
+									{
+										return this.point.name + ' (' + Math.round(this.percentage*10)/10 + '%)';
+									}
+								}
+							};
+	
+							options['plotOptions'] = plotOptions;
+					
+							// Disable the legend if there's only one series to show
+							//
+							if ( options.series.length == 1 )
+							{
+								options['legend'] = { enabled: 0 };
+							}
+							$(selector).highcharts(options);
+						}
+						// $prediction
+						$(function(){ showReport("#chart", ${prediction.toHighChartsJSON($model.language)}); })
+						</script>
+					</div>
+				</div>
+	
+				<div id="form" class="col-xs-12 col-md-6">
+					<div id="eventinfo" class="form-group row">
+						<div class="col-xs-6 heading">#msg('starttm')</div>
+						<div class="col-xs-6 info">#dateTimeFormat('d MMM yy hh:mm a z', ${prediction.event.startTime})</div>
+
+						<div class="clearfix"></div>
+						<div class="col-xs-6 heading">#msg('endtm')</div>
+						<div class="col-xs-6 info">#dateTimeFormat('d MMM yy hh:mm a z', ${prediction.event.endTime})</div>
+
+						#if ( $prediction.event.endTimeSeconds != $prediction.event.closesBySeconds )
+						<div class="clearfix"></div>
+						<div class="col-xs-6 heading">#msg('closesby')</div>
+						<div class="col-xs-6 info">#dateTimeFormat('d MMM yy hh:mm a z', ${prediction.event.closesBy})</div>
+						#end
+	
+						<div class="clearfix"></div>
+						<div class="col-xs-6 heading">#msg('postsby')</div>
+						<div class="col-xs-6 info">#dateTimeFormat('d MMM yy hh:mm a z', ${prediction.event.postsBy})</div>
+	
+						<div class="clearfix"></div>
+						<div class="col-xs-6 heading">#msg('maxbid')</div>
+						<div class="col-xs-6 info">#intFormat(${prediction.event.maxBid})</div>
+	
+						<div class="clearfix"></div>
+						<div class="col-xs-6 heading">#msg('roimultiple')</div>
+						<div class="col-xs-6 info" id="roimultiple">--</div>
+					</div>
+	
+					<form method="post" autocomplete="off">
+					#springFormHiddenInput("prediction.event" " ")
+	
+					<div class="row question"><div class="col-xs-12">#IString($!prediction.event.brief)</div></div>
+					<div class="form-group row outcomes">
+						<div class="col-xs-12 outcomes">
+							<div class="row">
+								<div class="odds heading col-xs-4">#msg('odds')</div>
+								<div class="outcome heading col-xs-8">#msg('outcome')</div>
+							</div>
+	    						#springBind("prediction.eventOutcome")
+							#foreach($option in ${outcomes.keySet()})
+							#set( $outcome = $outcomes.get($option))
+							#set( $likelihood = $outcome.likelihood * 100)
+							#set( $roi = $outcome.roi )
+							<div class="row">
+							#set( $playable = $prediction.event.isPlayable($prediction.timeStampSeconds) )
+							#if ( $roi > 0 && $playable )
+								<div class="odds info col-xs-4">#numberFormat('#0.0#', $roi) : 1</div> 
+								<div class="outcome info col-xs-8"><input type="radio" name="${status.expression}" value="${option}" #if("$!status.value" == "$option" ) checked="checked" #end roi='#numberFormat('#0.0#', $roi)' onClick='updateRoi()' #springCloseTag() #IString($outcome.descr)</div>
+							#elseif ( !$playable )
+								<div class="odds info col-xs-4">#numberFormat('#0.0#', $roi) : 1</div> 
+								<div class="outcome info col-xs-8">#IString($outcome.descr)</div>
+							#else
+								<div class="odds info col-xs-4 disabled">#numberFormat('#0.0#', $roi) : 1</div> 
+								<div class="outcome info col-xs-8 disabled">#IString($outcome.descr)</div>
+							#end
+							</div>
+							#end
+						</div>
+					</div>
+
+					<div class="form-group row">
+						#if ( $prediction.isReferenceURL($language) )
+						<div class="col-xs-12">#msg('reference')<a href="http://#IString($prediction.event.reference)" target="_blank">$prediction.getReferenceURLHost($language)</a></div>
+						#else
+						<div class="col-xs-12">#msg('reference')#IString($prediction.event.reference)</div>
+						#end
+					</div>
+	
+					<div class="form-group row bid">
+						<div class="col-xs-12">
+							#msg('quantity')
+						</div>
+						<div class="col-xs-12">
+							#i4oneFormInput( "prediction.quantity" '' "maxlength='5' onChange='updateRoi()' onKeyUp='updateRoi()'" )
+						</div>
+						<div class="col-xs-12">
+							<div id="roiAmount"></div>
+						</div>
+					</div>
+
+					<div class="form-group row">
+						#if ( $playable )
+						<div class="col-xs-12">#i4oneFormSubmit('msg.predict.user.events.bid.submit' $prediction)</div>
+						#else
+						<div class="col-xs-12">#i4oneFormDisabledButton('msg.predict.user.events.bid.submit' $prediction)</div>
+						#end
+						<div class="col-xs-12">#i4oneFormBack("index.html?categoryid=$prediction.event.category.ser")</div>
+					</div>
+					</form>
+				</div> #* id="form" *#
+			#end
+
+			<div id="bidhistory" class="col-xs-12">
+				<div class="row">
+					<div class="col-xs-12"><h3>#msg('bidhistory')</h3></div>
+				</div>
+				#if ( $bidHistory.empty )
+				<div class="row">
+					#set( $totalBidAmount = 0 )
+					#set( $totalAvailable = $prediction.event.maxBid )
+					<div class="col-xs-12 heading">#msg('nobids')</div>
+				</div>
+				#else
+				<div class="row hidden-xs hidden-sm">
+					<div class="col-md-4 heading">#msg('prediction')</div>
+					<div class="col-md-2 heading">#msg('amount')</div>
+					<div class="col-md-2 heading">#msg('payout')</div>
+					<div class="col-md-2 heading">#msg('likelihood')</div>
+					<div class="col-md-2 heading">#msg('timestamp')</div>
+				</div>
+				#set( $totalBidAmount = 0 )
+				#foreach ( $pastBid in $bidHistory )
+					#striping()
+					#set( $payoutAmountFloat = $pastBid.quantity * $pastBid.payout )
+					#set( $payoutAmount = $math.round($payoutAmountFloat) )
+					#set( $likelihood = (1 / $pastBid.payout) * 100)
+					<div class="row $rowClass">
+						<div class="col-xs-6 hidden-md hidden-lg heading">#msg('prediction')</div>
+						<div class="col-xs-6 col-sm-4">#IString($pastBid.eventOutcome.descr)</div>
+	
+						<div class="col-xs-6 hidden-md hidden-lg heading">#msg('amount')</div>
+						<div class="col-xs-6 col-sm-2">#intFormat($pastBid.quantity)</div>
+	
+						<div class="col-xs-6 hidden-md hidden-lg heading">#msg('payout')</div>
+						<div class="col-xs-6 col-sm-2">#intFormat($payoutAmount)</div>
+	
+						<div class="col-xs-6 hidden-md hidden-lg heading">#msg('likelihood')</div>
+						<div class="col-xs-6 col-sm-2">#numberFormat('#0.0', $likelihood)%</div>
+	
+						<div class="col-xs-6 hidden-md hidden-lg heading">#msg('timestamp')</div>
+	    					<div class="col-xs-6 col-sm-2">#dateTimeFormat('d MMM yy hh:mm a z', ${pastBid.timeStamp})</div>
+					</div>
+					#set( $totalBidAmount = $totalBidAmount + $pastBid.quantity )
+				#end
+				#set( $totalAvailable = $prediction.event.maxBid - $totalBidAmount )
+				<div class="row totals">
+					<div class="col-xs-6 col-md-4 heading">#msg('total')</div>
+					<div class="col-xs-6 col-md-2 info">#intFormat($totalBidAmount)</div>
+					<div class="hidden-xs col-sm-2">#* Doesn't make sense to have pay out totaled because the outcomes selected for each may be different and since they're exclusive, we can't accurately give a total payout potential*#</div>
+				</div>
+				#end
+			</div>
+		</div>
+		<div class="hidden-xs col-sm-2 hidden-md hidden-lg"></div>
+	</div>
+</section>
+
+<script language="javascript">
+#*
+ * Note: this script needs to be towards the bottom here to take advantage of the $totalAvailable
+ * variable that was computed in the bidHistory segment
+ *#
+function updateRoi()
+{
+	var roi = $('form input[type=radio]:checked').attr('roi');
+	var amount = parseInt($('input#quantity').val());
+
+	if ( roi && !isNaN(amount) && amount > 0 )
+	{
+		if ( amount <= $totalAvailable )
+		{
+			var roiMessage = "#plainMsg('correctroi')";
+	
+			// The multiplier for each currency
+			//
+			var roiAmount = Math.round(amount * roi);
+	
+			var expenses = [];
+			#foreach($expense in $prediction.event.balanceExpenses)
+				expenses[$foreach.index] = { "amount": $expense.amount, singleName: "#IString($expense.balance.singleName)", pluralName: "#IString($expense.balance.pluralName)" };
+			#end
+			var roiText = roiMessage;
+
+			#if ( ${prediction.event.balanceExpenses.size()} > 1 )
+				roiText += "<ul>";
+				#foreach($expense in $prediction.event.balanceExpenses)
+					var t = roiAmount * expenses[$foreach.index]['amount'];
+					roiText += "<li>" + t + " " + (t == 1 ? expenses[$foreach.index]['singleName'] : expenses[$foreach.index]['pluralName']) + "</li>";
+				#end
+				roiText += "</ul>";
+			#else
+				var t = roiAmount * expenses[0]['amount'];
+				roiText += t + " " + (t == 1 ? expenses[0]['singleName'] : expenses[0]['pluralName']);
+			#end
+	
+	
+			$("div#roimultiple").text(roi + " to 1");
+			$("#roiAmount").html(roiText);
+		}
+		else
+		{
+			var roiMessage = "$model.buildMessage('msg.predict.user.events.bid.overmax', 'item', $prediction, 'currentHoldings', $totalBidAmount)";
+
+			$("div#roimultiple").text("--");
+			$("#roiAmount").html(roiMessage);
+		}
+	}
+	else
+	{
+		var roiMessage = "$esc.javascript($model.buildMessage('msg.predict.user.events.bid.correct', 'expenses', $prediction.event.balanceExpenses))";
+
+		$("div#roimultiple").text("--");
+		$("#roiAmount").html(roiMessage);
+	}
+}
+
+$(function()
+{
+	updateRoi();
+	expandGameMenu();
+});
+
+
+function expandGameMenu()
+{
+	$(".gamebutton, .gamebuttonselect").css({marginLeft: "-147px"});
+	$(".gamebutton, .gamebuttonselect").animate({marginLeft: "7px"});
+}
+</script>
+
+#parseVm( "base/user/template/end.vm" )

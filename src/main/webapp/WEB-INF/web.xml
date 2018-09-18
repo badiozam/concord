@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<web-app version="3.0"
+	xmlns="http://java.sun.com/xml/ns/javaee"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee 
+	http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd" >
+
+	<session-config>
+		<tracking-mode>COOKIE</tracking-mode>
+	</session-config>
+
+	<context-param>
+		<param-name>defaultHtmlEscape</param-name>
+		<param-value>true</param-value>
+	</context-param> 
+	
+	<context-param>
+		<param-name>contextInitializerClasses</param-name>
+		<param-value>com.i4one.base.spring.I4oneApplicationContextInitializer</param-value>
+	</context-param>
+
+	<listener>
+		<listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+	</listener>
+
+	<servlet>
+		<servlet-name>concord</servlet-name>
+		<servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+		<load-on-startup>1</load-on-startup>
+	</servlet>
+
+	<servlet-mapping>
+		<servlet-name>concord</servlet-name>
+		<url-pattern>*.html</url-pattern>
+	</servlet-mapping>
+
+	<servlet-mapping>
+		<servlet-name>concord</servlet-name>
+		<url-pattern>*.json</url-pattern>
+	</servlet-mapping>
+
+	<servlet-mapping>
+		<servlet-name>concord</servlet-name>
+		<url-pattern>*.get</url-pattern>
+	</servlet-mapping>
+
+	<servlet-mapping>
+		<servlet-name>concord</servlet-name>
+		<url-pattern>*.cssc</url-pattern>
+	</servlet-mapping>
+
+	<servlet-mapping>
+		<servlet-name>concord</servlet-name>
+		<url-pattern>*.jsc</url-pattern>
+	</servlet-mapping>
+
+	<servlet-mapping>
+		<servlet-name>concord</servlet-name>
+		<url-pattern>*.pngg</url-pattern>
+	</servlet-mapping>
+
+	<servlet-mapping>
+		<servlet-name>concord</servlet-name>
+		<url-pattern>*.csv</url-pattern>
+	</servlet-mapping>
+
+	<filter>  
+		<filter-name>encodingFilter</filter-name>  
+		<filter-class>org.springframework.web.filter.CharacterEncodingFilter</filter-class>  
+		<init-param>  
+			<param-name>encoding</param-name>  
+			<param-value>UTF-8</param-value>  
+		</init-param>  
+		<init-param>  
+			<param-name>forceEncoding</param-name>  
+        		<param-value>true</param-value>  
+		</init-param>  
+	</filter>  
+	<filter-mapping>  
+		<filter-name>encodingFilter</filter-name>  
+		<url-pattern>/*</url-pattern>  
+	</filter-mapping> 
+
+	<welcome-file-list>
+		<welcome-file>index.html</welcome-file>
+	</welcome-file-list>
+
+</web-app>

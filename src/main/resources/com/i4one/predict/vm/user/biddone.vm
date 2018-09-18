@@ -1,0 +1,82 @@
+#**
+ * MIT License
+ * 
+ * Copyright (c) 2018 i4one Interactive, LLC
+ * 
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ * 
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ * 
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ *#
+#**
+ * @author Hamid Badiozamani
+ */
+#parseVm( "base/user/template/start.vm" )
+
+<div id="gamecardtopnavbg">
+	<div id="gamecardtopnavtop"></div>
+	<div id="gamecardtopnavcontent">
+		#foreach ( $category in $eventCategories )
+			<a link="$model.baseURL/predict/user/bid.html?categoryid=$category.ser" result="contentContainer"><img src="$category.detailPicURL" width="120" height="120"/></a>
+		#end
+	</div>
+	<div id="gamecardtopnavbottom"></div>
+</div>
+
+<div id="gamenav">
+	<div style="float: left; width: auto; margin-top: 5px;" class="sectiontexthead">$!prediction.event.category.title</div>
+	#foreach($foo in ${events})
+		#set( $index = $events.size() - $velocityCount )
+		#set( $currEvent = $events.get($index) )
+		#if ( $currEvent.ser == $prediction.event.ser )
+			<div class="gamebuttonselect">Game #$velocityCount</div>
+		#else
+			<div class="gamebutton"><a href="${request.baseurl}/predict/user/bid.html?eventid=$currEvent.ser" result="contentContainer">Game #$velocityCount</a></div>
+		#end
+	#end
+</div> ## gamenav
+
+
+<div id="questionbox">
+  <div style="padding-top:58px;">
+    <span style="">${prediction.event.title}</span>
+  </div>
+</div> ## questionbox
+
+
+<div id="playarea">
+
+
+<div class="poll" style="width: 870px">
+
+<form action="${request.baseurl}/predict/user/bid.html" method="GET">
+<input type="hidden" name="eventid" value="${prediction.event.ser}"/>
+<div>
+<br/>
+Your Prediction for this Game has been registered<br/>
+<div style="font-size: 12px; line-height: 24px;">Be sure to check back after the post date for results<br/><br/>
+Check out the <a href="${request.baseurl}/survey/user/index.html" class="more"> Extra Credit </a> page for more ways to increase your Game Score!<br><br></div>
+Good Luck!<br/>
+<br/>
+<input type="submit" value=" Back " class="silverbutton"/>
+</div>
+</form>
+
+</div> ## poll
+
+</div> ## playarea
+
+#parseVm( "base/user/template/end.vm" )

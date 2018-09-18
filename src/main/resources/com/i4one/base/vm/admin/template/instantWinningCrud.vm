@@ -1,0 +1,193 @@
+#**
+ * MIT License
+ * 
+ * Copyright (c) 2018 i4one Interactive, LLC
+ * 
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ * 
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ * 
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ *#
+#**
+ * @author Hamid Badiozamani
+ */
+#macro( detachInstantWinningButton $item $instantWinning $redir)
+	<a class="btn btn-default btn-block" href="${request.baseurl}/base/admin/instantwins/detach.html?instantwinid=$item.ser&featureid=$instantWinning.ser&featurename=$instantWinning.featureName&section=instantWinning&redir=$!redir">
+		#message('msg.base.admin.general.instantWinning.detach')
+	</a>
+#end
+
+#macro(instantWinningCrud $instantWinningName )
+	#pathToVar( $instantWinningName 'item' )
+	<a name="instantWinning"></a>
+	<section name="exclusiveinstantwins" class="form-group row">
+		<div class="col-sm-12">
+			<div class="row">
+				<div class="col-md-12"><h3>#messageWithHelp('msg.base.admin.general.exclusiveinstantwins')</h3></div>
+			</div>
+			#foreach ( $instantWin in $item.instantWinning.exclusiveInstantWins )
+				#striping()
+				#set( $currInstantWin = $instantWinningName + ".instantWinning.exclusiveInstantWins[" + $foreach.index + "]")
+				#set( $currInstantWinSer = $currInstantWin + ".ser" )
+				#set( $currInstantWinPercentWin = $currInstantWin + ".percentWin" )
+				#set( $currInstantWinUser = $currInstantWin + ".user.username" )
+				#set( $currInstantWinWinnerMessage = $currInstantWin + ".winnerMessage" )
+				#set( $currInstantWinLoserMessage = $currInstantWin + ".loserMessage" )
+				#set( $currInstantWinWinnerLimit = $currInstantWin + ".winnerLimit" )
+	
+				<div class="row $rowClass">
+					<div class="col-sm-2"><label for="$currInstantWinPercentWin">#message('msg.base.InstantWin.percentWin')</label></div>
+					<div class="col-sm-1">
+						#springFormHiddenInput($currInstantWinSer '')
+						#i4oneFormInput($currInstantWinPercentWin '' 'maxlength="9"')
+					</div>
+	
+					<div class="col-sm-2"><label for="$currInstantWinWinnerLimit">#message('msg.base.InstantWin.winnerLimit')</label></div>
+					<div class="col-sm-1">
+						#i4oneFormInput($currInstantWinWinnerLimit '' 'maxlength="9"')
+					</div>
+
+					<div class="col-sm-2"><label for="$currInstantWinUser">#message('msg.base.InstantWin.user')</label></div>
+					<div class="col-sm-4">
+						#i4oneFormInput($currInstantWinUser '' 'maxlength="64"')
+					</div>
+
+					<div class="col-sm-2"><label for="$currInstantWinWinnerMessage">#message('msg.base.InstantWin.winnerMessage')</label></div>
+					<div class="col-sm-4">
+						#i4oneFormITextarea($currInstantWinWinnerMessage '' 'maxlength="1024"')
+					</div>
+
+					<div class="col-sm-2"><label for="$currInstantWinLoserMessage">#message('msg.base.InstantWin.loserMessage')</label></div>
+					<div class="col-sm-4">
+						#i4oneFormITextarea($currInstantWinLoserMessage '' 'maxlength="1024"')
+					</div>
+
+					#set( $attachTitle = $item.title[$language] )
+					#set( $attachTitle = $esc.url($attachTitle) )
+					#set( $currInstantWinFeatureName = $currInstantWin + ".featureName" )
+					#pathToVar( $currInstantWinFeatureName 'instantWinFeatureName' )
+					#pathToVar( $currInstantWinSer 'instantWinFeatureId' )
+					<div class="col-sm-2"><label for="triggers">#message('msg.base.admin.general.nonexclusivetriggers')</label></div>
+					<div class="col-sm-4">
+						<div class="row" id="triggers">
+						#pathToVar( $currInstantWin 'instantWin' )
+						#foreach ( $trigger in $instantWin.nonExclusiveBalanceTriggers )
+							<div class="col-xs-6">#IString($trigger.title)</div>
+							<div class="col-xs-6"><a class="btn btn-default btn-block" href="${request.baseurl}/base/admin/balancetriggers/detach.html?triggerid=$trigger.ser&featureid=$instantWinFeatureId&featurename=$instantWinFeatureName&redirfeaturename=$item.featureName&redirfeatureid=$item.ser&section=instantWinning">#message('msg.base.admin.general.triggerable.detach')</a></div>
+						#end
+						</div>
+					</div>
+
+					<div class="col-sm-6">
+						<a class="btn btn-default btn-block" href="${request.baseurl}/base/admin/balancetriggers/attach.html?featureid=$instantWinFeatureId&featurename=$instantWinFeatureName&displayname=$attachTitle&redirfeaturename=$item.featureName&redirfeatureid=$item.ser&section=instantWinning">#message('msg.base.admin.general.attachbalancetrigger')</a>
+					</div>
+				</div>
+			#end
+	
+			#if ( $rowClass == 'odd' ) #set( $rowClass = 'even' ) #else #set( $rowClass = 'odd' )#end
+			#set( $lastInstantWin = $instantWinningName + ".instantWinning.exclusiveInstantWins[" + ${item.instantWinning.exclusiveInstantWins.size()} + "]")
+			#set( $lastInstantWinSer = $lastInstantWin + ".ser")
+			#set( $lastInstantWinPercentWin = $lastInstantWin + ".percentWin")
+			#set( $lastInstantWinWinnerLimit = $lastInstantWin + ".winnerLimit")
+			#set( $lastInstantWinWinnerMessage = $lastInstantWin + ".winnerMessage")
+			#set( $lastInstantWinLoserMessage = $lastInstantWin + ".loserMessage")
+			#set( $lastInstantWinUser = $lastInstantWin + ".user.username")
+	
+			<div class="row $rowClass">
+				<div class="col-sm-2"><label for="$lastInstantWinAmount">#message('msg.base.InstantWin.percentWin')</label></div>
+				<div class="col-sm-1">
+					#springFormHiddenInput($lastInstantWinSer '')
+					#i4oneFormInput($lastInstantWinPercentWin '' 'maxlength="9"')
+				</div>
+	
+				<div class="col-sm-2"><label for="$lastInstantWinWinnerLimit">#message('msg.base.InstantWin.winnerLimit')</label></div>
+				<div class="col-sm-1">
+					#i4oneFormInput($lastInstantWinWinnerLimit '' 'maxlength="9"')
+				</div>
+
+				<div class="col-sm-2"><label for="$lastInstantWinUser">#message('msg.base.InstantWin.user')</label></div>
+				<div class="col-sm-4">
+					#springFormHiddenInput($lastInstantWinSer '')
+					#i4oneFormInput($lastInstantWinUser '' 'maxlength="64"')
+				</div>
+
+				<div class="col-sm-2"><label for="$lastInstantWinWinnerMessage">#message('msg.base.InstantWin.winnerMessage')</label></div>
+				<div class="col-sm-4">
+					#springFormHiddenInput($lastInstantWinSer '')
+					#i4oneFormITextarea($lastInstantWinWinnerMessage '' 'maxlength="1024"')
+				</div>
+
+				<div class="col-sm-2"><label for="$lastInstantWinLoserMessage">#message('msg.base.InstantWin.loserMessage')</label></div>
+				<div class="col-sm-4">
+					#springFormHiddenInput($lastInstantWinSer '')
+					#i4oneFormITextarea($lastInstantWinLoserMessage '' 'maxlength="1024"')
+				</div>
+			</div>
+		</div>
+	</section>
+
+	#if ( $item.exists )
+	<section name="nonexclusiveinstantwins" class="form-group row">
+		<div class="col-sm-12">
+			<div class="row">
+				<div class="col-md-12"><h3>#messageWithHelp('msg.base.admin.general.nonexclusiveinstantwins')</h3></div>
+			</div>
+			<div class="row hidden-xs hidden-sm">
+				<div class="heading col-md-2">#message('msg.base.admin.instantWinning.starttime')</div>
+				<div class="heading col-md-2">#message('msg.base.admin.instantWinning.title')</div>
+				<div class="heading col-md-1">#message('msg.base.admin.instantWinning.percent')</div>
+				<div class="heading col-md-2">#message('msg.base.admin.instantWinning.user')</div>
+				<div class="heading col-md-1">#message('msg.base.admin.instantWinning.winnerlimit')</div>
+				<div class="heading col-md-2">#message('msg.base.admin.instantWinning.endtime')</div>
+				<div class="heading col-md-2"></div>
+			</div>
+	
+			#foreach ( $instantWin in $item.nonExclusiveInstantWins )
+				#striping()
+	
+				<div class="row $rowClass">
+					<div class="heading col-sm-3 visible-sm visible-xs">#message('msg.base.admin.instantWinning.starttime')</div>
+					<div class="col-sm-9 col-md-2">#formatDateTime($instantWin.startTime)</div>
+	
+					<div class="heading col-sm-3 visible-sm visible-xs">#message('msg.base.admin.instantWinning.title')</div>
+					<div class="col-sm-9 col-md-2">#IString($instantWin.title)</div>
+	
+					<div class="heading col-sm-3 visible-sm visible-xs">#message('msg.base.admin.instantWinning.percentwin')</div>
+					<div class="col-sm-9 col-md-1">#percentFormat($instantWin.percentWin)</div>
+	
+					<div class="heading col-sm-3 visible-sm visible-xs">#message('msg.base.admin.instantWinning.user')</div>
+					<div class="col-sm-9 col-md-2">#if( ${instantWin.user.exists()} )$instantWin.user.username#else#message('msg.base.admin.general.none')#end</div>
+	
+					<div class="heading col-sm-3 visible-sm visible-xs">#message('msg.base.admin.instantWinning.winnerlimit')</div>
+					<div class="col-sm-9 col-md-1">#if( $instantWin.winnerLimit == 0 )#message('msg.base.admin.general.infinite')#else#intFormat($instantWin.winnerCount) / #intFormat($instantWin.winnerLimit)#end</div>
+
+					<div class="heading col-sm-3 visible-sm visible-xs">#message('msg.base.admin.instantWinning.endtime')</div>
+					<div class="col-sm-9 col-md-2">#formatDateTime($instantWin.endTime)</div>
+	
+					<div class="col-sm-12 col-md-2">#detachInstantWinningButton($instantWin $item)</div>
+				</div>
+			#end
+		</div>
+	</section>
+
+	<div class="form-group row">
+		#set( $attachTitle = $item.title[$language] )
+		#set( $attachTitle = $esc.url($attachTitle) )
+		<a class="btn btn-default btn-block" href="${request.baseurl}/base/admin/instantwins/attach.html?featureid=$item.ser&featurename=$item.featureName&displayname=$attachTitle&section=instantWinning">#message('msg.base.admin.general.attachInstantWin')</a>
+	</div>
+
+	#end
+#end
