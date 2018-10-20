@@ -23,7 +23,7 @@
  *#
 #**
  * @author Hamid Badiozamani
- */
+ *#
 #parseVm( "base/user/template/start.vm" )
 
 <div class="breadcrumbs" align="left"><a link="${request.baseurl}/base/user/index.html" result="contentContainer">Home</a> / <a link="${request.baseurl}/predict/user/index.html" result="contentContainer">Predictions</a> / Allowance</div>

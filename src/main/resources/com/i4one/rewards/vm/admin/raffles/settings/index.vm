@@ -23,7 +23,7 @@
  *#
 #**
  * @author Hamid Badiozamani
- */
+ *#
 #parseVm( "base/admin/template/emailtemplate.vm" )
 #set($title = ${model.buildMessage('msg.rewards.admin.raffles.settings.index.pageTitle', 'item', $settings)})
 #parseVm( "base/admin/template/startHead.vm" )

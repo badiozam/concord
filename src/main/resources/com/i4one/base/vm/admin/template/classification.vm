@@ -23,7 +23,7 @@
  *#
 #**
  * @author Hamid Badiozamani
- */
+ *#
 #if ( !$reportName || $!reportName == "" ) #set( $reportName = "report" ) #end
 #if ( $reportSettings.printableView ) #set( $hideNavBar = true ) #end
 
@@ -160,7 +160,7 @@ div#actions ul.dropdown-menu > li > a
 					[0, 'rgb(255, 255, 255)'],
 					[1, 'rgb(230, 230, 230)']
 				]
-			},*/
+			},*#
 		},
 		#if ( $reportSettings.showTables )
 			title: { style: { display: 'none' } },

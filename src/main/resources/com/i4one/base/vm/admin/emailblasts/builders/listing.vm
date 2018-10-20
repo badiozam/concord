@@ -23,7 +23,7 @@
  *#
 #**
  * @author Hamid Badiozamani
- */
+ *#
 #macro( buildButton $item )
 	<form action="build.html">
 		<input type="hidden" name="id" value="$item.ser"/>

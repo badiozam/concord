@@ -23,7 +23,7 @@
  *#
 #**
  * @author Hamid Badiozamani
- */
+ *#
 #set( $title = ${model.buildMessage('msg.base.admin.preferences.reports.index.pageTitle')} )
 #parseVm( "base/admin/template/report.vm" )
 #showReport()

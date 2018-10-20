@@ -23,7 +23,7 @@
  *#
 #**
  * @author Hamid Badiozamani
- */
+ *#
 #set( $title = ${model.buildMessage('msg.base.admin.members.reports.lastlogin.pageTitle')} )
 #set( $reportName = "lastlogin" )
 #parseVm( "base/admin/template/report.vm" )

@@ -23,6 +23,6 @@
  *#
 #**
  * @author Hamid Badiozamani
- */
+ *#
 #set( $basePath = "${request.baseurl}/rewards/admin/shoppings/categories" )
 #parseVm( "base/admin/categories/update.vm" )

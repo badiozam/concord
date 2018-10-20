@@ -23,5 +23,5 @@
  *#
 #**
  * @author Hamid Badiozamani
- */
+ *#
 #parseVm( "base/user/template/endBody.vm" )

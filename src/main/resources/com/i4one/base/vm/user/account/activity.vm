@@ -23,7 +23,7 @@
  *#
 #**
  * @author Hamid Badiozamani
- */
+ *#
 #parseVm( "base/user/template/start.vm" )
 <style>
 #activity div#label h1
@@ -73,7 +73,7 @@
 	font-style: inherit;
 }
 
-@media(max-width:991px) /* @screen-xs-max and @screen-md-min */
+@media(max-width:991px) /* @screen-xs-max and @screen-md-min *#
 {
 	#activity .timestamp,
 	#activity .balance,

@@ -23,6 +23,6 @@
  *#
 #**
  * @author Hamid Badiozamani
- */
+ *#
 #set( $title = ${model.buildMessage('msg.research.admin.polls.reports.index.pageTitle')} )
 #parseVm( "base/admin/template/terminableClassification.vm" )

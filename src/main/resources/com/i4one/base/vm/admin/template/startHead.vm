@@ -23,7 +23,7 @@
  *#
 #**
  * @author Hamid Badiozamani
- */
+ *#
 #parseVm( "base/admin/i4oneAdmin.vm" )
 #parseVm( "base/template/startHead.vm" )
 

@@ -23,7 +23,7 @@
  *#
 #**
  * @author Hamid Badiozamani
- */
+ *#
 #set($title = ${model.buildMessage('msg.base.admin.instantwins.listing.pageTitle')})
 #set($terminableContent = "base/admin/instantwins/listing.vm")
 #set($noContentMessage = "msg.base.admin.instantwins.listing.noinstantwins")

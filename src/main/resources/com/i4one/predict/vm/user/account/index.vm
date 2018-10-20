@@ -23,7 +23,7 @@
  *#
 #**
  * @author Hamid Badiozamani
- */
+ *#
 #parseVm( "base/user/template/start.vm" )
 
 <style>
@@ -89,7 +89,7 @@
 	padding-right: 0;
 }
 
-@media (max-width: 991px) /* xs and sm */
+@media (max-width: 991px) /* xs and sm *#
 {
 	#predictionhistory .reference
 	{

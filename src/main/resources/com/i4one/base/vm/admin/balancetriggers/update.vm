@@ -23,7 +23,7 @@
  *#
 #**
  * @author Hamid Badiozamani
- */
+ *#
 #parseVm( "base/admin/template/terminableCrud.vm" )
 #set($title = ${model.buildMessage('msg.base.admin.balancetriggers.update.pageTitle', 'item', $trigger)})
 #parseVm( "base/admin/template/startHead.vm" )

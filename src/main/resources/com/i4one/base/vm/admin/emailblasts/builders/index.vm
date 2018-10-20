@@ -23,7 +23,7 @@
  *#
 #**
  * @author Hamid Badiozamani
- */
+ *#
 #set($title = ${model.buildMessage('msg.base.admin.emailblasts.builders.listing.pageTitle')})
 #set($noContentMessage = "msg.base.admin.emailblasts.builders.listing.nobuilders")
 #set($listingContent = "base/admin/emailblasts/builders/listing.vm")

@@ -23,7 +23,7 @@
  *#
 #**
  * @author Hamid Badiozamani
- */
+ *#
 #* #message('msg.research.admin.term.listing.nosurveys')</td> *#
 	
 <div class="row hidden-sm hidden-xs">

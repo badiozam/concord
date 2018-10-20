@@ -23,7 +23,7 @@
  *#
 #**
  * @author Hamid Badiozamani
- */
+ *#
 #parseVm( "base/user/template/start.vm" )
 <div class="breadcrumbs" align="left"><a href="index.html">Home</a> / Hall of Fame</div>
 <br/>

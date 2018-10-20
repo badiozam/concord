@@ -23,7 +23,7 @@
  *#
 #**
  * @author Hamid Badiozamani
- */
+ *#
 #set($title = ${model.buildMessage('msg.research.admin.polls.listing.pageTitle')})
 #set($noContentMessage = "msg.research.admin.polls.listing.nopolls")
 #set($terminableContent = "research/admin/polls/listing.vm")

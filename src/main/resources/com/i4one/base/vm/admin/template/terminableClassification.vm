@@ -23,7 +23,7 @@
  *#
 #**
  * @author Hamid Badiozamani
- */
+ *#
 #if ( ${reportSettings.item.isPast($model.timeInSeconds)} )
 	#set( $terminableDisplay = "past")
 #elseif ( ${reportSettings.item.isFuture($model.timeInSeconds)} )

@@ -23,7 +23,7 @@
  *#
 #**
  * @author Hamid Badiozamani
- */
+ *#
 #macro( winnersButton $item )
 	<form action="winners.html">
 		<input type="hidden" name="id" value="$item.ser"/>

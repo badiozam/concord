@@ -23,7 +23,7 @@
  *#
 #**
  * @author Hamid Badiozamani
- */
+ *#
 #macro( resultsButton $item )
 	<form action="report.html">
 		<input type="hidden" name="id" value="$item.ser"/>

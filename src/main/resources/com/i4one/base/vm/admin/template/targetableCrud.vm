@@ -23,7 +23,7 @@
  *#
 #**
  * @author Hamid Badiozamani
- */
+ *#
 #parseVm( "base/admin/template/tokenField.vm" )
 #macro(targetableCrud $targetableName )
 	#pathToVar( $targetableName 'item' )

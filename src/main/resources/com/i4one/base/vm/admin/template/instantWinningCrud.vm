@@ -23,7 +23,7 @@
  *#
 #**
  * @author Hamid Badiozamani
- */
+ *#
 #macro( detachInstantWinningButton $item $instantWinning $redir)
 	<a class="btn btn-default btn-block" href="${request.baseurl}/base/admin/instantwins/detach.html?instantwinid=$item.ser&featureid=$instantWinning.ser&featurename=$instantWinning.featureName&section=instantWinning&redir=$!redir">
 		#message('msg.base.admin.general.instantWinning.detach')

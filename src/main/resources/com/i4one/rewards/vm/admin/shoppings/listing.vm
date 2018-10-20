@@ -23,7 +23,7 @@
  *#
 #**
  * @author Hamid Badiozamani
- */
+ *#
 <style>
 img.soldout
 {
@@ -48,12 +48,12 @@ img.soldout
 	border: 2px solid #c00;
 	padding: 5px;
 
-	-ms-transform: rotate(-30deg); /* IE 9 */
-	-webkit-transform: rotate(-30deg); /* Chrome, Safari, Opera */
+	-ms-transform: rotate(-30deg); /* IE 9 *#
+	-webkit-transform: rotate(-30deg); /* Chrome, Safari, Opera *#
 	transform: rotate(-30deg);
 
-	-ms-transform-origin: 1rem 5rem; /* IE 9 */
-	-webkit-transform-origin: 1rem 5rem; /* Chrome, Safari, Opera */
+	-ms-transform-origin: 1rem 5rem; /* IE 9 *#
+	-webkit-transform-origin: 1rem 5rem; /* Chrome, Safari, Opera *#
 	transform-origin: 1rem 5rem;
 }
 

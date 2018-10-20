@@ -23,7 +23,7 @@
  *#
 #**
  * @author Hamid Badiozamani
- */
+ *#
 #set($title = ${model.buildMessage('msg.rewards.admin.shoppings.listing.pageTitle')})
 #set($noContentMessage = "msg.rewards.admin.shoppings.listing.noshoppings")
 #set($terminableContent = "rewards/admin/shoppings/listing.vm")

@@ -23,7 +23,7 @@
  *#
 #**
  * @author Hamid Badiozamani
- */
+ *#
 #parseVm( "base/user/template/start.vm" )
 <style>
 #raffles div#label h1
@@ -98,12 +98,12 @@
 	border: 2px solid #c00;
 	padding: 5px;
 
-	-ms-transform: rotate(-30deg); /* IE 9 */
-	-webkit-transform: rotate(-30deg); /* Chrome, Safari, Opera */
+	-ms-transform: rotate(-30deg); /* IE 9 *#
+	-webkit-transform: rotate(-30deg); /* Chrome, Safari, Opera *#
 	transform: rotate(-30deg);
 
-	-ms-transform-origin: 1rem 5rem; /* IE 9 */
-	-webkit-transform-origin: 1rem 5rem; /* Chrome, Safari, Opera */
+	-ms-transform-origin: 1rem 5rem; /* IE 9 *#
+	-webkit-transform-origin: 1rem 5rem; /* Chrome, Safari, Opera *#
 	transform-origin: 1rem 5rem;
 }
 
@@ -112,7 +112,7 @@
 	visibility: visible;
 }
 
-@media (max-width:767px) /* @screen-xs-max */
+@media (max-width:767px) /* @screen-xs-max *#
 {
 	#raffles .raffle
 	{
@@ -121,7 +121,7 @@
 	}
 }
 
-@media (min-width:768px) /* @screen-sm-max */
+@media (min-width:768px) /* @screen-sm-max *#
 {
 	#raffles .raffle:nth-child(2n+1)
 	{
@@ -129,7 +129,7 @@
 	}
 }
 
-@media (min-width:992px) /* @screen-md-max */
+@media (min-width:992px) /* @screen-md-max *#
 {
 	#* This is the same as lg since we want 3 in a row *#
 	#raffles .raffle:nth-child(2n+1)

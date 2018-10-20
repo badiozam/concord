@@ -23,7 +23,7 @@
  *#
 #**
  * @author Hamid Badiozamani
- */
+ *#
 #set($title = ${model.buildMessage('msg.base.admin.balancetriggers.listing.pageTitle')})
 #set($terminableContent = "base/admin/balancetriggers/listing.vm")
 #set($noContentMessage = "msg.base.admin.balancetriggers.listing.nobalancetriggers")

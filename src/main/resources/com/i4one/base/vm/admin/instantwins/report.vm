@@ -23,7 +23,7 @@
  *#
 #**
  * @author Hamid Badiozamani
- */
+ *#
 #set( $title = ${model.buildMessage('msg.base.admin.instantwins.reports.index.pageTitle')} )
 #parseVm( "base/admin/template/terminableReport.vm" )
 #showReport()

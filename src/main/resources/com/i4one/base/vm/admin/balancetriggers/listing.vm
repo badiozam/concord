@@ -23,7 +23,7 @@
  *#
 #**
  * @author Hamid Badiozamani
- */
+ *#
 <div class="row hidden-xs hidden-sm">
 	<div class="heading col-md-1">#message('msg.base.admin.terminable.listing.starttime')</div>
 	<div class="heading col-md-2">#message("msg.base.admin.balancetriggers.listing.balancetrigger.title")</div>

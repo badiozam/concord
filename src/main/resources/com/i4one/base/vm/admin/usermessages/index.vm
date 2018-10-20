@@ -23,7 +23,7 @@
  *#
 #**
  * @author Hamid Badiozamani
- */
+ *#
 #set($title = ${model.buildMessage('msg.base.admin.usermessages.listing.pageTitle')})
 #set($noContentMessage = "msg.base.admin.usermessages.listing.nomessages")
 #set($terminableContent = "base/admin/usermessages/listing.vm")

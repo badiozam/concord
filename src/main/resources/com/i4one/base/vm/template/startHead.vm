@@ -23,7 +23,7 @@
  *#
 #**
  * @author Hamid Badiozamani
- */
+ *#
 <!DOCTYPE html>
 <html lang="$model.language" dir="$languageDir">
 <head>

@@ -23,13 +23,13 @@
  *#
 #**
  * @author Hamid Badiozamani
- */
+ *#
 #parseVm( "base/user/template/start.vm" )
 
 <style>
 #forgotform div#forgot
 {
-	margin-top: 10px; /* Matches the remember me checkbox on the left side */
+	margin-top: 10px; /* Matches the remember me checkbox on the left side *#
 	margin-right: 5px;
 }
 

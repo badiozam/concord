@@ -23,7 +23,7 @@
  *#
 #**
  * @author Hamid Badiozamani
- */
+ *#
 #parseVm( "base/admin/template/expendableCrud.vm" )
 #parseVm( "rewards/admin/template/terminableCrud.vm" )
 #set($title = ${model.buildMessage('msg.rewards.admin.shoppings.update.pageTitle', 'item', $shopping)})

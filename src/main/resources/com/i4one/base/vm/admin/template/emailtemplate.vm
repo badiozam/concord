@@ -23,7 +23,7 @@
  *#
 #**
  * @author Hamid Badiozamani
- */
+ *#
 #macro(emailTemplate $emailTemplate )
 	#set( $emailTemplateSer = $emailTemplate + ".ser" )
 	#i4oneBind($emailTemplateSer)

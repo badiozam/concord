@@ -23,7 +23,7 @@
  *#
 #**
  * @author Hamid Badiozamani
- */
+ *#
 #set( $title = ${model.buildMessage('msg.predict.admin.events.reports.index.pageTitle')} )
 #set( $subtitle = ${model.buildMessage('msg.predict.admin.events.reports.index.pageSubtitle', 'reportSettings', $reportSettings)} )
 #set( $showUniques = true ) 

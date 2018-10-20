@@ -23,7 +23,7 @@
  *#
 #**
  * @author Hamid Badiozamani
- */
+ *#
 <div class="row hidden-sm hidden-xs">
 	<div class="heading col-md-2">#message('msg.base.admin.terminable.listing.starttime')</div>
 	<div class="heading col-md-4">#message('msg.base.admin.pages.listing.page.title')</div>

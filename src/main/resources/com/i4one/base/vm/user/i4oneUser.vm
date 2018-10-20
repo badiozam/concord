@@ -23,7 +23,7 @@
  *#
 #**
  * @author Hamid Badiozamani
- */
+ *#
 #macro(userNavBar)
 	<div id="defaultNavBar" class="navbar navbar-default navbar-fixed-top" role="navigation">
 		<div class="container">

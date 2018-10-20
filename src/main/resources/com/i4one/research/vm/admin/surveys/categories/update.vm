@@ -23,6 +23,6 @@
  *#
 #**
  * @author Hamid Badiozamani
- */
+ *#
 #set( $basePath = "${request.baseurl}/survey/admin/categories" )
 #parseVm( "base/admin/categories/update.vm" )

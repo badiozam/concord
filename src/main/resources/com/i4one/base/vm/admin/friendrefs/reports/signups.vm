@@ -23,7 +23,7 @@
  *#
 #**
  * @author Hamid Badiozamani
- */
+ *#
 #set( $title = ${model.buildMessage('msg.base.admin.friendrefs.reports.signups.pageTitle')} )
 #set( $reportName = "signups" )
 #parseVm( "base/admin/template/report.vm" )

@@ -23,7 +23,7 @@
  *#
 #**
  * @author Hamid Badiozamani
- */
+ *#
 #if ( $basePath )
 #set($title = ${model.buildMessage('msg.base.admin.categories.listing.pageTitle')})
 #parseVm( "base/admin/template/startHead.vm" )

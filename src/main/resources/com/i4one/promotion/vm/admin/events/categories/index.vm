@@ -23,6 +23,6 @@
  *#
 #**
  * @author Hamid Badiozamani
- */
+ *#
 #set( $basePath = "${request.baseurl}/promotion/admin/events/categories" )
 #parseVm( "base/admin/categories/index.vm" )

@@ -23,7 +23,7 @@
  *#
 #**
  * @author Hamid Badiozamani
- */
+ *#
 #if ( ${item.isPast($model.timeInSeconds)} )
 	#set( $terminableDisplay = "past")
 #elseif ( ${item.isFuture($model.timeInSeconds)} )
