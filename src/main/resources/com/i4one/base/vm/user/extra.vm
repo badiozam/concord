@@ -23,7 +23,7 @@
  *#
 #**
  * @author Hamid Badiozamani
- */
+ *#
 #parseVm( "base/user/template/start.vm" )
 <script language="javascript">
 $.getScript("${request.baseurl}/jsc/i4one.jsc");

@@ -23,6 +23,6 @@
  *#
 #**
  * @author Hamid Badiozamani
- */
+ *#
 #set( $title = $display.title )
 #parseVm( "base/admin/template/terminableClassification.vm" )

@@ -23,7 +23,7 @@
  *#
 #**
  * @author Hamid Badiozamani
- */
+ *#
 #parseVm( "base/user/i4oneUser.vm" )
 
 <body class="#plainMessage('content.body.class')">

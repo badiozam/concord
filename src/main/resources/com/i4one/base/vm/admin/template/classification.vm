@@ -23,7 +23,7 @@
  *#
 #**
  * @author Hamid Badiozamani
- */
+ *#
 #if ( !$reportName || $!reportName == "" ) #set( $reportName = "report" ) #end
 #if ( $reportSettings.printableView ) #set( $hideNavBar = true ) #end
 

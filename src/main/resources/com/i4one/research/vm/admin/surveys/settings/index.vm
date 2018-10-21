@@ -23,7 +23,7 @@
  *#
 #**
  * @author Hamid Badiozamani
- */
+ *#
 #set($title = ${model.buildMessage('msg.survey.admin.settings.index.pageTitle', 'item', $settings)})
 #parseVm( "base/admin/template/startHead.vm" )
 #parseVm( "base/admin/template/endHead.vm" )

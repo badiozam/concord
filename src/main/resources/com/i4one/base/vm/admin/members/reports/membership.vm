@@ -23,7 +23,7 @@
  *#
 #**
  * @author Hamid Badiozamani
- */
+ *#
 #set( $title = ${model.buildMessage('msg.base.admin.members.reports.membership.pageTitle')} )
 #set( $subtitle = "$reportSettings.startTimeString - $reportSettings.endTimeString" )
 #set( $reportName = "membership" )

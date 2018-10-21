@@ -23,7 +23,7 @@
  *#
 #**
  * @author Hamid Badiozamani
- */
+ *#
 #set($title = ${model.buildMessage('msg.base.admin.accesscodes.listing.pageTitle')})
 #set($noContentMessage = "msg.base.admin.accesscodes.listing.noaccesscodes")
 #set($terminableContent = "base/admin/accesscodes/listing.vm")

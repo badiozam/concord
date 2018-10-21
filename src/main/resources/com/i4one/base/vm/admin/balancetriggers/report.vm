@@ -23,7 +23,7 @@
  *#
 #**
  * @author Hamid Badiozamani
- */
+ *#
 #set( $title = ${model.buildMessage('msg.base.admin.balancetriggers.reports.index.pageTitle')} )
 #set( $subtitle = ${model.buildMessage('msg.base.admin.balancetriggers.reports.index.pageSubtitle', 'reportSettings', $reportSettings)} )
 #set( $showUniques = true ) 

@@ -23,7 +23,7 @@
  *#
 #**
  * @author Hamid Badiozamani
- */
+ *#
 #parseVm( "base/admin/template/emailtemplate.vm" )
 #set($title = ${model.buildMessage('msg.base.admin.members.birthdayemail.pageTitle', 'item', $settings)})
 #parseVm( "base/admin/template/startHead.vm" )

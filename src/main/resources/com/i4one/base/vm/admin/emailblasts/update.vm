@@ -23,7 +23,7 @@
  *#
 #**
  * @author Hamid Badiozamani
- */
+ *#
 #set($title = ${model.buildMessage('msg.base.admin.emailblasts.update.pageTitle', 'item', $emailblast)})
 #parseVm( "base/admin/template/startHead.vm" )
 #rootCSS("/js/bootstrap-tokenfield/css/bootstrap-tokenfield.min.css")

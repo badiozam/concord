@@ -23,7 +23,7 @@
  *#
 #**
  * @author Hamid Badiozamani
- */
+ *#
 #parseVm( "base/i4one.vm" )
 <html>
 #IString($builder.emailTemplate.htmlBody)

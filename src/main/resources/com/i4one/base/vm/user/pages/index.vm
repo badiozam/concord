@@ -23,7 +23,7 @@
  *#
 #**
  * @author Hamid Badiozamani
- */
+ *#
 #set($title = $page.title[$language])
 #parseVm( "base/user/template/start.vm" )
 

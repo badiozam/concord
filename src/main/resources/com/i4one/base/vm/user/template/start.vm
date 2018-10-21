@@ -23,7 +23,7 @@
  *#
 #**
  * @author Hamid Badiozamani
- */
+ *#
 #parseVm( "base/user/template/startHead.vm" )
 #parseVm( "base/user/template/endHead.vm" )
 #parseVm( "base/user/template/startBody.vm" )

@@ -23,5 +23,5 @@
  *#
 #**
  * @author Hamid Badiozamani
- */
+ *#
 #parseVm( "rewards/admin/template/reserve.vm" )

@@ -23,5 +23,5 @@
  *#
 #**
  * @author Hamid Badiozamani
- */
+ *#
 #parseVm( "base/admin/template/emailtemplateCrud.vm" )

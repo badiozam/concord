@@ -23,7 +23,7 @@
  *#
 #**
  * @author Hamid Badiozamani
- */
+ *#
 <div class="row hidden-xs">
 	<div class="heading col-sm-5 col-md-4 col-lg-3 col-xl-2">#message("msg.base.admin.admins.listing.admin.username")</div>
 	<div class="heading col-sm-5 col-md-6 col-lg-7 col-xl-6">#message("msg.base.admin.admins.listing.admin.email")</div>

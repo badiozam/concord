@@ -23,7 +23,7 @@
  *#
 #**
  * @author Hamid Badiozamani
- */
+ *#
 #set($title = ${model.buildMessage('msg.promotion.admin.socialphrases.listing.pageTitle')})
 #set($noContentMessage = "msg.promotion.admin.socialphrases.listing.nosocialphrases")
 #set($terminableContent = "promotion/admin/socialphrases/listing.vm")

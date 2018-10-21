@@ -23,7 +23,7 @@
  *#
 #**
  * @author Hamid Badiozamani
- */
+ *#
 #set($title = ${model.buildMessage('msg.predict.admin.events.listing.pageTitle')})
 #set($noContentMessage = "msg.predict.admin.events.listing.noevents")
 #set($terminableContent = "predict/admin/events/listing.vm")

@@ -23,6 +23,6 @@
  *#
 #**
  * @author Hamid Badiozamani
- */
+ *#
 #set( $basePath = "${request.baseurl}/predict/admin/categories" )
 #parseVm( "base/admin/categories/index.vm" )

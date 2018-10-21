@@ -23,7 +23,7 @@
  *#
 #**
  * @author Hamid Badiozamani
- */
+ *#
 #if ( !$reportName || $!reportName == "" ) #set( $reportName = "report" ) #end
 #parseVm( "base/admin/template/startHead.vm" )
 #parseVm( "base/admin/template/endHead.vm" )

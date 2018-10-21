@@ -23,7 +23,7 @@
  *#
 #**
  * @author Hamid Badiozamani
- */
+ *#
 #parseVm("base/doctype.vm")
 
 This is the DEFAULT test.vm<br/>

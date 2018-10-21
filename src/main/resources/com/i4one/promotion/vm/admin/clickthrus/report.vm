@@ -23,7 +23,7 @@
  *#
 #**
  * @author Hamid Badiozamani
- */
+ *#
 #set( $title = ${model.buildMessage('msg.promotion.admin.clickthrus.reports.index.pageTitle')} )
 #parseVm( "base/admin/template/terminableReport.vm" )
 #showReport()

@@ -23,7 +23,7 @@
  *#
 #**
  * @author Hamid Badiozamani
- */
+ *#
 #macro(terminableCrud $terminable )
 	#set( $terminableStartTimeSeconds = $terminable + ".startTimeSeconds" )
 	#i4oneBind($terminableStartTimeSeconds)

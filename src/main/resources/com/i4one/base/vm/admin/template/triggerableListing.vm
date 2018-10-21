@@ -23,7 +23,7 @@
  *#
 #**
  * @author Hamid Badiozamani
- */
+ *#
 #parseVm( "base/admin/template/terminableListing.vm" )
 
 #macro( printTrigger $trigger )

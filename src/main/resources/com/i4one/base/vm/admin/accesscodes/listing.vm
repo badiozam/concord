@@ -23,7 +23,7 @@
  *#
 #**
  * @author Hamid Badiozamani
- */
+ *#
 <div class="row hidden-sm hidden-xs headings">
 	<div class="heading col-md-2">#message('msg.base.admin.terminable.listing.starttime')</div>
 	<div class="heading col-md-3">#message('msg.base.admin.accesscodes.listing.accesscode.title')</div>

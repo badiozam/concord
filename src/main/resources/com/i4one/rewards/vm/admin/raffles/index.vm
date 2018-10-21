@@ -23,7 +23,7 @@
  *#
 #**
  * @author Hamid Badiozamani
- */
+ *#
 #set($title = ${model.buildMessage('msg.rewards.admin.raffles.listing.pageTitle')})
 #set($noContentMessage = "msg.rewards.admin.raffles.listing.noraffles")
 #set($terminableContent = "rewards/admin/raffles/listing.vm")

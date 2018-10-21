@@ -23,7 +23,7 @@
  *#
 #**
  * @author Hamid Badiozamani
- */
+ *#
 #parseVm( "base/admin/template/instantWinningCrud.vm" )
 #parseVm( "base/admin/template/triggerableCrud.vm" )
 #parseVm( "base/admin/template/terminableCrud.vm" )

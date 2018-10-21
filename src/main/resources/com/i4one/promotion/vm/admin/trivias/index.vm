@@ -23,7 +23,7 @@
  *#
 #**
  * @author Hamid Badiozamani
- */
+ *#
 #set($title = ${model.buildMessage('msg.promotion.admin.trivias.listing.pageTitle')})
 #set($noContentMessage = "msg.promotion.admin.trivias.listing.notrivias")
 #set($terminableContent = "promotion/admin/trivias/listing.vm")

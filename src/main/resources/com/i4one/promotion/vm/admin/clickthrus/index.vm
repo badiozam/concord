@@ -23,7 +23,7 @@
  *#
 #**
  * @author Hamid Badiozamani
- */
+ *#
 #set($title = ${model.buildMessage('msg.promotion.admin.clickthrus.listing.pageTitle')})
 #set($noContentMessage = "msg.promotion.admin.clickthrus.listing.noclickthrus")
 #set($terminableContent = "promotion/admin/clickthrus/listing.vm")

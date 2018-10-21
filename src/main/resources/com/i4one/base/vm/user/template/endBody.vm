@@ -23,7 +23,7 @@
  *#
 #**
  * @author Hamid Badiozamani
- */
+ *#
 		#message('content.main.end')
 	</main>
 	<footer>#message('content.footer')</footer>

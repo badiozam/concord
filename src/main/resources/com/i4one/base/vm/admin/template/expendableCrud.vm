@@ -23,7 +23,7 @@
  *#
 #**
  * @author Hamid Badiozamani
- */
+ *#
 #macro(expendableCrud $expendableName )
 	#pathToVar( $expendableName 'item' )
 	<a name="expendable"></a>

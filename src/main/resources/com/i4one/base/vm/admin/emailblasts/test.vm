@@ -23,7 +23,7 @@
  *#
 #**
  * @author Hamid Badiozamani
- */
+ *#
 #set($title = ${model.buildMessage('msg.base.admin.emailblasts.test.pageTitle', 'item', $testblast)})
 #set($subtitle = ${model.buildMessage('msg.base.admin.emailblasts.test.subtitle', 'item', $testblast)})
 #set( $hideNavBar = true )

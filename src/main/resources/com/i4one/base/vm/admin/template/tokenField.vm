@@ -23,7 +23,7 @@
  *#
 #**
  * @author Hamid Badiozamani
- */
+ *#
 #js("/js/bootstrap-tokenfield/bootstrap-tokenfield.min.js")
 <script language="javascript" type="text/javascript">
 $(function()

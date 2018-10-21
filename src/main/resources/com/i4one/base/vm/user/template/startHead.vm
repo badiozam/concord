@@ -23,7 +23,7 @@
  *#
 #**
  * @author Hamid Badiozamani
- */
+ *#
 #parseVm( "base/template/startHead.vm" )
 <link rel="shortcut icon" href="http://f.canadapredicts.ca/images/aupreds24x24.ico" type="image/x-icon" />
 

@@ -23,7 +23,7 @@
  *#
 #**
  * @author Hamid Badiozamani
- */
+ *#
 <div id="messagebox">
 	<div id="messageboxContentContainer">
 	#foreach ( $outcome in $model.featuredOutcomes )
