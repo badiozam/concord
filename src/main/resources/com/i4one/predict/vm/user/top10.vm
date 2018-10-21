@@ -103,7 +103,7 @@
 	min-height: 2rem;
 }
 
-@media (max-width: 991px) /* xs and sm */
+@media (max-width: 991px) /* xs and sm *#
 {
 	#top10 .heading
 	{
